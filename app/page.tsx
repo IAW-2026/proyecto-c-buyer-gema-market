@@ -5,6 +5,9 @@ import ProductGrid, {
 import ProductGridSkeleton from "@/app/components/products/ProductGridSkeleton";
 import { HeaderHomePage } from "@/app/components/features/home/HeaderHomePage";
 
+// TODO: llevarlo a una constante.
+const DEFAULT_PAGE_SIZE = 4;
+
 /**
  * Home page — Catálogo de productos.
  *
@@ -26,7 +29,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   const params = await searchParams;
 
   const page = Number(params.page) || 1;
-  const pageSize = Number(params.page_size) || 4;
+  const pageSize = Number(params.page_size) || DEFAULT_PAGE_SIZE;
 
   // Agregar a params y pasar a buildFiltersFromParams
   const paginatedParams = {

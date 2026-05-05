@@ -1,0 +1,7 @@
+[
+  { "category_id": "cat_muebles",           "name": "Muebles" },
+  { "category_id": "cat_electrodomesticos", "name": "Electrodomésticos" },
+  { "category_id": "cat_tecnologia",        "name": "Tecnología" },
+  { "category_id": "cat_ropa",              "name": "Ropa y calzado" },
+  { "category_id": "cat_libros",            "name": "Libros" }
+]

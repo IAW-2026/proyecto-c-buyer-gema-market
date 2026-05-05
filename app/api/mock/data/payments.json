@@ -1,0 +1,72 @@
+[
+  {
+    "payment_id": "pay_01HXYZAPPROVED01",
+    "buyer_id": "usr_01HXYZBUYER001",
+    "orders": [
+      {
+        "order_id": "ord_01HXYZAPPROVED",
+        "seller_id": "usr_01HXYZSELLER01",
+        "product_id": "prd_01HXYZDESK0001",
+        "quote_id": "qte_01HXYZQUOTE0001",
+        "amount": 19500.00
+      }
+    ],
+    "total_amount": 19500.00,
+    "currency": "ARS",
+    "status": "approved",
+    "mp_payment_id": "1234567890",
+    "mp_preference_id": "pref_01HXYZAPPROVED",
+    "mp_status_detail": "accredited",
+    "created_at": "2026-04-17T14:30:00Z",
+    "paid_at": "2026-04-17T14:32:00Z"
+  },
+  {
+    "payment_id": "pay_01HXYZPENDING01",
+    "buyer_id": "usr_01HXYZBUYER001",
+    "orders": [
+      {
+        "order_id": "ord_01HXYZPENDING",
+        "seller_id": "usr_01HXYZSELLER03",
+        "product_id": "prd_01HXYZMICROW01",
+        "quote_id": "qte_01HXYZQUOTE0002",
+        "amount": 21700.00
+      },
+      {
+        "order_id": "ord_01HXYZPENDING2",
+        "seller_id": "usr_01HXYZSELLER02",
+        "product_id": "prd_01HXYZPHONE001",
+        "quote_id": "qte_01HXYZQUOTE0003",
+        "amount": 46200.00
+      }
+    ],
+    "total_amount": 67900.00,
+    "currency": "ARS",
+    "status": "pending",
+    "mp_payment_id": null,
+    "mp_preference_id": "pref_01HXYZPENDING",
+    "mp_status_detail": null,
+    "created_at": "2026-04-20T10:00:00Z",
+    "paid_at": null
+  },
+  {
+    "payment_id": "pay_01HXYZREJECTED01",
+    "buyer_id": "usr_01HXYZBUYER002",
+    "orders": [
+      {
+        "order_id": "ord_01HXYZREJECTED",
+        "seller_id": "usr_01HXYZSELLER02",
+        "product_id": "prd_01HXYZLAPTOP01",
+        "quote_id": "qte_01HXYZQUOTE0004",
+        "amount": 121500.00
+      }
+    ],
+    "total_amount": 121500.00,
+    "currency": "ARS",
+    "status": "rejected",
+    "mp_payment_id": "9876543210",
+    "mp_preference_id": "pref_01HXYZREJECTED",
+    "mp_status_detail": "cc_rejected_insufficient_amount",
+    "created_at": "2026-04-21T11:15:00Z",
+    "paid_at": null
+  }
+]

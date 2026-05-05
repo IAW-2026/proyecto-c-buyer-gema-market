@@ -14,6 +14,11 @@ import {
 
 export default function AccountPage() {
   const router = useRouter();
+
+  // ACA DEBERA TRAER LOS DATOS DEL USUARIO
+  // Hacer query a la base de datos y obtener los datos del usuario
+  // Deberiamos tener una funcion en lib/db/user para obtener los datos del usuario
+
   const [form, setForm] = useState({
     name: "Lucía Méndez",
     email: "lucia.mendez@uns.edu.ar",
@@ -35,7 +40,9 @@ export default function AccountPage() {
   };
 
   const handleLogout = () => {
-    router.push("/login");
+    router.push("/");
+    // SALE DE LA SESION DE CLERK
+    // USE LA FUNCION DE CLERK PARA CERRAR SESION
   };
 
   return (
@@ -44,10 +51,7 @@ export default function AccountPage() {
         <TopBar title="Cuenta" />
       </div>
       <div className="p-4 min-[600px]:max-w-[760px] min-[600px]:mx-auto min-[600px]:p-6 lgx:max-w-[760px] lgx:mx-auto lgx:p-0">
-        <Card
-          padding={20}
-          className="mb-4"
-        >
+        <Card padding={20} className="mb-4">
           <div className="flex items-center gap-3.5">
             <Avatar name={form.name} size={64} />
             <div className="flex-1 min-w-0">
@@ -59,9 +63,7 @@ export default function AccountPage() {
           </div>
         </Card>
 
-        <Card
-          padding={20}
-        >
+        <Card padding={20}>
           <div className="flex items-center gap-2.5 mb-[18px]">
             <div className="w-9 h-9 rounded-xl bg-bone flex items-center justify-center text-olive">
               <Icon name="user" size={18} />

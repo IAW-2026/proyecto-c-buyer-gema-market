@@ -1,0 +1,38 @@
+[
+  {
+    "shipping_id": "shp_01HXYZINTRANS01",
+    "order_id": "ord_01HXYZINTRANSIT",
+    "status": "in_transit",
+    "tracking_code": "BB-0001-2026",
+    "tracking_url": "https://shipping.unihousing.com/track/BB-0001-2026",
+    "pickup_address": { "street": "Av. Colón", "number": "123", "zip": "5000" },
+    "delivery_address": { "street": "San Martín", "number": "456", "zip": "5000" },
+    "price": 4500.00,
+    "picked_up_at": "2026-04-18T10:00:00Z",
+    "delivered_at": null
+  },
+  {
+    "shipping_id": "shp_01HXYZDELIVRD01",
+    "order_id": "ord_01HXYZDELIVERED",
+    "status": "delivered",
+    "tracking_code": "BB-0002-2026",
+    "tracking_url": "https://shipping.unihousing.com/track/BB-0002-2026",
+    "pickup_address": { "street": "Belgrano", "number": "789", "zip": "5000" },
+    "delivery_address": { "street": "Rivadavia", "number": "321", "zip": "5000" },
+    "price": 1200.00,
+    "picked_up_at": "2026-04-19T09:00:00Z",
+    "delivered_at": "2026-04-20T14:30:00Z"
+  },
+  {
+    "shipping_id": "shp_01HXYZPENDING01",
+    "order_id": "ord_01HXYZSHIPPING",
+    "status": "pending_pickup",
+    "tracking_code": "BB-0003-2026",
+    "tracking_url": "https://shipping.unihousing.com/track/BB-0003-2026",
+    "pickup_address": { "street": "Chacabuco", "number": "555", "zip": "5000" },
+    "delivery_address": { "street": "Obispo Trejo", "number": "100", "zip": "5000" },
+    "price": 3200.00,
+    "picked_up_at": null,
+    "delivered_at": null
+  }
+]

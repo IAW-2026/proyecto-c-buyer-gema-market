@@ -1,0 +1,38 @@
+[
+  {
+    "product_id": "prd_01HXYZDESK0001",
+    "price": 4500.00,
+    "currency": "ARS",
+    "estimated_days": 3
+  },
+  {
+    "product_id": "prd_01HXYZCHAIR001",
+    "price": 3800.00,
+    "currency": "ARS",
+    "estimated_days": 3
+  },
+  {
+    "product_id": "prd_01HXYZPHONE001",
+    "price": 1200.00,
+    "currency": "ARS",
+    "estimated_days": 1
+  },
+  {
+    "product_id": "prd_01HXYZLAPTOP01",
+    "price": 1500.00,
+    "currency": "ARS",
+    "estimated_days": 2
+  },
+  {
+    "product_id": "prd_01HXYZMICROW01",
+    "price": 3200.00,
+    "currency": "ARS",
+    "estimated_days": 2
+  },
+  {
+    "product_id": "_default",
+    "price": 2500.00,
+    "currency": "ARS",
+    "estimated_days": 2
+  }
+]
