@@ -1,13 +1,108 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// prisma/schema.prisma
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// Enums
+// ─────────────────────────────────────────────
+
+enum Role {
+  buyer
+  seller
+}
+
+enum OrdenStatus {
+  created
+  awaiting_payment
+  paid
+  shipping
+  delivered
+  shipping_failed
+  cancelled
+  refunded
+  disputed
+}
+
+// ─────────────────────────────────────────────
+// Models
+// ─────────────────────────────────────────────
+
+model Usuario {
+  id            String   @id @default(cuid()) @db.VarChar(26) // ULID-compatible
+  clerkUserId   String   @unique @map("clerk_user_id")
+  email         String
+  fullName      String   @map("full_name")
+  address       Json?
+  role          Role     @default(buyer)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  ordenes       Orden[]
+  carritos      Carrito[]
+  favoritos     Favorito[]
+
+  @@map("usuario")
+}
+
+model Orden {
+  id             String      @id @default(cuid()) @db.VarChar(26)
+  buyerId        String      @map("buyer_id")
+  sellerId       String      @map("seller_id")       // FK lógica → Seller App
+  productId      String      @map("product_id")      // FK lógica → Seller App
+  quantity       Int
+  unitPrice      Decimal     @map("unit_price")       @db.Decimal(12, 2)
+  quoteId        String?     @map("quote_id")         // FK lógica → Shipping App
+  shippingPrice  Int         @map("shipping_price")
+  totalAmount    Decimal     @map("total_amount")     @db.Decimal(12, 2)
+  currency       String      @default("ARS")          @db.VarChar(3)
+  status         OrdenStatus @default(created)
+  paymentId      String?     @map("payment_id")       // FK lógica → Payments App
+  shippingId     String?     @map("shipping_id")      // FK lógica → Shipping App
+  createdAt      DateTime    @default(now())           @map("created_at")
+  updatedAt      DateTime    @updatedAt                @map("updated_at")
+
+  buyer          Usuario     @relation(fields: [buyerId], references: [id])
+
+  @@map("orden")
+}
+
+model Carrito {
+  id        String       @id @default(cuid()) @db.VarChar(26)
+  buyerId   String       @map("buyer_id")
+  createdAt DateTime     @default(now()) @map("created_at")
+
+  buyer     Usuario      @relation(fields: [buyerId], references: [id])
+  items     ItemCarrito[]
+
+  @@map("carrito")
+}
+
+model ItemCarrito {
+  id         String   @id @default(cuid()) @db.VarChar(26)
+  carritoId  String   @map("carrito_id")
+  productId  String   @map("product_id")  // FK lógica → Seller App
+  quantity   Int
+  addedAt    DateTime @default(now()) @map("added_at")
+
+  carrito    Carrito  @relation(fields: [carritoId], references: [id])
+
+  @@map("item_carrito")
+}
+
+model Favorito {
+  buyerId    String   @map("buyer_id")
+  productId  String   @map("product_id")  // FK lógica → Seller App
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  buyer      Usuario  @relation(fields: [buyerId], references: [id])
+
+  @@id([buyerId, productId])
+  @@map("favorito")
 }
