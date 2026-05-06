@@ -1,12 +1,12 @@
 import React from "react";
-import { Icon } from "./Icon";
+import { Icon, IconName } from "./Icon";
 
 interface ButtonProps {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "ghost" | "danger" | "accent" | "soft";
   size?: "sm" | "md" | "lg";
-  icon?: string;
-  iconRight?: string;
+  icon?: IconName;
+  iconRight?: IconName;
   full?: boolean;
   onClick?: () => void;
   disabled?: boolean;

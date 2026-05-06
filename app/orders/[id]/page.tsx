@@ -2,14 +2,7 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
-import {
-  TopBar,
-  Card,
-  Icon,
-  Pill,
-  ProductGlyph,
-  Button,
-} from "@/app/components/ui";
+import { TopBar, Card, Icon, ProductGlyph, Button } from "@/app/components/ui";
 import {
   UH_ORDERS as orders,
   UH_STATUS_LABEL,
@@ -17,12 +10,7 @@ import {
   OrderStatus,
 } from "@/app/lib/data";
 
-const fmtARS = (value: number) =>
-  new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  }).format(value);
+import { fmtARS } from "@/app/lib/utils";
 
 export default function OrderDetailPage() {
   const params = useParams();
@@ -31,7 +19,7 @@ export default function OrderDetailPage() {
   const o = orders.find((x) => x.id === id) || orders[0];
   const st = UH_STATUS_LABEL[o.status];
 
-  const steps = [
+  const steps: { id: string; label: string; icon: import("@/app/components/ui").IconName }[] = [
     { id: "pago_pendiente", label: "Pago confirmado", icon: "check" },
     { id: "preparando", label: "Preparando tu pedido", icon: "box" },
     { id: "listo_envio", label: "Listo para envío", icon: "pkg" },

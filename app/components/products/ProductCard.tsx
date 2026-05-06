@@ -5,16 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { ProductListItem } from "@/app/lib/types/product";
 import { Icon } from "../ui/Icon";
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-/** Formatea un precio en ARS con separador de miles. */
-function formatPrice(amount: number, currency: string): string {
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
+import { fmtARS } from "@/app/lib/utils";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 interface ProductCardProps {
@@ -24,7 +15,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, compact }: ProductCardProps) {
   const [fav, setFav] = useState(false);
-  const formattedPrice = formatPrice(product.price, product.currency);
+  const formattedPrice = fmtARS(product.price);
 
   return (
     <div className="group cursor-pointer rounded-r3 overflow-hidden bg-paper border border-line transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-sh-2">

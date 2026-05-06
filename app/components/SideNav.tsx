@@ -5,11 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "./ui/Icon";
 import { Avatar } from "./ui/Avatar";
+import { IconName } from "./ui";
 
 interface NavItem {
   id: string;
   label: string;
-  icon: string;
+  icon: IconName;
   route: string;
 }
 
@@ -25,22 +26,8 @@ const NAV_ITEMS: NavItem[] = [
 export const SideNav = () => {
   const pathname = usePathname();
 
-  // Hide on login and checkout
   const hideOnPaths = ["/login", "/checkout"];
   if (hideOnPaths.includes(pathname)) return null;
-
-  const getActiveId = () => {
-    if (pathname === "/") return "home";
-    //if (pathname === "/search") return "search";
-    if (pathname === "/cart") return "cart";
-    if (pathname === "/favorites") return "fav";
-    if (pathname === "/orders" || pathname.startsWith("/orders/"))
-      return "orders";
-    if (pathname === "/account") return "me";
-    return null;
-  };
-
-  const activeId = getActiveId();
 
   return (
     <aside className="hidden lgx:flex lgx:fixed lgx:left-0 lgx:top-0 lgx:bottom-0 lgx:z-[60] lgx:flex-col lgx:w-[240px] lgx:shrink-0 lgx:bg-paper lgx:border-r lgx:border-line lgx:px-3.5 lgx:py-5 lgx:h-screen lgx:overflow-y-auto">
@@ -61,7 +48,10 @@ export const SideNav = () => {
       <nav className="flex flex-col gap-0.5 flex-1">
         {/* original index.html filters out search from the sidebar */}
         {NAV_ITEMS.filter((it) => it.id !== "search").map((it) => {
-          const isActive = activeId === it.id;
+          const isActive =
+            pathname === it.route ||
+            (it.route !== "/" && pathname.startsWith(it.route));
+
           return (
             <Link
               key={it.id}

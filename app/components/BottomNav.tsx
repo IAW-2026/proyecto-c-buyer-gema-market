@@ -3,12 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Icon } from "./ui";
+import { Icon, IconName } from "./ui";
 
 interface NavItem {
   id: string;
   label: string;
-  icon: string;
+  icon: IconName;
   route: string;
 }
 
@@ -17,7 +17,7 @@ export const BottomNav = () => {
 
   const items: NavItem[] = [
     { id: "home", label: "Inicio", icon: "home", route: "/" },
-    //{ id: "search", label: "Buscar",    icon: "search", route: "/search" },
+    { id: "cart", label: "Carrito", icon: "cart", route: "/cart" },
     { id: "fav", label: "Favoritos", icon: "heart", route: "/favorites" },
     { id: "orders", label: "Pedidos", icon: "box", route: "/orders" },
     { id: "me", label: "Cuenta", icon: "user", route: "/account" },

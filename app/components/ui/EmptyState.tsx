@@ -1,8 +1,8 @@
 import React from "react";
-import { Icon } from "./Icon";
+import { Icon, IconName } from "./Icon";
 
 interface EmptyStateProps {
-  icon?: string;
+  icon?: IconName;
   title: string;
   body: string;
   action?: React.ReactNode;

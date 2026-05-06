@@ -1,11 +1,19 @@
 import React from "react";
-import { Icon } from "./Icon";
+import { Icon, IconName } from "./Icon";
 
 interface PillProps {
   children: React.ReactNode;
-  tone?: "neutral" | "sand" | "sage" | "forest" | "success" | "warn" | "danger" | "outline";
+  tone?:
+    | "neutral"
+    | "sand"
+    | "sage"
+    | "forest"
+    | "success"
+    | "warn"
+    | "danger"
+    | "outline";
   size?: "sm" | "md" | "lg";
-  icon?: string;
+  icon?: IconName;
   onClick?: () => void;
   active?: boolean;
 }

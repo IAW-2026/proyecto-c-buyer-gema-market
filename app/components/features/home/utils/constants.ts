@@ -1,14 +1,4 @@
 /**
-
-export function formatARS(value: number): string {
-  return new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-/**
  * Convierte cadenas de condición a valores intereños
  */
 export const CONDITION_OPTIONS = {

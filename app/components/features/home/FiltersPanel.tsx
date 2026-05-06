@@ -33,14 +33,18 @@ export function FiltersPanel({
   onApply,
   onClear,
 }: FiltersPanelProps) {
-  if (!isOpen) return null;
-
   const handleFilterUpdate = (key: keyof ParsedFilters, value: any) => {
     onFilterChange({ ...filters, [key]: value });
   };
 
   return (
-    <div className="absolute right-0 top-14 z-[45] w-[360px] animate-popover bg-paper border border-line rounded-[18px] shadow-sh-3 p-4 origin-top-right max-[640px]:left-0 max-[640px]:right-0 max-[640px]:w-auto">
+    <div 
+      className={`absolute right-0 top-14 z-[45] w-[360px] bg-paper border border-line rounded-[18px] shadow-sh-3 p-4 origin-top-right max-[640px]:left-0 max-[640px]:right-0 max-[640px]:w-auto transition-all duration-200 ${
+        isOpen 
+          ? "opacity-100 scale-100 pointer-events-auto" 
+          : "opacity-0 scale-95 pointer-events-none"
+      }`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between gap-3 mb-3.5">
         <div className="text-[15px] font-bold text-ink">Filtros</div>
