@@ -77,6 +77,24 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 - **Response 200**: `{ "ok": true }`
 
+### `POST /api/buyer/ordenes/:order_id/disputa-resuelta`
+
+- **Consumido por**: Payments App.
+- **Descripción**: notifica al comprador la resolución definitiva de una disputa sobre su orden.
+- **Request body**:
+
+```json
+{
+  "dispute_id": "dsp_01HXYZ...",
+  "resolution": "refunded",
+  "resolved_at": "2026-04-17T14:32:00Z"
+}
+```
+
+- **Response 200**: `{ "ok": true }`
+
+---
+
 ## Seller App — Endpoints expuestos
 
 ### `GET /api/seller/productos`
@@ -143,6 +161,43 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
   "created_at": "2026-04-10T10:00:00Z"
 }
 ```
+
+### `POST /api/seller/productos/batch`
+
+- **Consumido por**: Buyer App.
+- **Descripción**: devuelve la información de detalle de un lote de productos a partir de sus IDs. Se usa en los flujos donde la Buyer App necesita resolver múltiples productos en una sola llamada (ej: renderizar el carrito, la pantalla de favoritos, o el resumen de orden).
+- **Request body**:
+
+```json
+{
+  "product_ids": ["prd_01HXYZ...", "prd_01HABC...", "prd_01HDEF..."]
+}
+```
+
+- **Validaciones**:
+  - El array `product_ids` no puede estar vacío.
+
+- **Response 200**:
+
+```json
+{
+  "products": [
+    {
+      "product_id": "prd_01HXYZ...",
+      "seller_id": "usr_01HXYZ...",
+      "title": "Escritorio de madera",
+      "description": "Escritorio de madera maciza, ideal para estudiantes.",
+      "price": 15000.0,
+      "currency": "ARS",
+      "stock": 1,
+      "status": "active",
+      "images": ["https://..."]
+    }
+  ]
+}
+```
+
+- **Response 400**: `{ "error": "product_ids is required and must be a non-empty array" }`
 
 ### `GET /api/seller/productos/:product_id/direccion-origen`
 
@@ -285,6 +340,40 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 ```
 
 - **Response 200**: `{ "ok": true }`
+
+### `POST /api/seller/ventas/:order_id/disputa-abierta`
+
+- **Consumido por**: Payments App.
+- **Descripción**: notifica al vendedor que el comprador inició un reclamo por un problema en la operación.
+- **Request body**:
+
+```json
+{
+  "dispute_id": "dsp_01HXYZ...",
+  "reason": "product_not_as_described",
+  "description": "El producto llegó dañado."
+}
+```
+
+- **Response 200**: `{ "ok": true }`
+
+### `POST /api/seller/ventas/:order_id/disputa-resuelta`
+
+- **Consumido por**: Payments App.
+- **Descripción**: notifica al vendedor el resultado y resolución de una disputa abierta.
+- **Request body**:
+
+```json
+{
+  "dispute_id": "dsp_01HXYZ...",
+  "resolution": "refunded",
+  "resolved_at": "2026-04-17T14:32:00Z"
+}
+```
+
+- **Response 200**: `{ "ok": true }`
+
+---
 
 ## Shipping App — Endpoints expuestos
 
@@ -499,6 +588,37 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
 ```
 
 - **Response 200**: `OK`
+
+### `POST /api/payments/disputas`
+
+- **Consumido por**: Buyer App.
+- **Descripción**: permite a un usuario abrir un reclamo oficial por un problema durante la compra.
+- **Request body**:
+
+```json
+{
+  "order_id": "ord_01HXYZ...",
+  "reason": "product_not_as_described",
+  "description": "El producto llegó dañado."
+}
+```
+
+- **Response 201**: `{ "dispute_id": "dsp_01HXYZ...", "status": "open" }`
+
+### `POST /api/payments/disputas/:dispute_id/resolver`
+
+- **Consumido por**: Control Plane.
+- **Descripción**: permite a un administrador resolver una disputa a favor del comprador (reembolso) o del vendedor (rechazar reclamo).
+- **Request body**:
+
+```json
+{
+  "resolution": "refunded",
+  "notes": "Se comprobó el daño en base a las fotos enviadas."
+}
+```
+
+- **Response 200**: `{ "ok": true }`
 
 ---
 
@@ -736,7 +856,32 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
 }
 ```
 
-````
+#### `GET /api/payments/admin/disputas`
+
+- **Consumido por**: Control Plane, Analytics Dashboard.
+- **Descripción**: listado paginado de todas las disputas.
+- **Query params**: `status`, `date_from`, `date_to`, `sort_by`, `order`, `page`, `page_size`.
+- **Response 200**:
+
+```json
+{
+  "items": [
+    {
+      "dispute_id": "dsp_01HXYZ...",
+      "order_id": "ord_01HXYZ...",
+      "payment_id": "pay_01HXYZ...",
+      "reason": "product_not_as_described",
+      "status": "open",
+      "resolved_at": null
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total": 15,
+  "sort_by": "created_at",
+  "order": "desc"
+}
+```
 
 #### `GET /api/payments/admin/stats`
 
@@ -761,6 +906,6 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
   "approval_rate": 0.862,
   "open_disputes": 3
 }
-````
+```
 
 ---

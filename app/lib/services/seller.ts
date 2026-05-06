@@ -16,6 +16,7 @@ import type {
   Category,
   ProductDetail,
   Shop,
+  ProductBatchResponse,
 } from "@/app/lib/types/product";
 
 // ── Configuración ─────────────────────────────────────────────────────────────
@@ -155,4 +156,26 @@ export async function getProductsByIds(
   return uniqueIds
     .map((productId) => byId.get(productId))
     .filter((product): product is ProductListItem => Boolean(product));
+}
+
+/**
+ * POST /api/seller/productos/batch
+ * Resuelve un lote de productos por sus IDs en una sola llamada.
+ */
+export async function getProductsBatch(
+  productIds: string[],
+): Promise<ProductBatchResponse> {
+  if (productIds.length === 0) return { products: [] };
+
+  const res = await fetch(`${SELLER_BASE_URL}/productos/batch`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ product_ids: productIds }),
+    next: { revalidate: 60 },
+  });
+
+  if (!res.ok) throw new Error(`Seller API error: ${res.status}`);
+  return res.json();
 }

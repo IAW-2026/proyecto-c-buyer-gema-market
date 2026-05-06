@@ -64,6 +64,23 @@ export interface Shop {
   products: ProductListResponse;
 }
 
+// ── Batch: POST /api/seller/productos/batch ──────────────────────────────────
+export interface ProductBatchItem {
+  product_id: string;
+  seller_id: string;
+  title: string;
+  description: string;
+  price: number;
+  currency: string;
+  stock: number;
+  status: ProductStatus;
+  images: string[];
+}
+
+export interface ProductBatchResponse {
+  products: ProductBatchItem[];
+}
+
 // ── Opciones de ordenamiento ──────────────────────────────────────────────────
 export type SortByOption = "price" | "created_at" | "title";
 export type OrderOption = "asc" | "desc";

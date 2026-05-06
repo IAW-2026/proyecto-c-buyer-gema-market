@@ -6,7 +6,7 @@ import ProductGridSkeleton from "@/app/components/products/ProductGridSkeleton";
 import { HeaderHomePage } from "@/app/components/features/home/HeaderHomePage";
 
 // TODO: llevarlo a una constante.
-const DEFAULT_PAGE_SIZE = 4;
+const DEFAULT_PAGE_SIZE = 8;
 
 /**
  * Home page — Catálogo de productos.

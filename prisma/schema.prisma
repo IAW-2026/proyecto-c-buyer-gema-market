@@ -33,7 +33,7 @@ enum OrdenStatus {
 // ─────────────────────────────────────────────
 
 model Usuario {
-  id            String   @id @default(cuid()) @db.VarChar(26) // ULID-compatible
+  id            String   @id @db.VarChar(30) // prefixed ULID
   clerkUserId   String   @unique @map("clerk_user_id")
   email         String
   fullName      String   @map("full_name")
@@ -49,7 +49,7 @@ model Usuario {
 }
 
 model Orden {
-  id             String      @id @default(cuid()) @db.VarChar(26)
+  id             String      @id @db.VarChar(30)
   buyerId        String      @map("buyer_id")
   sellerId       String      @map("seller_id")       // FK lógica → Seller App
   productId      String      @map("product_id")      // FK lógica → Seller App
@@ -71,7 +71,7 @@ model Orden {
 }
 
 model Carrito {
-  id        String       @id @default(cuid()) @db.VarChar(26)
+  id        String       @id @db.VarChar(30)
   buyerId   String       @map("buyer_id")
   createdAt DateTime     @default(now()) @map("created_at")
 
@@ -82,7 +82,7 @@ model Carrito {
 }
 
 model ItemCarrito {
-  id         String   @id @default(cuid()) @db.VarChar(26)
+  id         String   @id @db.VarChar(30)
   carritoId  String   @map("carrito_id")
   productId  String   @map("product_id")  // FK lógica → Seller App
   quantity   Int
