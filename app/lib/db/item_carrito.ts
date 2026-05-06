@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { ItemCarrito } from "@prisma/client";
+import { generateUlid } from "../ulidGenerator";
 
 // ─────────────────────────────────────────────
 // Types
@@ -35,6 +36,7 @@ export async function createItemCarrito(
 ): Promise<ItemCarrito> {
   return prisma.itemCarrito.create({
     data: {
+      id: generateUlid("itm"),
       carritoId: data.carritoId,
       productId: data.productId,
       quantity: data.quantity,

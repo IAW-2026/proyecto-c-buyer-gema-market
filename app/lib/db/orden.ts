@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { Orden, OrdenStatus, Prisma } from "@prisma/client";
+import { generateUlid } from "../ulidGenerator";
 
 // ─────────────────────────────────────────────
 // Types
@@ -48,6 +49,7 @@ export async function createOrden(
 ): Promise<OrdenConBuyer> {
   return prisma.orden.create({
     data: {
+      id: generateUlid("ord"),
       buyerId: data.buyerId,
       sellerId: data.sellerId,
       productId: data.productId,

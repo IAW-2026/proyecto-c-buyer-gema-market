@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { Usuario, Role } from "@prisma/client";
+import { generateUlid } from "@/app/lib/ulidGenerator";
 
 // ─────────────────────────────────────────────
 // Types
@@ -48,6 +49,7 @@ export async function createUsuario(
 ): Promise<Usuario> {
   return prisma.usuario.create({
     data: {
+      id: generateUlid("usr"),
       clerkUserId: data.clerkUserId,
       email: data.email,
       fullName: data.fullName,

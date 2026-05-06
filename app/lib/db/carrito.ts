@@ -1,5 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { Carrito, Prisma } from "@prisma/client";
+import { generateUlid } from "../ulidGenerator";
 
 // ─────────────────────────────────────────────
 // Types
@@ -25,6 +26,7 @@ type CarritoConRelaciones = Prisma.CarritoGetPayload<{
 ): Promise<Carrito> {
   return prisma.carrito.create({
     data: {
+      id: generateUlid("car"),
       buyerId: data.buyerId,
     },
     include: { items: true },
