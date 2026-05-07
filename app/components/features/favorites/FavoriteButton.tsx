@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useOptimistic, useTransition } from "react";
 import { Icon } from "@/app/components/ui";
 import { toggleFavoriteAction } from "@/app/lib/actions/favorites";
 
@@ -15,50 +15,56 @@ export default function FavoriteButton({
   initialFavorite,
   className = "",
 }: FavoriteButtonProps) {
-  const [isFav, setIsFav] = useState(initialFavorite);
-  const [isLoading, setIsLoading] = useState(false);
+  // useTransition es necesario para que useOptimistic funcione correctamente
+  // ya que las actualizaciones optimistas deben ocurrir dentro de una transición.
+  const [isPending, startTransition] = useTransition();
+
+  // useOptimistic toma el estado base (que viene del servidor) y una función reducer.
+  // Si la acción termina y el estado base no cambió a lo esperado, React revierte automáticamente.
+  const [optimisticIsFav, addOptimisticIsFav] = useOptimistic(
+    initialFavorite,
+    (state, newState: boolean) => newState,
+  );
 
   const handleToggle = async (e: React.MouseEvent) => {
     e.preventDefault(); // Evita navegar si el botón está dentro de un <Link>
     e.stopPropagation();
 
-    if (isLoading) return;
+    // Iniciamos la transición para la Server Action
+    startTransition(async () => {
+      // 1. Actualización optimista inmediata
+      addOptimisticIsFav(!optimisticIsFav);
 
-    // 1. Actualización optimista (inmediata)
-    const previousState = isFav;
-    setIsFav(!isFav);
-    setIsLoading(true);
+      try {
+        // 2. Ejecución de la acción en el servidor
+        const result = await toggleFavoriteAction(productId);
 
-    // 2. Petición al servidor
-    try {
-      const result = await toggleFavoriteAction(productId);
-
-      // 3. Rollback en caso de error
-      if (!result.success) {
-        setIsFav(previousState);
-        alert(result.error || "Hubo un error al guardar el favorito.");
+        if (!result.success) {
+          // Si el servidor falla, React revertirá optimisticIsFav al valor de initialFavorite
+          // automáticamente al finalizar esta función de transición.
+          console.error("Error al guardar favorito:", result.error);
+        }
+      } catch (error) {
+        console.error("Error de red al alternar favorito:", error);
       }
-    } catch (error) {
-      console.error("Error toggling favorite:", error);
-      setIsFav(previousState);
-    } finally {
-      setIsLoading(false);
-    }
+    });
   };
 
   return (
     <button
       onClick={handleToggle}
-      disabled={isLoading}
-      aria-label={isFav ? "Quitar de favoritos" : "Agregar a favoritos"}
+      disabled={isPending}
+      aria-label={
+        optimisticIsFav ? "Quitar de favoritos" : "Agregar a favoritos"
+      }
       className={`flex items-center justify-center transition-colors ${className} ${
-        isFav ? "text-forest" : "text-ink-2 hover:text-forest"
-      }`}
+        optimisticIsFav ? "text-forest" : "text-ink-2 hover:text-forest"
+      } ${isPending ? "opacity-70 cursor-not-allowed" : ""}`}
     >
       <Icon
         name="heart"
         size={16}
-        className={isFav ? "[fill:currentColor]" : ""}
+        className={optimisticIsFav ? "[fill:currentColor]" : ""}
       />
     </button>
   );

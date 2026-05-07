@@ -25,9 +25,9 @@ export default function OrdersPage() {
   const filtered =
     tab === "activos"
       ? orders.filter(
-          (o) => o.status !== "entregado" && o.status !== "cancelado",
+          (o) => o.status !== "delivered" && o.status !== "cancelled",
         )
-      : orders.filter((o) => o.status === "entregado");
+      : orders.filter((o) => o.status === "delivered");
 
   return (
     <div className="pb-6">
@@ -38,12 +38,12 @@ export default function OrdersPage() {
             {
               id: "activos",
               label: "Activos",
-              count: orders.filter((o) => o.status !== "entregado").length,
+              count: orders.filter((o) => o.status !== "delivered").length,
             },
             {
               id: "historial",
               label: "Historial",
-              count: orders.filter((o) => o.status === "entregado").length,
+              count: orders.filter((o) => o.status === "delivered").length,
             },
           ]}
           active={tab}
