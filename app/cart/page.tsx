@@ -10,9 +10,9 @@ import {
   Button,
   EmptyState,
 } from "@/app/components/ui";
-import { UH_PRODUCTS } from "@/app/lib/data";
-import { getProductsByIds } from "@/app/lib/services/seller";
-import { fmtARS } from "@/app/lib/utils";
+import { UH_PRODUCTS } from "@/app/mocks/buyer/data";
+// import { getProductsBatch } from "@/app/lib/services/seller";
+import { fmtARS } from "@/app/lib/utils/format";
 
 export default function CartPage() {
   const router = useRouter();
@@ -24,8 +24,8 @@ export default function CartPage() {
   // getProductsInCart va a estar en lib/db/cart.ts
   // const cart_items_id = getProductsInCart();
 
-  // TODO: Usar getProductsByIds con los productos del carrito
-  //const cartItems = await getProductsByIds(cart_items_id);
+  // TODO: Usar getProductsBatch con los productos del carrito
+  //const cartItems = await getProductsBatch(cart_items_id);
 
   // Initial state with mock items
   const [items, setItems] = useState([
@@ -40,11 +40,11 @@ export default function CartPage() {
   const updateQty = (id: string, d: number) =>
     setItems(
       items.map((i) =>
-        i.id === id ? { ...i, qty: Math.max(1, i.qty + d) } : i,
+        i.product_id === id ? { ...i, qty: Math.max(1, i.qty + d) } : i,
       ),
     );
 
-  const remove = (id: string) => setItems(items.filter((i) => i.id !== id));
+  const remove = (id: string) => setItems(items.filter((i) => i.product_id !== id));
 
   return (
     <div className={items.length ? "pb-[240px]" : "pb-[140px]"}>
@@ -64,7 +64,7 @@ export default function CartPage() {
         <>
           <div className="p-4 flex flex-col gap-3">
             {items.map((i) => (
-              <Card key={i.id} padding={14}>
+              <Card key={i.product_id} padding={14}>
                 <div className="flex gap-3.5">
                   <div
                     className="w-[84px] h-[84px] rounded-r2 flex items-center justify-center shrink-0"
@@ -86,7 +86,7 @@ export default function CartPage() {
                     <div className="flex justify-between items-center">
                       <div className="flex items-center border border-line-2 rounded-full h-8">
                         <button
-                          onClick={() => updateQty(i.id, -1)}
+                          onClick={() => updateQty(i.product_id, -1)}
                           className="px-2.5 h-full active:scale-90 transition-transform"
                         >
                           <Icon name="minus" size={14} />
@@ -95,7 +95,7 @@ export default function CartPage() {
                           {i.qty}
                         </span>
                         <button
-                          onClick={() => updateQty(i.id, 1)}
+                          onClick={() => updateQty(i.product_id, 1)}
                           className="px-2.5 h-full active:scale-90 transition-transform"
                         >
                           <Icon name="plus" size={14} />
@@ -109,7 +109,7 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-end mt-2">
                   <button
-                    onClick={() => remove(i.id)}
+                    onClick={() => remove(i.product_id)}
                     className="text-xs text-danger flex items-center gap-1 hover:underline"
                   >
                     <Icon name="trash" size={12} /> Quitar

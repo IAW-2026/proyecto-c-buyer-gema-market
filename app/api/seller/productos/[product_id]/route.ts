@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_PRODUCTS } from "@/app/api/seller/mock-data";
+import { MOCK_PRODUCTS } from "@/app/mocks/seller/data";
 
 /**
  * GET /api/seller/productos/:product_id

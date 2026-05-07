@@ -1,5 +1,7 @@
 import React from "react";
 
+import Image from "next/image";
+
 interface AvatarProps {
   name?: string;
   size?: number;
@@ -29,7 +31,7 @@ export const Avatar = ({ name = "", size = 40, src }: AvatarProps) => {
       }}
     >
       {src ? (
-        <img src={src} alt={name} className="w-full h-full object-cover" />
+        <Image src={src} alt={name} width={size} height={size} className="w-full h-full object-cover" />
       ) : (
         initials
       )}

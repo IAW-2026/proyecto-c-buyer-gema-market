@@ -50,8 +50,29 @@ export interface ProductDetail extends ProductListItem {
 
 // ── Categoría: GET /api/seller/categorias ────────────────────────────────────
 export interface Category {
-  category_id: string;
-  name: string;
+  category_id: string; // 'cat_living', etc.
+  name: string; // 'Living', etc.
+  icon?: string; // 'sofa', etc. (UI)
+}
+
+// ── Producto Unificado (Mock & UI) ───────────────────────────────────────────
+/**
+ * Representación del producto usada en el frontend.
+ * Combina datos de la API (snake_case) con campos específicos de la UI (UniHousing).
+ */
+export interface Product extends ProductListItem {
+  oldPrice?: number;
+  seller: string;
+  glyph: string;
+  palette: string[];
+  stock: number;
+  location: string;
+  shipping: number;
+  width: number;
+  height: number;
+  depth: number;
+  description?: string;
+  images?: string[];
 }
 
 // ── Tienda: GET /api/seller/shops/:seller_id ──────────────────────────────────
@@ -62,23 +83,6 @@ export interface Shop {
   total_products: number;
   categories: Category[];
   products: ProductListResponse;
-}
-
-// ── Batch: POST /api/seller/productos/batch ──────────────────────────────────
-export interface ProductBatchItem {
-  product_id: string;
-  seller_id: string;
-  title: string;
-  description: string;
-  price: number;
-  currency: string;
-  stock: number;
-  status: ProductStatus;
-  images: string[];
-}
-
-export interface ProductBatchResponse {
-  products: ProductBatchItem[];
 }
 
 // ── Opciones de ordenamiento ──────────────────────────────────────────────────

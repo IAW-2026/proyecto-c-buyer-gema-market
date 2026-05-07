@@ -10,13 +10,12 @@
  */
 
 import type {
-  ProductListItem,
+  // ProductListItem,
   ProductListResponse,
   ProductFilters,
   Category,
   ProductDetail,
   Shop,
-  ProductBatchResponse,
 } from "@/app/lib/types/product";
 
 // ── Configuración ─────────────────────────────────────────────────────────────
@@ -120,52 +119,14 @@ export async function getShopById(
 }
 
 /**
- * Resuelve múltiples productos por id manteniendo el orden recibido.
- * Se usa, por ejemplo, para la pantalla de favoritos.
- */
-export async function getProductsByIds(
-  productIds: string[],
-): Promise<ProductListItem[]> {
-  if (productIds.length === 0) return [];
-
-  const uniqueIds = [...new Set(productIds)];
-
-  const details = await Promise.all(
-    uniqueIds.map((productId) => getProductById(productId)),
-  );
-
-  const byId = new Map(
-    details
-      .filter((detail): detail is ProductDetail => detail !== null)
-      .map((detail) => {
-        const product: ProductListItem = {
-          product_id: detail.product_id,
-          seller_id: detail.seller_id,
-          title: detail.title,
-          price: detail.price,
-          currency: detail.currency,
-          category_id: detail.category_id,
-          status: detail.status,
-          thumbnail_url: detail.thumbnail_url,
-          href: detail.href,
-        };
-        return [product.product_id, product] as const;
-      }),
-  );
-
-  return uniqueIds
-    .map((productId) => byId.get(productId))
-    .filter((product): product is ProductListItem => Boolean(product));
-}
-
-/**
  * POST /api/seller/productos/batch
  * Resuelve un lote de productos por sus IDs en una sola llamada.
  */
 export async function getProductsBatch(
   productIds: string[],
-): Promise<ProductBatchResponse> {
-  if (productIds.length === 0) return { products: [] };
+): Promise<ProductListResponse> {
+  if (productIds.length === 0)
+    return { items: [], page: 0, page_size: 0, total: 0 };
 
   const res = await fetch(`${SELLER_BASE_URL}/productos/batch`, {
     method: "POST",

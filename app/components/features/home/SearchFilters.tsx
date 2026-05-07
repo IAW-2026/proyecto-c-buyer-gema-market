@@ -34,9 +34,11 @@ export default function SearchFilters() {
 
   // Sincronizar filtros pendientes cuando cambia la URL
   // Esto permite que el modal refleje los filtros aplicados desde la URL
-  useEffect(() => {
+  const [prevUrlFilters, setPrevUrlFilters] = useState(urlFilters);
+  if (urlFilters !== prevUrlFilters) {
     setPendingFilters(urlFilters);
-  }, [urlFilters]);
+    setPrevUrlFilters(urlFilters);
+  }
 
   // Manejar click fuera del panel
   useEffect(() => {

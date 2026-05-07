@@ -1,6 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { Carrito, Prisma } from "@prisma/client";
-import { generateUlid } from "../ulidGenerator";
+import { generateUlid } from "../utils/ulidGenerator";
 
 // ─────────────────────────────────────────────
 // Types

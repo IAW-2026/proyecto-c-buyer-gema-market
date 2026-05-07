@@ -11,13 +11,7 @@ import {
   SectionTitle,
   Icon,
 } from "@/app/components/ui";
-
-const fmtARS = (value: number) =>
-  new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  }).format(value);
+import { fmtARS } from "@/app/lib/utils/format";
 
 export default function CheckoutPage() {
   const router = useRouter();

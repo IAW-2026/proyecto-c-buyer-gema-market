@@ -1,7 +1,6 @@
 import { Suspense } from "react";
-import ProductGrid, {
-  buildFiltersFromParams,
-} from "@/app/components/features/home/ProductGrid";
+import ProductGrid from "@/app/components/features/home/ProductGrid";
+import { buildFiltersFromParams } from "@/app/lib/utils/product-filters";
 import ProductGridSkeleton from "@/app/components/products/ProductGridSkeleton";
 import { HeaderHomePage } from "@/app/components/features/home/HeaderHomePage";
 

@@ -5,7 +5,7 @@ import { Icon, Pill, Button, Input } from "../../ui";
 import type { ProductStatus } from "@/app/lib/types/product";
 import { CONDITION_OPTIONS, SORT_OPTIONS } from "./utils/constants";
 import type { ParsedFilters } from "./utils/filterParser";
-import { fmtARS } from "@/app/lib/utils";
+import { fmtARS } from "@/app/lib/utils/format";
 
 interface FiltersPanelProps {
   isOpen: boolean;
@@ -33,7 +33,7 @@ export function FiltersPanel({
   onApply,
   onClear,
 }: FiltersPanelProps) {
-  const handleFilterUpdate = (key: keyof ParsedFilters, value: any) => {
+  const handleFilterUpdate = (key: keyof ParsedFilters, value: ParsedFilters[keyof ParsedFilters]) => {
     onFilterChange({ ...filters, [key]: value });
   };
 

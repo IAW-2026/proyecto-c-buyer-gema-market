@@ -288,7 +288,7 @@ export const MOCK_PRODUCTS = [
   {
     product_id: "prd_01HABCDEF013",
     seller_id: "usr_01HSELLER05",
-    title: "Ventilador de Pie Liliana 18\"",
+    title: 'Ventilador de Pie Liliana 18"',
     description:
       "Ventilador de pie con 3 velocidades, oscilante y altura regulable. Muy potente.",
     price: 48000,

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { MOCK_CATEGORIES } from "@/app/api/seller/mock-data";
+import { MOCK_CATEGORIES } from "@/app/mocks/seller/data";
 
 /**
  * GET /api/seller/categorias

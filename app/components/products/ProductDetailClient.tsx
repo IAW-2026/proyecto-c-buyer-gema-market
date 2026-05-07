@@ -3,15 +3,15 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Icon, Pill, Card, Button, Avatar, Tabs } from "@/app/components/ui";
+import { Icon, Pill, Card, Button, Tabs } from "@/app/components/ui";
 import type { ProductDetail } from "@/app/lib/types/product";
-import { fmtARS } from "@/app/lib/utils";
+import { fmtARS } from "@/app/lib/utils/format";
+import FavoriteButton from "../features/favorites/FavoriteButton";
 
-export default function ProductDetailClient({ p }: { p: ProductDetail }) {
+export default function ProductDetailClient({ p, initialFavorite = false }: { p: ProductDetail, initialFavorite?: boolean }) {
   const router = useRouter();
 
   const [tab, setTab] = useState("descripcion");
-  const [fav, setFav] = useState(false);
   const [qty, setQty] = useState(1);
 
   const handleAddToCart = () => {
@@ -21,7 +21,7 @@ export default function ProductDetailClient({ p }: { p: ProductDetail }) {
     setTimeout(() => router.push("/cart"), 800);
   };
 
-  const sellerName = `Vendedor ${p.seller_id.slice(-4)}`; // Simulated seller name
+  // const sellerName = `Vendedor ${p.seller_id.slice(-4)}`; // Simulated seller name
   const condition = p.status === "new" ? "Nuevo" : "Usado";
   const location = "Bahía Blanca"; // Simulated location
 
@@ -53,18 +53,11 @@ export default function ProductDetailClient({ p }: { p: ProductDetail }) {
                 <Icon name="arrowLeft" size={18} />
               </button>
               <div className="flex gap-2">
-                <button
-                  onClick={() => setFav(!fav)}
-                  className={`w-10 h-10 rounded-full bg-paper/95 flex items-center justify-center shadow-sh-1 active:scale-90 transition-transform ${
-                    fav ? "text-danger" : "text-ink"
-                  }`}
-                >
-                  <Icon
-                    name="heart"
-                    size={18}
-                    className={fav ? "[fill:currentColor]" : ""}
-                  />
-                </button>
+                <FavoriteButton
+                  productId={p.product_id}
+                  initialFavorite={initialFavorite}
+                  className="w-10 h-10 rounded-full bg-paper/95 shadow-sh-1 active:scale-90"
+                />
               </div>
             </div>
           </div>

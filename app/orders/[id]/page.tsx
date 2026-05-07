@@ -7,10 +7,10 @@ import {
   UH_ORDERS as orders,
   UH_STATUS_LABEL,
   UH_PRODUCTS,
-  OrderStatus,
-} from "@/app/lib/data";
+} from "@/app/mocks/buyer/data";
+import { OrderStatus } from "@/app/lib/types/orders";
 
-import { fmtARS } from "@/app/lib/utils";
+import { fmtARS } from "@/app/lib/utils/format";
 
 export default function OrderDetailPage() {
   const params = useParams();
@@ -19,20 +19,23 @@ export default function OrderDetailPage() {
   const o = orders.find((x) => x.id === id) || orders[0];
   const st = UH_STATUS_LABEL[o.status];
 
-  const steps: { id: string; label: string; icon: import("@/app/components/ui").IconName }[] = [
-    { id: "pago_pendiente", label: "Pago confirmado", icon: "check" },
-    { id: "preparando", label: "Preparando tu pedido", icon: "box" },
-    { id: "listo_envio", label: "Listo para envío", icon: "pkg" },
-    { id: "en_camino", label: "En camino", icon: "truck" },
-    { id: "entregado", label: "Entregado", icon: "home" },
+  const steps: {
+    id: OrderStatus;
+    label: string;
+    icon: import("@/app/components/ui").IconName;
+  }[] = [
+    { id: "awaiting_payment", label: "Pago pendiente", icon: "check" },
+    { id: "paid", label: "Pago confirmado", icon: "check" },
+    { id: "shipping", label: "En camino", icon: "truck" },
+    { id: "delivered", label: "Entregado", icon: "home" },
   ];
 
   const orderSequence: OrderStatus[] = [
-    "pago_pendiente",
-    "preparando",
-    "listo_envio",
-    "en_camino",
-    "entregado",
+    "created",
+    "awaiting_payment",
+    "paid",
+    "shipping",
+    "delivered",
   ];
 
   const currentIdx = orderSequence.indexOf(o.status);
@@ -142,7 +145,7 @@ export default function OrderDetailPage() {
           </div>
         </Card>
 
-        {o.status === "entregado" && (
+        {o.status === "delivered" && (
           <Button variant="danger" full icon="alert">
             Iniciar disputa
           </Button>

@@ -146,23 +146,53 @@ export async function getFavorito(
 // ─────────────────────────────────────────────
 // HELPER
 // ─────────────────────────────────────────────
+
 /**
  * Alterna el estado de un favorito: agrega si no existe, elimina si existe
- * 1. isFavorited: verifica si el producto ya es favorito
- * 2. Si existe → deleteFavorito: lo elimina y retorna false
- * 3. Si no existe → createFavorito: lo crea y retorna true
+ * Usa transacción para garantizar atomicidad y evitar race conditions
  * Retorna: true si ahora es favorito, false si ya no lo es
- */ export async function toggleFavorito(
+ */
+export async function toggleFavorito(
   buyerId: string,
   productId: string,
 ): Promise<boolean> {
-  const exists = await isFavorited(buyerId, productId);
+  return prisma.$transaction(async (tx) => {
+    const exists = await tx.favorito.findUnique({
+      where: {
+        buyerId_productId: {
+          buyerId,
+          productId,
+        },
+      },
+    });
 
-  if (exists) {
-    await deleteFavorito(buyerId, productId);
-    return false; // Now it's not favorited
-  } else {
-    await createFavorito({ buyerId, productId });
-    return true; // Now it's favorited
-  }
+    if (exists) {
+      await tx.favorito.delete({
+        where: {
+          buyerId_productId: {
+            buyerId,
+            productId,
+          },
+        },
+      });
+      return false; // Ahora no es favorito
+    } else {
+      await tx.favorito.create({
+        data: { buyerId, productId },
+      });
+      return true; // Ahora es favorito
+    }
+  });
+}
+
+/**
+ * Obtiene solo los IDs de los productos favoritos de un comprador.
+ * Útil para la renderización rápida de listados.
+ */
+export async function getFavoritosIds(buyerId: string): Promise<string[]> {
+  const favoritos = await prisma.favorito.findMany({
+    where: { buyerId },
+    select: { productId: true },
+  });
+  return favoritos.map((f) => f.productId);
 }

@@ -1,20 +1,19 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import type { ProductListItem } from "@/app/lib/types/product";
 import { Icon } from "../ui/Icon";
-import { fmtARS } from "@/app/lib/utils";
+import { fmtARS } from "@/app/lib/utils/format";
+import FavoriteButton from "../features/favorites/FavoriteButton";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 interface ProductCardProps {
   product: ProductListItem;
   compact?: boolean;
+  initialFavorite?: boolean;
 }
 
-export default function ProductCard({ product, compact }: ProductCardProps) {
-  const [fav, setFav] = useState(false);
+export default function ProductCard({ product, compact, initialFavorite = false }: ProductCardProps) {
   const formattedPrice = fmtARS(product.price);
 
   return (
@@ -39,23 +38,13 @@ export default function ProductCard({ product, compact }: ProductCardProps) {
           )}
 
           {/* Botón de favoritos (Corazón) */}
-          <button
-            onClick={(e) => {
-              e.preventDefault(); // evita navegar al detalle
-              e.stopPropagation();
-              setFav(!fav);
-            }}
-            className={`absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-paper/90 backdrop-blur-[8px] flex items-center justify-center transition-colors z-10 ${
-              fav ? "text-red-500" : "text-ink-2 hover:text-red-500"
-            }`}
-            aria-label={fav ? "Quitar de favoritos" : "Agregar a favoritos"}
-          >
-            <Icon
-              name="heart"
-              size={16}
-              className={fav ? "[fill:currentColor]" : ""}
+          <div className="absolute top-2.5 right-2.5 z-10">
+            <FavoriteButton
+              productId={product.product_id}
+              initialFavorite={initialFavorite}
+              className="w-8 h-8 rounded-full bg-paper/90 backdrop-blur-[8px]"
             />
-          </button>
+          </div>
         </div>
 
         {/* ── Info ────────────────────────────────────────────────────────── */}

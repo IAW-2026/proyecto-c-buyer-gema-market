@@ -1,6 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
-import { Orden, OrdenStatus, Prisma } from "@prisma/client";
-import { generateUlid } from "../ulidGenerator";
+import { OrdenStatus, Prisma } from "@prisma/client";
+import { generateUlid } from "../utils/ulidGenerator";
 
 // ─────────────────────────────────────────────
 // Types

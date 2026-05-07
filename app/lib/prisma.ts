@@ -1,9 +1,26 @@
 import { PrismaClient } from "@prisma/client";
 
-const globalForPrisma = global as unknown as {
-  prisma: PrismaClient;
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+/**
+ * Singleton para el cliente Prisma, que se conecta a la base de datos PostgreSQL.
+ */
+const prismaClientSingleton = () => {
+  const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+
+  const adapter = new PrismaPg(pool);
+  return new PrismaClient({ adapter });
 };
 
-export const prisma = globalForPrisma.prisma || new PrismaClient();
+declare global {
+  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
+}
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+
+export { prisma };
+
+if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;

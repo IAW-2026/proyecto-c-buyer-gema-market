@@ -3,7 +3,7 @@
 import { Icon } from "../../ui";
 import clsx from "clsx";
 import Link from "next/link";
-import { generatePagination } from "@/app/lib/utils";
+import { generatePagination } from "@/app/lib/utils/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export default function Pagination({ totalPages }: { totalPages: number }) {

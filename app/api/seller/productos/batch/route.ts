@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_PRODUCTS } from "@/app/api/seller/mock-data";
+import { MOCK_PRODUCTS } from "@/app/mocks/seller/data";
 
 /**
  * POST /api/seller/productos/batch
@@ -21,21 +21,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const products = MOCK_PRODUCTS.filter((p) =>
+    const items = MOCK_PRODUCTS.filter((p) =>
       product_ids.includes(p.product_id),
     ).map((p) => ({
       product_id: p.product_id,
       seller_id: p.seller_id,
       title: p.title,
-      description: p.description,
       price: p.price,
       currency: p.currency,
-      stock: p.stock,
-      status: p.status,
-      images: p.images,
+      category_id: p.category_id,
+      status: p.status as "new" | "used",
+      thumbnail_url: p.thumbnail_url,
+      href: p.href,
     }));
 
-    return NextResponse.json({ products });
+    return NextResponse.json({
+      items,
+      page: 1,
+      page_size: items.length,
+      total: items.length,
+    });
   } catch {
     return NextResponse.json(
       { error: "Invalid request body" },

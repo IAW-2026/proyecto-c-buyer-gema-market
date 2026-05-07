@@ -1,18 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { BottomNav } from "@/app/components/BottomNav";
 import { SideNav } from "@/app/components/SideNav";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-});
+import { inter, jetbrainsMono } from "./lib/fonts";
 
 export const metadata: Metadata = {
   title: "UniHousing — Tu mudanza simplificada",
@@ -42,14 +32,12 @@ export default function RootLayout({
       lang="es"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="min-h-full bg-paper text-ink font-sans">
+      <body className="min-h-full bg-paper text-ink font-sans lgx:bg-cream">
         {/* Desktop sidebar */}
         <SideNav />
 
         {/* Page content — shifted right on desktop */}
-        <main className="pb-16 lgx:pb-0 lgx:ml-[240px]">
-          {children}
-        </main>
+        <main className="pb-16 lgx:pb-0 lgx:ml-60">{children}</main>
 
         {/* Mobile bottom navigation */}
         <BottomNav />

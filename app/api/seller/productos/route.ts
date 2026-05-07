@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_PRODUCTS } from "@/app/api/seller/mock-data";
+import { MOCK_PRODUCTS } from "@/app/mocks/seller/data";
 
 /**
  * GET /api/seller/productos
@@ -79,7 +79,17 @@ export async function GET(req: NextRequest) {
 
   // Devolvemos solo los campos del ProductListItem (sin description, images, etc.)
   const listItems = paginatedItems.map(
-    ({ product_id, seller_id, title, price, currency, category_id, status, thumbnail_url, href }) => ({
+    ({
+      product_id,
+      seller_id,
+      title,
+      price,
+      currency,
+      category_id,
+      status,
+      thumbnail_url,
+      href,
+    }) => ({
       product_id,
       seller_id,
       title,

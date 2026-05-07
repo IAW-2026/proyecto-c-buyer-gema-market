@@ -15,14 +15,8 @@ import {
   UH_ORDERS as orders,
   UH_STATUS_LABEL,
   UH_PRODUCTS,
-} from "@/app/lib/data";
-
-const fmtARS = (value: number) =>
-  new Intl.NumberFormat("es-AR", {
-    style: "currency",
-    currency: "ARS",
-    maximumFractionDigits: 0,
-  }).format(value);
+} from "@/app/mocks/buyer/data";
+import { fmtARS } from "@/app/lib/utils/format";
 
 export default function OrdersPage() {
   const router = useRouter();

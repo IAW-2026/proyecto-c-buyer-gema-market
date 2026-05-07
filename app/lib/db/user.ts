@@ -1,6 +1,6 @@
 import { prisma } from "@/app/lib/prisma";
 import { Usuario, Role } from "@prisma/client";
-import { generateUlid } from "@/app/lib/ulidGenerator";
+import { generateUlid } from "@/app/lib/utils/ulidGenerator";
 
 // ─────────────────────────────────────────────
 // Types
