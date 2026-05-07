@@ -2,7 +2,7 @@ import React from "react";
 import { Icon, IconName } from "./Icon";
 
 interface ButtonProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   variant?: "primary" | "secondary" | "ghost" | "danger" | "accent" | "soft";
   size?: "sm" | "md" | "lg";
   icon?: IconName;
@@ -12,6 +12,7 @@ interface ButtonProps {
   disabled?: boolean;
   type?: "button" | "submit" | "reset";
   className?: string;
+  ariaLabel?: string;
 }
 
 export const Button = ({
@@ -25,6 +26,7 @@ export const Button = ({
   disabled,
   type = "button",
   className = "",
+  ariaLabel,
 }: ButtonProps) => {
   const sizeMap = {
     sm: "h-[34px] px-3.5 text-[13px] gap-1.5",
@@ -50,6 +52,7 @@ export const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
+      aria-label={ariaLabel}
       className={`inline-flex items-center justify-center rounded-full font-medium tracking-[-0.01em] max-w-full min-w-0 whitespace-nowrap transition-[transform,opacity] duration-100 ${
         sizeMap[size]
       } ${variantMap[variant]} ${widthCls} ${stateCls} ${className}`}

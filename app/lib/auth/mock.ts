@@ -10,7 +10,7 @@
  *   return userId;
  */
 
-export const DEV_USER_ID = "usr_01JTTESTUSER00000000000001";
+import { getUsuarioByClerkId } from "../db/user";
 
 /**
  * Retorna el ID del usuario actual.
@@ -18,5 +18,13 @@ export const DEV_USER_ID = "usr_01JTTESTUSER00000000000001";
  */
 export async function getCurrentUserId(): Promise<string> {
   // TODO: reemplazar con Clerk cuando auth esté lista
-  return DEV_USER_ID;
+  const id_clerk = "mock_clerk_user_dev";
+
+  // Hace consulta a la base de datos para obtener el id del usuario con el id de clerk
+  const usuario = await getUsuarioByClerkId(id_clerk);
+  if (usuario) {
+    return usuario.id;
+  }
+
+  return "";
 }

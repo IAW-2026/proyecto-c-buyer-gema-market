@@ -176,7 +176,7 @@ export const Icon = ({ name, size = 20, stroke = 1.5, className = "" }: IconProp
   };
 
   return (
-    <svg {...props}>
+    <svg {...props} aria-hidden="true">
       {paths[name] || paths.box}
     </svg>
   );

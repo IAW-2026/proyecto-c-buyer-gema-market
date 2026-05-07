@@ -50,6 +50,7 @@ export function FiltersPanel({
         <div className="text-[15px] font-bold text-ink">Filtros</div>
         <button
           onClick={onClose}
+          aria-label="Cerrar filtros"
           className="w-8 h-8 rounded-full bg-bone flex items-center justify-center text-ink-3 hover:text-ink transition-colors"
         >
           <Icon name="close" size={15} />
@@ -116,6 +117,7 @@ export function FiltersPanel({
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFilterUpdate("maxPrice", Number(e.target.value))
           }
+          aria-label="Precio máximo"
           className="w-full cursor-pointer [accent-color:#333d29]"
         />
         <Input

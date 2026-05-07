@@ -87,6 +87,7 @@ export default function CartPage() {
                       <div className="flex items-center border border-line-2 rounded-full h-8">
                         <button
                           onClick={() => updateQty(i.product_id, -1)}
+                          aria-label="Disminuir cantidad"
                           className="px-2.5 h-full active:scale-90 transition-transform"
                         >
                           <Icon name="minus" size={14} />
@@ -96,6 +97,7 @@ export default function CartPage() {
                         </span>
                         <button
                           onClick={() => updateQty(i.product_id, 1)}
+                          aria-label="Aumentar cantidad"
                           className="px-2.5 h-full active:scale-90 transition-transform"
                         >
                           <Icon name="plus" size={14} />

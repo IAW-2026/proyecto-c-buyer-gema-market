@@ -32,7 +32,7 @@ export default function RootLayout({
       lang="es"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="min-h-full bg-paper text-ink font-sans lgx:bg-cream">
+      <body className="min-h-full bg-cream text-ink font-sans">
         {/* Desktop sidebar */}
         <SideNav />
 

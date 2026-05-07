@@ -86,7 +86,7 @@
   }
 
   body {
-    background-color: var(--color-paper);
+    background-color: var(--color-cream);
     color: var(--color-ink);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

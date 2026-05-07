@@ -8,7 +8,13 @@ import type { ProductDetail } from "@/app/lib/types/product";
 import { fmtARS } from "@/app/lib/utils/format";
 import FavoriteButton from "../features/favorites/FavoriteButton";
 
-export default function ProductDetailClient({ p, initialFavorite = false }: { p: ProductDetail, initialFavorite?: boolean }) {
+export default function ProductDetailClient({
+  p,
+  initialFavorite = false,
+}: {
+  p: ProductDetail;
+  initialFavorite?: boolean;
+}) {
   const router = useRouter();
 
   const [tab, setTab] = useState("descripcion");
@@ -48,6 +54,7 @@ export default function ProductDetailClient({ p, initialFavorite = false }: { p:
             <div className="absolute top-4 left-4 right-4 flex justify-between z-10">
               <button
                 onClick={() => router.back()}
+                aria-label="Volver"
                 className="w-10 h-10 rounded-full bg-paper/95 flex items-center justify-center shadow-sh-1 active:scale-90 transition-transform"
               >
                 <Icon name="arrowLeft" size={18} />
@@ -121,6 +128,7 @@ export default function ProductDetailClient({ p, initialFavorite = false }: { p:
             <div className="flex items-center border border-line-2 rounded-full h-12">
               <button
                 onClick={() => setQty(Math.max(1, qty - 1))}
+                aria-label="Disminuir cantidad"
                 className="px-3 h-full active:scale-90 transition-transform"
               >
                 <Icon name="minus" size={16} />
@@ -128,6 +136,7 @@ export default function ProductDetailClient({ p, initialFavorite = false }: { p:
               <span className="min-w-6 text-center font-semibold">{qty}</span>
               <button
                 onClick={() => setQty(Math.min(p.stock || 10, qty + 1))}
+                aria-label="Aumentar cantidad"
                 className="px-3 h-full active:scale-90 transition-transform"
               >
                 <Icon name="plus" size={16} />
@@ -149,7 +158,12 @@ export default function ProductDetailClient({ p, initialFavorite = false }: { p:
             />
           </div>
 
-          <div className="py-5 text-sm text-ink-2 leading-[1.6] min-h-[200px] w-full">
+          <div
+            className="py-5 text-sm text-ink-2 leading-[1.6] min-h-[200px] w-full"
+            role="tabpanel"
+            id={`tab-panel-${tab}`}
+            aria-labelledby={`tab-${tab}`}
+          >
             {tab === "descripcion" && (
               <p className="w-full">
                 {p.description || "Sin descripción disponible."}

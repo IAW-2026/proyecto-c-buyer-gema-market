@@ -34,6 +34,7 @@ export const TopBar = ({ title, back, action, transparent }: TopBarProps) => {
         {back && (
           <button
             onClick={handleBack}
+            aria-label="Volver"
             className="w-10 h-10 rounded-full bg-bone flex items-center justify-center transition-transform active:scale-95"
           >
             <Icon name="arrowLeft" size={18} />

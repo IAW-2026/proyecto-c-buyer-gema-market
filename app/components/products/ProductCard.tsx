@@ -13,7 +13,11 @@ interface ProductCardProps {
   initialFavorite?: boolean;
 }
 
-export default function ProductCard({ product, compact, initialFavorite = false }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  compact,
+  initialFavorite = false,
+}: ProductCardProps) {
   const formattedPrice = fmtARS(product.price);
 
   return (

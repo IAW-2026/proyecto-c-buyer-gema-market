@@ -38,6 +38,7 @@ model Usuario {
   clerkUserId   String   @unique @map("clerk_user_id")
   email         String
   fullName      String   @map("full_name")
+  phoneNumber   String?  @map("phone_number")
   address       Json?
   role          Role     @default(buyer)
   createdAt     DateTime @default(now()) @map("created_at")

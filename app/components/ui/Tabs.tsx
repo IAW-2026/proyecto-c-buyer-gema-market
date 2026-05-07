@@ -13,7 +13,7 @@ interface TabsProps {
 }
 
 export const Tabs = ({ tabs, active, onChange }: TabsProps) => (
-  <div className="flex gap-1 border-b border-line overflow-x-auto max-w-full no-scrollbar [-webkit-overflow-scrolling:touch] flex-wrap-mobile">
+  <div role="tablist" className="flex gap-1 border-b border-line overflow-x-auto max-w-full no-scrollbar [-webkit-overflow-scrolling:touch] flex-wrap-mobile">
     {tabs.map((t) => {
       const id = typeof t === "string" ? t : t.id;
       const label = typeof t === "string" ? t : t.label;
@@ -23,6 +23,10 @@ export const Tabs = ({ tabs, active, onChange }: TabsProps) => (
       return (
         <button
           key={id}
+          role="tab"
+          aria-selected={isActive}
+          aria-controls={`tab-panel-${id}`}
+          id={`tab-${id}`}
           onClick={() => onChange(id)}
           className={`px-4 py-3 text-sm font-medium -mb-px flex items-center gap-2 whitespace-nowrap shrink-0 max-[520px]:px-2.5 max-[520px]:text-[13px] max-[520px]:gap-1.5 transition-colors ${
             isActive

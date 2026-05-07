@@ -27,6 +27,7 @@ export default function LoginPage() {
       <div className="mb-8 lgx:fixed lgx:top-8 lgx:left-8 lgx:m-0">
         <button
           onClick={() => router.push("/")}
+          aria-label="Volver"
           className="w-10 h-10 rounded-full bg-paper flex items-center justify-center active:scale-90 transition-transform shadow-sh-1"
         >
           <Icon name="arrowLeft" size={18} />
@@ -35,6 +36,7 @@ export default function LoginPage() {
       <div className="max-w-[420px] mx-auto w-full flex-1 lgx:flex-none lgx:max-w-[520px] lgx:bg-paper lgx:border lgx:border-line lgx:rounded-[26px] lgx:shadow-sh-3 lgx:px-14 lgx:pt-[52px] lgx:pb-9">
         <button
           onClick={() => router.push("/")}
+          aria-label="Ir al inicio"
           className="inline-flex lgx:flex lgx:justify-center lgx:w-full active:scale-95 transition-transform"
         >
           <Logo size={32} />

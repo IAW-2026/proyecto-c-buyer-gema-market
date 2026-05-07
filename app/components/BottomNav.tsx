@@ -38,6 +38,7 @@ export const BottomNav = () => {
           <Link
             key={it.id}
             href={it.route}
+            aria-label={it.label}
             className={`flex flex-col items-center gap-[3px] px-3.5 py-1.5 rounded-r2 relative transition-colors ${
               isActive ? "text-forest" : "text-ink-3 hover:text-ink-2"
             }`}

@@ -110,6 +110,7 @@ export default function SearchFilters() {
         {/* Botón de filtros */}
         <button
           onClick={() => setIsOpen((prev) => !prev)}
+          aria-label="Filtros"
           className={`h-[46px] rounded-r2 border border-line-2 px-3.5 inline-flex items-center gap-2 text-ink text-[13px] font-semibold whitespace-nowrap transition-all max-[640px]:px-3 ${
             isOpen ? "bg-bone border-ink" : "bg-paper hover:bg-bone"
           }`}

@@ -9,15 +9,14 @@ import { generateUlid } from "@/app/lib/utils/ulidGenerator";
 export type Address = {
   street: string;
   city: string;
-  state: string;
   postalCode: string;
-  country: string;
 };
 
 type CreateUsuarioInput = {
   clerkUserId: string;
   email: string;
   fullName: string;
+  phoneNumber?: string;
   address?: Address;
   role?: Role;
 };
@@ -29,6 +28,7 @@ type CreateUsuarioInput = {
 type UpdateUsuarioInput = Partial<{
   email: string;
   fullName: string;
+  phoneNumber: string;
   address: Address;
   role: Role;
 }>;
@@ -53,6 +53,7 @@ export async function createUsuario(
       clerkUserId: data.clerkUserId,
       email: data.email,
       fullName: data.fullName,
+      phoneNumber: data.phoneNumber ?? null,
       address: data.address ?? undefined,
       role: data.role ?? "buyer",
     },
