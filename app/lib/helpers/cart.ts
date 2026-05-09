@@ -8,6 +8,7 @@ import type { ProductListItem } from "@/app/lib/types/product";
  */
 export interface CartItemWithProduct extends ProductListItem {
   quantity: number;
+  item_id: string;
 }
 
 /**
@@ -36,15 +37,22 @@ export async function getCartWithProducts(): Promise<CartItemWithProduct[]> {
     const response = await getProductsBatch(productIds);
     const products = response?.items || [];
 
-    // 4. Mapear los productos para incluir la cantidad almacenada en el carrito
+    // 4. Mapear los productos para incluir la cantidad y el ID del item del carrito
     const itemMap = new Map(
-      carrito.items.map((item) => [item.productId, item.quantity]),
+      carrito.items.map((item) => [
+        item.productId,
+        { quantity: item.quantity, id: item.id },
+      ]),
     );
 
-    return products.map((product) => ({
-      ...product,
-      quantity: itemMap.get(product.product_id) || 0,
-    }));
+    return products.map((product) => {
+      const cartData = itemMap.get(product.product_id);
+      return {
+        ...product,
+        quantity: cartData?.quantity || 0,
+        item_id: cartData?.id || "",
+      };
+    });
   } catch (error) {
     console.error("Error fetching cart with products:", error);
     return [];

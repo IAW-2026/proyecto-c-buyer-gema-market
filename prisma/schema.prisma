@@ -92,6 +92,8 @@ model ItemCarrito {
 
   carrito    Carrito  @relation(fields: [carritoId], references: [id])
 
+  // Un mismo producto solo puede aparecer una vez por carrito
+  @@unique([carritoId, productId])
   @@map("item_carrito")
 }
 

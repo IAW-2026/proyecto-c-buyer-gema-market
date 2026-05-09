@@ -6,6 +6,7 @@ interface CartSummaryProps {
   ship: number;
   total: number;
   onCheckout: () => void;
+  isPending?: boolean;
 }
 
 /**
@@ -16,6 +17,7 @@ export function CartSummary({
   ship,
   total,
   onCheckout,
+  isPending,
 }: CartSummaryProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line px-4 py-3 z-50 lgx:left-[240px]">
@@ -40,6 +42,7 @@ export function CartSummary({
           variant="accent"
           iconRight="arrowRight"
           onClick={onCheckout}
+          disabled={isPending}
         >
           Continuar al checkout
         </Button>

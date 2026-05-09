@@ -13,6 +13,7 @@ interface ButtonProps {
   type?: "button" | "submit" | "reset";
   className?: string;
   ariaLabel?: string;
+  loading?: boolean;
 }
 
 export const Button = ({
@@ -27,6 +28,7 @@ export const Button = ({
   type = "button",
   className = "",
   ariaLabel,
+  loading,
 }: ButtonProps) => {
   const sizeMap = {
     sm: "h-[34px] px-3.5 text-[13px] gap-1.5",
@@ -43,9 +45,10 @@ export const Button = ({
     soft: "bg-bone text-olive border border-transparent",
   };
   const widthCls = full ? "w-full" : "w-auto";
-  const stateCls = disabled
-    ? "opacity-50 cursor-not-allowed"
-    : "cursor-pointer active:scale-[0.98]";
+  const stateCls =
+    disabled || loading
+      ? "opacity-50 cursor-not-allowed"
+      : "cursor-pointer active:scale-[0.98]";
 
   return (
     <button
@@ -57,9 +60,17 @@ export const Button = ({
         sizeMap[size]
       } ${variantMap[variant]} ${widthCls} ${stateCls} ${className}`}
     >
-      {icon && <Icon name={icon} size={iconSizes[size]} />}
-      {children}
-      {iconRight && <Icon name={iconRight} size={iconSizes[size]} />}
+      {loading ? (
+        <div
+          className={`w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin`}
+        />
+      ) : (
+        <>
+          {icon && <Icon name={icon} size={iconSizes[size]} />}
+          {children}
+          {iconRight && <Icon name={iconRight} size={iconSizes[size]} />}
+        </>
+      )}
     </button>
   );
 };

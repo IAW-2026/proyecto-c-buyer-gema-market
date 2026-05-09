@@ -44,6 +44,42 @@ export async function createItemCarrito(
   });
 }
 
+/**
+ * Agrega un producto al carrito de forma segura (upsert).
+ * Si el producto ya existe en el carrito, incrementa la cantidad.
+ * Si no existe, lo crea.
+ * Respeta la restricción @@unique([carritoId, productId]).
+ * Retorna: ItemCarrito actualizado o creado.
+ */
+export async function upsertItemCarrito(
+  data: CreateItemCarritoInput,
+): Promise<ItemCarrito> {
+  const existing = await prisma.itemCarrito.findFirst({
+    where: {
+      carritoId: data.carritoId,
+      productId: data.productId,
+    },
+  });
+
+  if (existing) {
+    // Ya existe: sumar la cantidad
+    return prisma.itemCarrito.update({
+      where: { id: existing.id },
+      data: { quantity: existing.quantity + data.quantity },
+    });
+  }
+
+  // No existe: crear nuevo
+  return prisma.itemCarrito.create({
+    data: {
+      id: generateUlid("itm"),
+      carritoId: data.carritoId,
+      productId: data.productId,
+      quantity: data.quantity,
+    },
+  });
+}
+
 // ─────────────────────────────────────────────
 // READ
 // ─────────────────────────────────────────────

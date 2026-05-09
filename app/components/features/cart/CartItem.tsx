@@ -2,19 +2,26 @@ import { Card, Icon } from "@/app/components/ui";
 import { fmtARS } from "@/app/lib/utils/format";
 import Image from "next/image";
 import type { CartItemWithProduct } from "@/app/lib/helpers/cart";
+import Link from "next/link";
 
 interface CartItemProps {
   item: CartItemWithProduct;
   onUpdateQuantity: (id: string, delta: number) => void;
   onRemove: (id: string) => void;
+  isPending?: boolean;
 }
 
 /**
  * Componente que representa una fila individual en el carrito.
  */
-export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
+export function CartItem({
+  item,
+  onUpdateQuantity,
+  onRemove,
+  isPending,
+}: CartItemProps) {
   return (
-    <Card padding={14}>
+    <Card padding={14} className={isPending ? "opacity-60 transition-opacity" : ""}>
       <div className="flex gap-3.5">
         <div className="w-[84px] h-[84px] rounded-r2 flex items-center justify-center shrink-0 bg-bone relative overflow-hidden">
           {item.thumbnail_url ? (
@@ -29,13 +36,19 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-medium mb-2">{item.title}</div>
+          <Link
+            href={`/product/${item.product_id}`}
+            className="text-sm font-medium mb-2 hover:underline"
+          >
+            {item.title}
+          </Link>
           <div className="flex justify-between items-center">
             <div className="flex items-center border border-line-2 rounded-full h-8">
               <button
                 onClick={() => onUpdateQuantity(item.product_id, -1)}
+                disabled={isPending}
                 aria-label="Disminuir cantidad"
-                className="px-2.5 h-full active:scale-90 transition-transform"
+                className="px-2.5 h-full active:scale-90 transition-transform disabled:opacity-30"
               >
                 <Icon name="minus" size={14} />
               </button>
@@ -44,8 +57,9 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
               </span>
               <button
                 onClick={() => onUpdateQuantity(item.product_id, 1)}
+                disabled={isPending}
                 aria-label="Aumentar cantidad"
-                className="px-2.5 h-full active:scale-90 transition-transform"
+                className="px-2.5 h-full active:scale-90 transition-transform disabled:opacity-30"
               >
                 <Icon name="plus" size={14} />
               </button>
@@ -59,7 +73,8 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
       <div className="flex justify-end mt-2">
         <button
           onClick={() => onRemove(item.product_id)}
-          className="text-xs text-danger flex items-center gap-1 hover:underline"
+          disabled={isPending}
+          className="text-xs text-danger flex items-center gap-1 hover:underline disabled:opacity-50"
         >
           <Icon name="trash" size={12} /> Quitar
         </button>

@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Icon, Pill, Card, Button, Tabs } from "@/app/components/ui";
 import type { ProductDetail } from "@/app/lib/types/product";
 import { fmtARS } from "@/app/lib/utils/format";
 import FavoriteButton from "../features/favorites/FavoriteButton";
+import { addToCartAction } from "@/app/lib/actions/cart";
 
 export default function ProductDetailClient({
   p,
@@ -16,21 +17,42 @@ export default function ProductDetailClient({
   initialFavorite?: boolean;
 }) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const [tab, setTab] = useState("descripcion");
-  const [qty, setQty] = useState(1);
+  const [quantity, setQuantity] = useState(1);
+  const [notification, setNotification] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
 
   const handleAddToCart = () => {
-    // Se hace una query para agregar el producto al carrito
+    startTransition(async () => {
+      const result = await addToCartAction(p.product_id, quantity);
 
-    alert("Agregado al carrito");
-    setTimeout(() => router.push("/cart"), 800);
+      if (result.success) {
+        setNotification({
+          type: "success",
+          message: `¡Agregado al carrito! (${quantity} ${
+            quantity === 1 ? "unidad" : "unidades"
+          })`,
+        });
+        setTimeout(() => setNotification(null), 3000);
+      } else {
+        setNotification({
+          type: "error",
+          message: result.error || "No se pudo agregar al carrito",
+        });
+        setTimeout(() => setNotification(null), 3000);
+      }
+    });
   };
 
   // const sellerName = `Vendedor ${p.seller_id.slice(-4)}`; // Simulated seller name
   const condition = p.status === "new" ? "Nuevo" : "Usado";
   const location = "Bahía Blanca"; // Simulated location
 
+  // TODO, pedir cotizacion de envios
   const shipping = 5000; // Simulated shipping
 
   return (
@@ -107,6 +129,7 @@ export default function ProductDetailClient({
             </Button>
           </Card> */}
 
+          {/* Card de envío */}
           <Card padding={14} className="mb-5">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-bone flex items-center justify-center">
@@ -124,29 +147,46 @@ export default function ProductDetailClient({
             </div>
           </Card>
 
+          {/* Botón para agregar al carrito */}
           <div className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line px-4 py-3 flex gap-2.5 z-50 max-w-[600px] mx-auto lgx:static lgx:max-w-none lgx:bg-transparent lgx:backdrop-blur-none lgx:border-t lgx:border-line lgx:px-0 lgx:pt-4 lgx:pb-0 lgx:mt-5">
-            <div className="flex items-center border border-line-2 rounded-full h-12">
+            <div className="flex items-center border border-line-2 rounded-full h-12 bg-paper shadow-sm">
               <button
-                onClick={() => setQty(Math.max(1, qty - 1))}
+                type="button"
+                onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 aria-label="Disminuir cantidad"
-                className="px-3 h-full active:scale-90 transition-transform"
+                disabled={quantity <= 1 || isPending}
+                className="px-4 h-full active:scale-90 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <Icon name="minus" size={16} />
               </button>
-              <span className="min-w-6 text-center font-semibold">{qty}</span>
+              <span className="min-w-[40px] text-center font-bold text-lg select-none">
+                {quantity}
+              </span>
               <button
-                onClick={() => setQty(Math.min(p.stock || 10, qty + 1))}
+                type="button"
+                onClick={() =>
+                  setQuantity((q) => Math.min(p.stock || 99, q + 1))
+                }
                 aria-label="Aumentar cantidad"
-                className="px-3 h-full active:scale-90 transition-transform"
+                disabled={quantity >= (p.stock || 99) || isPending}
+                className="px-4 h-full active:scale-90 transition-transform disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 <Icon name="plus" size={16} />
               </button>
             </div>
-            <Button size="lg" full variant="accent" onClick={handleAddToCart}>
+            <Button
+              size="lg"
+              full
+              variant="accent"
+              onClick={handleAddToCart}
+              loading={isPending}
+              disabled={isPending}
+            >
               Agregar al carrito
             </Button>
           </div>
 
+          {/** Tabs de descripción y especificaciones */}
           <div className="mt-8">
             <Tabs
               tabs={[
@@ -185,6 +225,45 @@ export default function ProductDetailClient({
             )}
           </div>
         </div>
+      </div>
+
+      {/* Notificación (Toast) */}
+      <div
+        className={`fixed top-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ease-out transform ${
+          notification
+            ? "translate-y-0 opacity-100"
+            : "-translate-y-8 opacity-0 pointer-events-none"
+        }`}
+      >
+        {/* Usamos un contenedor interno que solo cambia si hay una notificación activa 
+            para evitar el "flash" de color al cerrar */}
+        {notification && (
+          <div
+            className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-sh-2 border backdrop-blur-md transition-colors ${
+              notification.type === "success"
+                ? "bg-moss/90 border-moss/20 text-paper"
+                : "bg-red-600/90 border-red-500/20 text-paper"
+            }`}
+          >
+            <Icon
+              name={notification.type === "success" ? "check" : "alertCircle"}
+              size={20}
+            />
+            <span className="font-medium text-sm tracking-tight">
+              {notification.message}
+            </span>
+            {notification.type === "success" && (
+              <Button
+                size="sm"
+                variant="secondary"
+                className="ml-2 bg-paper/20 hover:bg-paper/30 border-transparent text-paper h-8 px-3"
+                onClick={() => router.push("/cart")}
+              >
+                Ver carrito
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

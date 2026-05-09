@@ -18,7 +18,7 @@ import { getUsuarioByClerkId } from "../db/user";
  */
 export async function getCurrentUserId(): Promise<string> {
   // TODO: reemplazar con Clerk cuando auth esté lista
-  const id_clerk = "mock_clerk_user_dev";
+  const id_clerk = "mock_clerk_user_dev2";
 
   // Hace consulta a la base de datos para obtener el id del usuario con el id de clerk
   const usuario = await getUsuarioByClerkId(id_clerk);
