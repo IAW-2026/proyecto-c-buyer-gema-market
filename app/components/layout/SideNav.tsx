@@ -1,11 +1,9 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Icon } from "./ui/Icon";
-import { Avatar } from "./ui/Avatar";
-import { IconName } from "./ui";
+import { Icon, IconName } from "../ui";
+import { Avatar } from "../ui/Avatar";
 
 interface NavItem {
   id: string;

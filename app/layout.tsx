@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { BottomNav } from "@/app/components/BottomNav";
-import { SideNav } from "@/app/components/SideNav";
+
 import { inter, jetbrainsMono } from "./lib/fonts";
+import { SideNav } from "./components/layout/SideNav";
+import { BottomNav } from "./components/layout/BottomNav";
 
 export const metadata: Metadata = {
   title: "UniHousing — Tu mudanza simplificada",
@@ -18,8 +19,6 @@ export const viewport: Viewport = {
   themeColor: "#faf8f3",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function RootLayout({
