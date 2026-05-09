@@ -7,6 +7,9 @@ import SearchFilters from "./SearchFilters";
 export function HeaderHomePage() {
   return (
     <div className="sticky top-0 z-30 bg-paper/90 backdrop-blur-md px-4 pt-3 border-b border-line lgx:px-7">
+      {/* H1 oculto para accesibilidad y SEO */}
+      <h1 className="sr-only">UniHousing — Tu mudanza simplificada</h1>
+      
       {/* Cabecera (Logo + Botón de carrito) */}
       <div className="mb-3 flex w-full items-center gap-3 lgx:mx-auto lgx:max-w-295">
         <Link href="/" className="inline-flex items-center" aria-label="Ir al inicio">

@@ -62,7 +62,6 @@ export async function upsertItemCarrito(
   });
 
   if (existing) {
-    // Ya existe: sumar la cantidad
     return prisma.itemCarrito.update({
       where: { id: existing.id },
       data: { quantity: existing.quantity + data.quantity },

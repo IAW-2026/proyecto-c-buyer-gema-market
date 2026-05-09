@@ -74,6 +74,7 @@ export function CartItem({
         <button
           onClick={() => onRemove(item.product_id)}
           disabled={isPending}
+          aria-label={`Quitar ${item.title} del carrito`}
           className="text-xs text-danger flex items-center gap-1 hover:underline disabled:opacity-50"
         >
           <Icon name="trash" size={12} /> Quitar

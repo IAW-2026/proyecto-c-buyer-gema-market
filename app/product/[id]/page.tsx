@@ -12,16 +12,18 @@ interface PageProps {
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
-  const p = await getProductById(resolvedParams.id);
+  
+  // 1. Obtenemos el producto y el userId en paralelo
+  const [p, userId] = await Promise.all([
+    getProductById(resolvedParams.id),
+    getCurrentUserId()
+  ]);
 
   if (!p) {
     notFound();
   }
 
-  // 2. Simulamos obtener el userId de la sesión
-  // const userId = await getUserId();
-  const userId = await getCurrentUserId();
-  //const favoriteProductIds = await getFavoritosIds(userId);
+  // 2. Obtenemos los favoritos del usuario
   const favoriteProductIds = await getFavoritosIds(userId);
   const initialFavorite = favoriteProductIds.includes(p.product_id);
 

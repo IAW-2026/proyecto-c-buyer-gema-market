@@ -27,7 +27,7 @@ export const BottomNav = () => {
   if (hideOnPaths.includes(pathname)) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line flex justify-around px-1 pt-2 pb-safe-bottom z-50 lgx:hidden">
+    <nav aria-label="Navegación móvil" className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line flex justify-around px-1 pt-2 pb-safe-bottom z-50 lgx:hidden">
       {items.map((it) => {
         const isActive =
           pathname === it.route ||
@@ -38,6 +38,7 @@ export const BottomNav = () => {
             key={it.id}
             href={it.route}
             aria-label={it.label}
+            aria-current={isActive ? "page" : undefined}
             className={`flex flex-col items-center gap-[3px] px-3.5 py-1.5 rounded-r2 relative transition-colors ${
               isActive ? "text-forest" : "text-ink-3 hover:text-ink-2"
             }`}

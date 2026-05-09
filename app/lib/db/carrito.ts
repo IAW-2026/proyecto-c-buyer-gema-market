@@ -11,7 +11,7 @@ type CreateCarritoInput = {
 };
 
 type CarritoConRelaciones = Prisma.CarritoGetPayload<{
-  include: { items: true; buyer: true };
+  include: { items: true };
 }>;
 
 // ─────────────────────────────────────────────
@@ -48,7 +48,7 @@ export async function getCarritoById(
 ): Promise<CarritoConRelaciones | null> {
   return prisma.carrito.findUnique({
     where: { id },
-    include: { items: true, buyer: true },
+    include: { items: true },
   });
 }
 /**
@@ -62,7 +62,7 @@ export async function getCarritoById(
 ): Promise<CarritoConRelaciones | null> {
   return prisma.carrito.findFirst({
     where: { buyerId },
-    include: { items: true, buyer: true },
+    include: { items: true },
   });
 }
 /**
@@ -72,7 +72,7 @@ export async function getCarritoById(
  * Retorna: Array de Carritos con sus relaciones
  */ export async function getAllCarritos(): Promise<CarritoConRelaciones[]> {
   return prisma.carrito.findMany({
-    include: { items: true, buyer: true },
+    include: { items: true },
   });
 }
 

@@ -43,28 +43,32 @@ export const SideNav = () => {
         </div>
       </Link>
 
-      <nav className="flex flex-col gap-0.5 flex-1">
-        {/* original index.html filters out search from the sidebar */}
-        {NAV_ITEMS.filter((it) => it.id !== "search").map((it) => {
-          const isActive =
-            pathname === it.route ||
-            (it.route !== "/" && pathname.startsWith(it.route));
+      <nav aria-label="Navegación principal" className="flex flex-col gap-0.5 flex-1">
+        <ul className="flex flex-col gap-0.5 list-none p-0 m-0">
+          {/* original index.html filters out search from the sidebar */}
+          {NAV_ITEMS.filter((it) => it.id !== "search").map((it) => {
+            const isActive =
+              pathname === it.route ||
+              (it.route !== "/" && pathname.startsWith(it.route));
 
-          return (
-            <Link
-              key={it.id}
-              href={it.route}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors ${
-                isActive
-                  ? "bg-bone text-olive font-semibold"
-                  : "bg-transparent text-ink-2 font-medium hover:bg-bone/50"
-              }`}
-            >
-              <Icon name={it.icon} size={18} />
-              {it.label}
-            </Link>
-          );
-        })}
+            return (
+              <li key={it.id}>
+                <Link
+                  href={it.route}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm transition-colors ${
+                    isActive
+                      ? "bg-bone text-olive font-semibold"
+                      : "bg-transparent text-ink-2 font-medium hover:bg-bone/50"
+                  }`}
+                >
+                  <Icon name={it.icon} size={18} />
+                  {it.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </nav>
 
       {/* Profile matching index.html */}

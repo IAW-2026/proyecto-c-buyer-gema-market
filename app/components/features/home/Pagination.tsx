@@ -21,40 +21,40 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
 
   return (
     <>
-      <div className="flex items-center gap-2">
-        <PaginationArrow
-          direction="left"
-          href={createPageURL(currentPage - 1)}
-          isDisabled={currentPage <= 1}
-        />
+    <nav aria-label="Paginación" className="flex items-center gap-2">
+      <PaginationArrow
+        direction="left"
+        href={createPageURL(currentPage - 1)}
+        isDisabled={currentPage <= 1}
+      />
 
-        <div className="flex items-center gap-1.5">
-          {allPages.map((page, index) => {
-            let position: "first" | "last" | "single" | "middle" | undefined;
+      <div className="flex items-center gap-1.5">
+        {allPages.map((page, index) => {
+          let position: "first" | "last" | "single" | "middle" | undefined;
 
-            if (index === 0) position = "first";
-            if (index === allPages.length - 1) position = "last";
-            if (allPages.length === 1) position = "single";
-            if (page === "...") position = "middle";
+          if (index === 0) position = "first";
+          if (index === allPages.length - 1) position = "last";
+          if (allPages.length === 1) position = "single";
+          if (page === "...") position = "middle";
 
-            return (
-              <PaginationNumber
-                key={`${page}-${index}`}
-                href={createPageURL(page)}
-                page={page}
-                position={position}
-                isActive={currentPage === page}
-              />
-            );
-          })}
-        </div>
-
-        <PaginationArrow
-          direction="right"
-          href={createPageURL(currentPage + 1)}
-          isDisabled={currentPage >= totalPages}
-        />
+          return (
+            <PaginationNumber
+              key={`${page}-${index}`}
+              href={createPageURL(page)}
+              page={page}
+              position={position}
+              isActive={currentPage === page}
+            />
+          );
+        })}
       </div>
+
+      <PaginationArrow
+        direction="right"
+        href={createPageURL(currentPage + 1)}
+        isDisabled={currentPage >= totalPages}
+      />
+    </nav>
     </>
   );
 }
@@ -81,9 +81,15 @@ function PaginationNumber({
   );
 
   return isActive || position === "middle" ? (
-    <div className={className}>{page}</div>
+    <div className={className} aria-current={isActive ? "page" : undefined}>
+      {page}
+    </div>
   ) : (
-    <Link href={href} className={className}>
+    <Link
+      href={href}
+      className={className}
+      aria-label={`Ir a la página ${page}`}
+    >
       {page}
     </Link>
   );
@@ -116,9 +122,17 @@ function PaginationArrow({
     );
 
   return isDisabled ? (
-    <div className={className}>{icon}</div>
+    <div className={className} aria-disabled="true">
+      {icon}
+    </div>
   ) : (
-    <Link className={className} href={href}>
+    <Link
+      className={className}
+      href={href}
+      aria-label={
+        direction === "left" ? "Página anterior" : "Página siguiente"
+      }
+    >
       {icon}
     </Link>
   );

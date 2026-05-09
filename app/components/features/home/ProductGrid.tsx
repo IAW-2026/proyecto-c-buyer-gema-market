@@ -20,11 +20,12 @@ interface ProductGridProps {
 }
 
 export default async function ProductGrid({ filters }: ProductGridProps) {
-  const { items, total, page_size } = await getProducts(filters);
-
-  // Obtenemos el userId del usuario actual (mock en desarrollo)
-  // TODO: cuando Clerk esté listo, getCurrentUserId() ya lo maneja internamente.
-  const userId = await getCurrentUserId();
+  //hacemos las llamadas simultaneamente, lo que hace que sea mas rapido
+  const [productsResult, userId] = await Promise.all([
+    getProducts(filters),
+    getCurrentUserId(),
+  ]);
+  const { items, total, page_size } = productsResult;
   const favoriteProductIds = await getFavoritosIds(userId);
 
   if (items.length === 0) {
@@ -35,6 +36,7 @@ export default async function ProductGrid({ filters }: ProductGridProps) {
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
+          aria-hidden="true"
         >
           <path
             strokeLinecap="round"
