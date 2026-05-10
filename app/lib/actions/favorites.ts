@@ -13,7 +13,7 @@ import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 export async function toggleFavoriteAction(productId: string) {
   // Validación de entrada
   if (!productId?.trim()) {
-    return { success: false, error: "ID de producto inválido" };
+    return { ok: false, error: "ID de producto inválido" };
   }
 
   const userId = await getCurrentUserId();
@@ -25,9 +25,9 @@ export async function toggleFavoriteAction(productId: string) {
     revalidatePath("/favorites");
     revalidatePath("/");
 
-    return { success: true };
+    return { ok: true };
   } catch (error) {
     console.error("Error toggling favorite:", error);
-    return { success: false, error: "No se pudo actualizar el favorito" };
+    return { ok: false, error: "No se pudo actualizar el favorito" };
   }
 }

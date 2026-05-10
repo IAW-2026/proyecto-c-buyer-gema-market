@@ -27,6 +27,8 @@ export interface ProductListItem {
   depth?: number;
 }
 
+// Uso esos ultimos 4 para enviar a shipping, los recupero con batch product
+
 /** Respuesta paginada del endpoint GET /api/seller/productos. */
 // Estos se mostraran en el listado de productos
 export interface ProductListResponse {

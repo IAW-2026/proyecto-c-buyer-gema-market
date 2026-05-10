@@ -84,7 +84,7 @@ export default function CartGridClient({
 
         // 2. Ejecutamos la acción del servidor
         const result = await updateCartItemQuantityAction(item.item_id, newQty);
-        if (!result.success) {
+        if (!result.ok) {
           console.error(result.error);
         }
       } finally {
@@ -111,7 +111,7 @@ export default function CartGridClient({
 
         // 2. Ejecutamos la acción del servidor
         const result = await removeCartItemAction(item.item_id);
-        if (!result.success) {
+        if (!result.ok) {
           console.error(result.error);
         }
       } finally {

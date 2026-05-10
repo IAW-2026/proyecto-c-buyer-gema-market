@@ -17,7 +17,7 @@ export async function addToCartAction(productId: string, quantity: number) {
   try {
     const userId = await getCurrentUserId();
     if (!userId) {
-      return { success: false, error: "Usuario no autenticado" };
+      return { ok: false, error: "Usuario no autenticado" };
     }
 
     // 1. Obtener o crear el carrito del usuario
@@ -43,10 +43,10 @@ export async function addToCartAction(productId: string, quantity: number) {
     revalidatePath("/cart");
     revalidatePath(`/product/${productId}`);
 
-    return { success: true };
+    return { ok: true };
   } catch (error) {
     console.error("Error adding to cart:", error);
-    return { success: false, error: "No se pudo agregar al carrito" };
+    return { ok: false, error: "No se pudo agregar al carrito" };
   }
 }
 
@@ -67,10 +67,10 @@ export async function updateCartItemQuantityAction(
   try {
     await updateItemCarritoQuantity(itemId, newQuantity);
     revalidatePath("/cart");
-    return { success: true };
+    return { ok: true };
   } catch (error) {
     console.error("Error updating cart item quantity:", error);
-    return { success: false, error: "No se pudo actualizar la cantidad" };
+    return { ok: false, error: "No se pudo actualizar la cantidad" };
   }
 }
 
@@ -81,11 +81,11 @@ export async function removeCartItemAction(itemId: string) {
   try {
     await deleteItemCarrito(itemId);
     revalidatePath("/cart");
-    return { success: true };
+    return { ok: true };
   } catch (error) {
     console.error("Error removing cart item:", error);
     return {
-      success: false,
+      ok: false,
       error: "No se pudo eliminar el producto del carrito",
     };
   }

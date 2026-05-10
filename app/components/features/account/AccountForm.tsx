@@ -117,20 +117,20 @@ export default function AccountForm({ initialData }: AccountFormProps) {
           {state && (
             <div
               className={`mt-6 p-3.5 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300 ${
-                state.success
+                state.ok
                   ? "bg-forest/10 text-forest"
                   : "bg-danger/10 text-danger"
               }`}
             >
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                  state.success ? "bg-forest/20" : "bg-danger/20"
+                  state.ok ? "bg-forest/20" : "bg-danger/20"
                 }`}
               >
-                <Icon name={state.success ? "sparkle" : "alert"} size={18} />
+                <Icon name={state.ok ? "sparkle" : "alert"} size={18} />
               </div>
               <span className="text-sm font-semibold">
-                {state.success ? "¡Perfil actualizado con éxito!" : state.error}
+                {state.ok ? "¡Perfil actualizado con éxito!" : state.error}
               </span>
             </div>
           )}

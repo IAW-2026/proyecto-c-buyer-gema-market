@@ -11,6 +11,8 @@
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 
+import type { PaymentOrderResult } from "@/app/lib/types/orders";
+
 export interface PaymentOrderItem {
   order_id: string;
   seller_id: string;
@@ -28,12 +30,6 @@ export interface CreatePaymentOrderParams {
   orders: PaymentOrderItem[];
   currency?: string;
   return_url: string;
-}
-
-export interface PaymentOrderResult {
-  payment_id: string;
-  checkout_url: string;
-  status: "pending" | "approved" | "rejected" | "cancelled";
 }
 
 // ── Configuración ─────────────────────────────────────────────────────────────

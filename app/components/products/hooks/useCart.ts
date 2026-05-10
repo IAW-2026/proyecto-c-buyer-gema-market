@@ -22,7 +22,7 @@ export function useCart(productId: string) {
     async (qty: number) => {
       const result = await addToCartAction(productId, qty);
 
-      if (result.success) {
+      if (result.ok) {
         setNotification({
           type: "success",
           message: `¡Agregado al carrito! (${qty} ${qty === 1 ? "unidad" : "unidades"})`,

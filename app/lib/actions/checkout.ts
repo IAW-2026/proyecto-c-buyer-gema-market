@@ -26,7 +26,7 @@ import { createOrden, updateOrden } from "@/app/lib/db/orden";
 import { getProductsBatch } from "@/app/lib/services/seller";
 import { requestShippingQuote } from "@/app/lib/services/shipping";
 import { createPaymentOrder } from "@/app/lib/services/payment";
-import type { ShippingQuote, CheckoutItem } from "@/app/lib/types/orders";
+import type { CheckoutItem } from "@/app/lib/types/orders";
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
@@ -90,52 +90,53 @@ export async function requestShippingQuoteAction(address: {
 
     const productMap = new Map(products.map((p) => [p.product_id, p]));
 
-    // 4. Cotizar envío para cada item individualmente y construir CheckoutItems
-    const checkoutItems: CheckoutItem[] = [];
+    // 4. Cotizar envío para cada item en paralelo y construir CheckoutItems
+    const quoteResults = await Promise.all(
+      carrito.items.map(async (item) => {
+        const product = productMap.get(item.productId);
+        if (!product) return null;
 
-    for (const item of carrito.items) {
-      const product = productMap.get(item.productId);
-      if (!product) continue;
+        const weightKg =
+          "weight" in product && typeof product.weight === "number"
+            ? product.weight
+            : 5;
+        const heightM =
+          "height" in product && typeof product.height === "number"
+            ? product.height
+            : 0.5;
+        const widthM =
+          "width" in product && typeof product.width === "number"
+            ? product.width
+            : 0.5;
+        const depthM =
+          "depth" in product && typeof product.depth === "number"
+            ? product.depth
+            : 0.5;
 
-      // Dimensiones y peso del producto (con fallbacks razonables si la Seller App
-      // no los provee en el listado — el ProductDetail sí los tiene)
-      const weightKg =
-        "weight" in product && typeof product.weight === "number"
-          ? product.weight
-          : 5;
-      const heightM =
-        "height" in product && typeof product.height === "number"
-          ? product.height
-          : 0.5;
-      const widthM =
-        "width" in product && typeof product.width === "number"
-          ? product.width
-          : 0.5;
-      const depthM =
-        "depth" in product && typeof product.depth === "number"
-          ? product.depth
-          : 0.5;
+        const quote = await requestShippingQuote({
+          destination_address: address,
+          product_id: product.product_id,
+          weight_kg: weightKg,
+          height_m: heightM,
+          width_m: widthM,
+          depth_m: depthM,
+        });
 
-      // Un quote por producto distinto (1 cotización para "silla", sin importar quantity)
-      const quote: ShippingQuote = await requestShippingQuote({
-        destination_address: address,
-        product_id: product.product_id,
-        weight_kg: weightKg,
-        height_m: heightM,
-        width_m: widthM,
-        depth_m: depthM,
-      });
+        return {
+          itemId: item.id,
+          productId: item.productId,
+          sellerId: product.seller_id,
+          productTitle: product.title,
+          quantity: item.quantity,
+          unitPrice: product.price,
+          quote,
+        };
+      }),
+    );
 
-      checkoutItems.push({
-        itemId: item.id,
-        productId: item.productId,
-        sellerId: product.seller_id,
-        productTitle: product.title,
-        quantity: item.quantity,
-        unitPrice: product.price,
-        quote, // cada item lleva su propio quote
-      });
-    }
+    const checkoutItems: CheckoutItem[] = quoteResults.filter(
+      (r): r is NonNullable<typeof r> => r !== null,
+    );
 
     if (checkoutItems.length === 0) {
       return { ok: false, error: "No hay productos válidos en el carrito." };

@@ -11,13 +11,7 @@
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 
-export interface ShippingQuote {
-  quote_id: string;
-  price: number;
-  currency: string;
-  estimated_days: number;
-  valid_until: string; // ISO string
-}
+import type { ShippingQuote } from "@/app/lib/types/orders";
 
 export interface RequestQuoteParams {
   destination_address: {

@@ -6,7 +6,6 @@
  */
 
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { TopBar, Card, Icon, Pill } from "@/app/components/ui";
 import { getOrdenById } from "@/app/lib/db/orden";
 import { getProductById } from "@/app/lib/services/seller";

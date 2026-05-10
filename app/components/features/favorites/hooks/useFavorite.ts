@@ -23,7 +23,7 @@ export function useFavorite(productId: string, initialFavorite: boolean) {
 
     try {
       const result = await toggleFavoriteAction(productId);
-      if (!result.success) {
+      if (!result.ok) {
         console.error("Error al guardar favorito:", result.error);
       }
     } catch (error) {

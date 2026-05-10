@@ -46,7 +46,7 @@ export async function updateAccountAction(data: unknown) {
   if (!parsed.success) {
     const firstIssue = parsed.error.issues[0];
     return {
-      success: false,
+      ok: false,
       error: firstIssue?.message ?? "Datos inválidos.",
     };
   }
@@ -54,18 +54,18 @@ export async function updateAccountAction(data: unknown) {
   // 2. Obtener usuario autenticado
   const userId = await getCurrentUserId();
   if (!userId) {
-    return { success: false, error: "No autenticado." };
+    return { ok: false, error: "No autenticado." };
   }
 
   // 3. Persistir
   try {
     await updateUsuario(userId, parsed.data);
     revalidatePath("/account");
-    return { success: true };
+    return { ok: true };
   } catch (error) {
     console.error("Error updating account:", error);
     return {
-      success: false,
+      ok: false,
       error: "No se pudieron guardar los cambios en el servidor.",
     };
   }
