@@ -12,11 +12,11 @@ interface PageProps {
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
-  
+
   // 1. Obtenemos el producto y el userId en paralelo
   const [p, userId] = await Promise.all([
     getProductById(resolvedParams.id),
-    getCurrentUserId()
+    getCurrentUserId(),
   ]);
 
   if (!p) {

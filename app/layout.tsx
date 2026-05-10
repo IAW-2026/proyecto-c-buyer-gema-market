@@ -4,6 +4,8 @@ import "./globals.css";
 import { inter, jetbrainsMono } from "./lib/fonts";
 import { SideNav } from "./components/layout/SideNav";
 import { BottomNav } from "./components/layout/BottomNav";
+import { ClerkProvider } from "@clerk/nextjs";
+import { syncCurrentUser } from "./lib/auth/sync-usuario";
 
 export const metadata: Metadata = {
   title: "UniHousing — Tu mudanza simplificada",
@@ -21,26 +23,32 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await syncCurrentUser();
+
   return (
-    <html
-      lang="es"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
-    >
-      <body className="min-h-full bg-cream text-ink font-sans">
-        {/* Desktop sidebar */}
-        <SideNav />
+    <ClerkProvider>
+      <html
+        lang="es"
+        className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
+      >
+        <body className="min-h-full bg-cream text-ink font-sans">
+          {/* Desktop sidebar */}
+          <SideNav />
 
-        {/* Page content — shifted right on desktop */}
-        <main className="pb-16 lgx:pb-0 lgx:ml-60">{children}</main>
+          {/* Page content — layout adjusted based on nav presence */}
+          <main className="lgx:pb-0 lgx:[aside+&]:ml-60 [&:has(+nav)]:pb-16">
+            {children}
+          </main>
 
-        {/* Mobile bottom navigation */}
-        <BottomNav />
-      </body>
-    </html>
+          {/* Mobile bottom navigation */}
+          <BottomNav />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

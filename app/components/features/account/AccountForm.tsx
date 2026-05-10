@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, ChangeEvent } from "react";
-import { useRouter } from "next/navigation";
 import { Card, Avatar, Field, Input, Button, Icon } from "@/app/components/ui";
+import { SignOutButton } from "@clerk/nextjs";
 import type { Usuario } from "@prisma/client";
 import { Address } from "@/app/lib/db/user";
 import { updateAccountAction } from "../../../lib/actions/account";
@@ -12,8 +12,6 @@ interface AccountFormProps {
 }
 
 export default function AccountForm({ initialData }: AccountFormProps) {
-  const router = useRouter();
-
   // Cast del JSON de Prisma al tipo Address conocido
   const initialAddress = (initialData.address as unknown as Address) || {
     street: "",
@@ -80,10 +78,6 @@ export default function AccountForm({ initialData }: AccountFormProps) {
     } finally {
       setIsPending(false);
     }
-  };
-
-  const handleLogout = () => {
-    router.push("/");
   };
 
   return (
@@ -196,18 +190,13 @@ export default function AccountForm({ initialData }: AccountFormProps) {
           >
             {isPending ? "Guardando..." : "Guardar cambios"}
           </Button>
-          <Button
-            full
-            variant="danger"
-            icon="logout"
-            onClick={handleLogout}
-            disabled={isPending}
-          >
-            Cerrar sesión
-          </Button>
+          <SignOutButton>
+            <Button full variant="danger" icon="logout" disabled={isPending}>
+              Cerrar sesión
+            </Button>
+          </SignOutButton>
         </div>
       </div>
     </div>
   );
 }
-

@@ -34,10 +34,10 @@ enum OrdenStatus {
 // ─────────────────────────────────────────────
 
 model Usuario {
-  id            String   @id @db.VarChar(30) // prefixed ULID
-  clerkUserId   String   @unique @map("clerk_user_id")
-  email         String
-  fullName      String   @map("full_name")
+  id            String   @id @db.VarChar(50) // prefixed ULID: usr_<26-char-ulid>
+  clerkUserId   String   @unique @db.VarChar(255) @map("clerk_user_id")
+  email         String   @db.VarChar(255)
+  fullName      String   @db.VarChar(255) @map("full_name")
   phoneNumber   String?  @map("phone_number")
   address       Json?
   role          Role     @default(buyer)

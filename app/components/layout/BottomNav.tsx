@@ -23,11 +23,14 @@ export const BottomNav = () => {
   ];
 
   // Rutas donde no queremos mostrar la navegación inferior
-  const hideOnPaths = ["/login", "/checkout"];
-  if (hideOnPaths.includes(pathname)) return null;
+  const isAuthPage = pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
+  if (isAuthPage || pathname.startsWith("/checkout")) return null;
 
   return (
-    <nav aria-label="Navegación móvil" className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line flex justify-around px-1 pt-2 pb-safe-bottom z-50 lgx:hidden">
+    <nav
+      aria-label="Navegación móvil"
+      className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line flex justify-around px-1 pt-2 pb-safe-bottom z-50 lgx:hidden"
+    >
       {items.map((it) => {
         const isActive =
           pathname === it.route ||

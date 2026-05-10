@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, IconName } from "../ui";
 import { Avatar } from "../ui/Avatar";
+import { useUser } from "@clerk/nextjs";
 
 interface NavItem {
   id: string;
@@ -23,9 +24,10 @@ const NAV_ITEMS: NavItem[] = [
 
 export const SideNav = () => {
   const pathname = usePathname();
+  const { user, isSignedIn, isLoaded } = useUser();
 
-  const hideOnPaths = ["/login", "/checkout"];
-  if (hideOnPaths.includes(pathname)) return null;
+  const isAuthPage = pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
+  if (isAuthPage || pathname.startsWith("/checkout")) return null;
 
   return (
     <aside className="hidden lgx:flex lgx:fixed lgx:left-0 lgx:top-0 lgx:bottom-0 lgx:z-[60] lgx:flex-col lgx:w-[240px] lgx:shrink-0 lgx:bg-paper lgx:border-r lgx:border-line lgx:px-3.5 lgx:py-5 lgx:h-screen lgx:overflow-y-auto">
@@ -43,7 +45,10 @@ export const SideNav = () => {
         </div>
       </Link>
 
-      <nav aria-label="Navegación principal" className="flex flex-col gap-0.5 flex-1">
+      <nav
+        aria-label="Navegación principal"
+        className="flex flex-col gap-0.5 flex-1"
+      >
         <ul className="flex flex-col gap-0.5 list-none p-0 m-0">
           {/* original index.html filters out search from the sidebar */}
           {NAV_ITEMS.filter((it) => it.id !== "search").map((it) => {
@@ -71,19 +76,36 @@ export const SideNav = () => {
         </ul>
       </nav>
 
-      {/* Profile matching index.html */}
-      <Link
-        href="/account"
-        className="p-3 bg-bone rounded-r2 w-full text-left active:scale-[0.98] transition-transform"
-      >
-        <div className="flex items-center gap-2.5 mb-2">
-          <Avatar name="Lucía M." size={36} />
-          <div className="min-w-0">
-            <div className="text-[13px] font-semibold truncate">Lucía M.</div>
-            <div className="text-[11px] text-ink-3">Compradora</div>
+      {/* Profile/Auth Section */}
+      {!isLoaded ? (
+        <div className="p-3 bg-bone/50 animate-pulse rounded-r2 w-full h-[60px]" />
+      ) : isSignedIn ? (
+        <Link
+          href="/account"
+          className="p-3 bg-bone rounded-r2 w-full text-left active:scale-[0.98] transition-transform"
+        >
+          <div className="flex items-center gap-2.5 mb-0">
+            <Avatar 
+              name={user.fullName || "Usuario"} 
+              size={36} 
+            />
+            <div className="min-w-0">
+              <div className="text-[13px] font-semibold truncate">
+                {user.fullName || "Usuario"}
+              </div>
+              <div className="text-[11px] text-ink-3">Mi cuenta</div>
+            </div>
           </div>
-        </div>
-      </Link>
+        </Link>
+      ) : (
+        <Link
+          href="/sign-in"
+          className="p-3 bg-moss text-paper rounded-r2 w-full text-center font-semibold text-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
+        >
+          <Icon name="user" size={18} />
+          Iniciar sesión
+        </Link>
+      )}
     </aside>
   );
 };

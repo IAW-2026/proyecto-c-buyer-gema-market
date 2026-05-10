@@ -83,6 +83,7 @@ interface IconProps {
   size?: number;
   stroke?: number;
   className?: string;
+  filled?: boolean;
 }
 
 export const Icon = ({
@@ -90,6 +91,7 @@ export const Icon = ({
   size = 20,
   stroke = 1.5,
   className = "",
+  filled = false,
 }: IconProps) => {
   const props = {
     width: size,
@@ -489,6 +491,18 @@ export const Icon = ({
       </>
     ),
   };
+
+  if (name === "heart" && filled) {
+    return (
+      <svg {...props} aria-hidden="true">
+        <path
+          d="M12 20s-7-4.5-9-9.5C1.5 6 5 3 8 4.5c1.7.8 3 2 4 3.5 1-1.5 2.3-2.7 4-3.5 3-1.5 6.5 1.5 5 6-2 5-9 9.5-9 9.5z"
+          fill="currentColor"
+          stroke="currentColor"
+        />
+      </svg>
+    );
+  }
 
   return (
     <svg {...props} aria-hidden="true">

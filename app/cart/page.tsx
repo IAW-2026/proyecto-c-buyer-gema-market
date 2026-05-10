@@ -3,6 +3,8 @@ import { TopBar } from "@/app/components/ui";
 import CartGrid from "@/app/components/features/cart/CartGrid";
 import CartSkeleton from "@/app/components/features/cart/CartSkeleton";
 
+export const dynamic = "force-dynamic";
+
 export default function CartPage() {
   return (
     <div className="pb-[140px]">

@@ -3,6 +3,8 @@ import { TopBar } from "@/app/components/ui";
 import { getAccountData } from "@/app/lib/helpers/account";
 import AccountForm from "../components/features/account/AccountForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function AccountPage() {
   const datos = await getAccountData();
 
