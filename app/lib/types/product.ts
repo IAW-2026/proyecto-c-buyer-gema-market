@@ -21,6 +21,10 @@ export interface ProductListItem {
   status: ProductStatus;
   thumbnail_url: string;
   href: string;
+  weight?: number;
+  height?: number;
+  width?: number;
+  depth?: number;
 }
 
 /** Respuesta paginada del endpoint GET /api/seller/productos. */

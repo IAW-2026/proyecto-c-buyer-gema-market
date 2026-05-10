@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
       status: p.status as "new" | "used",
       thumbnail_url: p.thumbnail_url,
       href: p.href,
+      weight: p.weight,
+      height: p.height,
+      width: p.width,
+      depth: p.depth,
     }));
 
     return NextResponse.json({

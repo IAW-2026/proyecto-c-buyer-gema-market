@@ -1,15 +1,3 @@
-/**
- * Mock de autenticación — solo para desarrollo.
- *
- * Reemplazar el cuerpo de `getCurrentUserId` por la
- * llamada real a Clerk cuando la auth esté lista:
- *
- *   import { auth } from "@clerk/nextjs/server";
- *   const { userId } = await auth();
- *   if (!userId) throw new Error("Not authenticated");
- *   return userId;
- */
-
 import { getUsuarioByClerkId } from "../db/user";
 import { currentUser } from "@clerk/nextjs/server";
 

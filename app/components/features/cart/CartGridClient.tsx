@@ -19,13 +19,17 @@ import { CartSummary } from "./CartSummary";
 
 interface CartGridClientProps {
   initialItems: CartItemWithProduct[];
+  estimatedShipping: number;
 }
 
 type OptimisticAction =
   | { type: "update"; id: string; quantity: number }
   | { type: "remove"; id: string };
 
-export default function CartGridClient({ initialItems }: CartGridClientProps) {
+export default function CartGridClient({
+  initialItems,
+  estimatedShipping,
+}: CartGridClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
@@ -52,13 +56,14 @@ export default function CartGridClient({ initialItems }: CartGridClientProps) {
   // Cálculos derivados del estado optimista
   const { subtotal, ship, total } = useMemo(() => {
     const sub = optimisticItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    const shp = optimisticItems.length > 0 ? 7300 : 0;
+    // Si hay items, usamos el envío calculado en el servidor
+    const shp = optimisticItems.length > 0 ? estimatedShipping : 0;
     return {
       subtotal: sub,
       ship: shp,
       total: sub + shp,
     };
-  }, [optimisticItems]);
+  }, [optimisticItems, estimatedShipping]);
 
   // Handlers
   const updateQuantity = async (id: string, delta: number) => {
