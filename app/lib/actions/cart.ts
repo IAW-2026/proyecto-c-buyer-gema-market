@@ -6,7 +6,7 @@ import {
   deleteItemCarrito,
   upsertItemCarrito,
 } from "@/app/lib/db/item_carrito";
-import { getCurrentUserId } from "@/app/lib/auth/mock";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 import { getCarritoByBuyerId, createCarrito } from "@/app/lib/db/carrito";
 
 /**

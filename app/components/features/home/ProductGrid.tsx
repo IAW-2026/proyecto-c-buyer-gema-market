@@ -13,7 +13,7 @@ import { getProducts } from "@/app/lib/services/seller";
 import Pagination from "./Pagination";
 import ProductCard from "../../products/ProductCard";
 import { getFavoritosIds } from "@/app/lib/db/favorito";
-import { getCurrentUserId } from "@/app/lib/auth/mock";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 
 interface ProductGridProps {
   filters: ProductFilters;

@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "@/app/lib/auth/mock";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 import { getFavoritosIds } from "@/app/lib/db/favorito";
 import { getProductsBatch } from "@/app/lib/services/seller";
 import type { ProductListItem } from "@/app/lib/types/product";

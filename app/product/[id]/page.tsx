@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getProductById } from "@/app/lib/services/seller";
 import ProductDetailClient from "../../components/products/ProductDetailClient";
 import { getFavoritosIds } from "@/app/lib/db/favorito";
-import { getCurrentUserId } from "@/app/lib/auth/mock";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 
 interface PageProps {
   params: Promise<{

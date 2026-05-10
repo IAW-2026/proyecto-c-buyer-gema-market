@@ -34,10 +34,5 @@ export async function getCurrentUserId(): Promise<string> {
     );
   }
 
-  // Fallback de desarrollo: ID hardcodeado (mantener para pruebas locales)
-  const id_clerk = "mock_clerk_user_dev2";
-  const usuario = await getUsuarioByClerkId(id_clerk);
-  if (usuario) return usuario.id;
-
   return "";
 }
