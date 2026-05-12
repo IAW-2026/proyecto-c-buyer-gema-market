@@ -1,7 +1,8 @@
+import Image from "next/image";
 import { SectionTitle, Card, Icon } from "@/app/components/ui";
 import { fmtARS } from "@/app/lib/utils/format";
 import type { CheckoutItem } from "@/app/lib/types/orders";
-import type { Address } from "./CheckoutAddressStep";
+import type { Address } from "@/app/lib/types/user";
 
 interface CheckoutSummaryStepProps {
   addr: Address;
@@ -34,7 +35,6 @@ export function CheckoutSummaryStep({
             </div>
             <div className="font-medium text-sm">
               {addr.street} {addr.number}
-              {addr.apt && `, depto ${addr.apt}`}
             </div>
             <div className="text-[13px] text-ink-3">
               Bahía Blanca · CP {addr.zip}
@@ -48,36 +48,56 @@ export function CheckoutSummaryStep({
         {items.map((item, idx) => (
           <div
             key={item.itemId}
-            className={`px-4 py-3.5 ${idx > 0 ? "border-t border-line" : ""}`}
+            className={`px-4 py-3.5 flex gap-3 ${idx > 0 ? "border-t border-line" : ""}`}
           >
-            <div className="flex justify-between items-start gap-2">
-              <div className="min-w-0">
-                <div className="font-medium text-sm leading-tight truncate">
-                  {item.productTitle}
+            {/* Imagen del producto */}
+            <div className="w-14 h-14 rounded-lg bg-bone shrink-0 overflow-hidden">
+              {item.productImage ? (
+                <Image
+                  src={item.productImage}
+                  alt={item.productTitle}
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-ink-3">
+                  <Icon name="image" size={20} />
                 </div>
-                <div className="text-[12px] text-ink-3 mt-0.5">
-                  {item.quantity > 1 && `×${item.quantity} · `}
-                  {fmtARS(item.unitPrice)}
-                  {item.quantity > 1 ? " c/u" : ""}
-                </div>
-              </div>
-              <div className="text-right shrink-0">
-                <div className="font-semibold text-sm">
-                  {fmtARS(item.unitPrice * item.quantity)}
-                </div>
-              </div>
+              )}
             </div>
 
-            {/* Envío por producto */}
-            <div className="flex items-center gap-1.5 mt-2 text-[12px] text-ink-3">
-              <Icon name="truck" size={13} />
-              <span>
-                Envío estimado: {item.quote.estimated_days}{" "}
-                {item.quote.estimated_days === 1 ? "día" : "días"} ·{" "}
-                <span className="font-medium text-ink">
-                  {fmtARS(item.quote.price)}
+            {/* Datos del item */}
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-start gap-2">
+                <div className="min-w-0">
+                  <div className="font-medium text-sm leading-tight truncate">
+                    {item.productTitle}
+                  </div>
+                  <div className="text-[12px] text-ink-3 mt-0.5">
+                    {item.quantity > 1 && `×${item.quantity} · `}
+                    {fmtARS(item.unitPrice)}
+                    {item.quantity > 1 ? " c/u" : ""}
+                  </div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="font-semibold text-sm">
+                    {fmtARS(item.unitPrice * item.quantity)}
+                  </div>
+                </div>
+              </div>
+
+              {/* Envío por producto */}
+              <div className="flex items-center gap-1.5 mt-2 text-[12px] text-ink-3">
+                <Icon name="truck" size={13} />
+                <span>
+                  Envío estimado: {item.quote.estimated_days}{" "}
+                  {item.quote.estimated_days === 1 ? "día" : "días"} ·{" "}
+                  <span className="font-medium text-ink">
+                    {fmtARS(item.quote.price)}
+                  </span>
                 </span>
-              </span>
+              </div>
             </div>
           </div>
         ))}

@@ -17,6 +17,7 @@ export async function toggleFavoriteAction(productId: string) {
   }
 
   const userId = await getCurrentUserId();
+  if (!userId) return { ok: false, error: "Debés iniciar sesión" };
 
   try {
     await toggleFavorito(userId, productId);

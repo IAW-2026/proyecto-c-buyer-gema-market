@@ -55,11 +55,10 @@ export function createMockPaymentOrder(params: {
   const payment_id = generateUlid("pay");
   const total_amount = params.orders.reduce((sum, o) => sum + o.amount, 0);
 
-  // checkout_url simula el redirect de Mercado Pago de vuelta a nuestra app
-  // En producción, esto sería la URL de MP; en mock, volvemos directamente
-  // al callback con pago aprobado
-  const checkoutBase = params.return_url.split("?")[0];
-  const checkout_url = `${checkoutBase}?payment_id=${payment_id}&status=approved`;
+  // En producción checkout_url sería la URL de Mercado Pago.
+  // En mock apunta a /orders, simulando que Payments App redirige al buyer
+  // de vuelta al historial de órdenes tras el pago.
+  const checkout_url = "/orders";
 
   const paymentOrder: MockPaymentOrder = {
     payment_id,

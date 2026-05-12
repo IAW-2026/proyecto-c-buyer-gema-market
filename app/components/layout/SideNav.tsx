@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, IconName } from "../ui";
-import { Avatar } from "../ui/Avatar";
 import { useUser } from "@clerk/nextjs";
 
 interface NavItem {
@@ -24,7 +23,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export const SideNav = () => {
   const pathname = usePathname();
-  const { user, isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
 
   const isAuthPage = pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
   if (isAuthPage || pathname.startsWith("/checkout")) return null;
@@ -76,28 +75,10 @@ export const SideNav = () => {
         </ul>
       </nav>
 
-      {/* Profile/Auth Section */}
+      {/* Auth Section — solo visible cuando no hay sesión */}
       {!isLoaded ? (
         <div className="p-3 bg-bone/50 animate-pulse rounded-r2 w-full h-[60px]" />
-      ) : isSignedIn ? (
-        <Link
-          href="/account"
-          className="p-3 bg-bone rounded-r2 w-full text-left active:scale-[0.98] transition-transform"
-        >
-          <div className="flex items-center gap-2.5 mb-0">
-            <Avatar 
-              name={user.fullName || "Usuario"} 
-              size={36} 
-            />
-            <div className="min-w-0">
-              <div className="text-[13px] font-semibold truncate">
-                {user.fullName || "Usuario"}
-              </div>
-              <div className="text-[11px] text-ink-3">Mi cuenta</div>
-            </div>
-          </div>
-        </Link>
-      ) : (
+      ) : !isSignedIn ? (
         <Link
           href="/sign-in"
           className="p-3 bg-moss text-paper rounded-r2 w-full text-center font-semibold text-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
@@ -105,7 +86,7 @@ export const SideNav = () => {
           <Icon name="user" size={18} />
           Iniciar sesión
         </Link>
-      )}
+      ) : null}
     </aside>
   );
 };

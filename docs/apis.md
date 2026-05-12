@@ -156,7 +156,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
   "currency": "ARS",
   "category_id": "cat_muebles",
   "stock": 1,
-  "status": "all",
+  "status": "active",
   "images": ["https://..."],
   "created_at": "2026-04-10T10:00:00Z"
 }
@@ -181,22 +181,23 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 ```json
 {
-  "items": [
+  "products": [
     {
       "product_id": "prd_01HXYZ...",
       "seller_id": "usr_01HXYZ...",
       "title": "Escritorio de madera",
+      "description": "Escritorio de madera maciza, ideal para estudiantes.",
       "price": 15000.0,
       "currency": "ARS",
-      "category_id": "cat_muebles",
-      "status": "all",
-      "thumbnail_url": "https://...",
-      "href": "https://.../api/seller/productos/prd_01HXYZ..."
+      "stock": 1,
+      "status": "active",
+      "images": ["https://..."],
+      "weight": 15,
+      "height": 75,
+      "width": 120,
+      "depth": 60
     }
-  ],
-  "page": 1,
-  "page_size": 3,
-  "total": 3
+  ]
 }
 ```
 

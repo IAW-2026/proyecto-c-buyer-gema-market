@@ -80,7 +80,8 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 },
     );
-  } catch {
+  } catch (error) {
+    console.error("[POST /api/payments/ordenes-de-pago] Error:", error);
     return NextResponse.json(
       { error: "Error al crear orden de pago" },
       { status: 500 },

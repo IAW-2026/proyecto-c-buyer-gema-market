@@ -9,7 +9,7 @@
 import { Button, EmptyState } from "@/app/components/ui";
 import React, { useState, useOptimistic, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import type { CartItemWithProduct } from "@/app/lib/helpers/cart";
+import type { CartItemWithProduct } from "@/app/lib/types/cart";
 import {
   updateCartItemQuantityAction,
   removeCartItemAction,
@@ -19,17 +19,13 @@ import { CartSummary } from "./CartSummary";
 
 interface CartGridClientProps {
   initialItems: CartItemWithProduct[];
-  estimatedShipping: number;
 }
 
 type OptimisticAction =
   | { type: "update"; id: string; quantity: number }
   | { type: "remove"; id: string };
 
-export default function CartGridClient({
-  initialItems,
-  estimatedShipping,
-}: CartGridClientProps) {
+export default function CartGridClient({ initialItems }: CartGridClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
@@ -53,17 +49,10 @@ export default function CartGridClient({
     },
   );
 
-  // Cálculos derivados del estado optimista
-  const { subtotal, ship, total } = useMemo(() => {
-    const sub = optimisticItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    // Si hay items, usamos el envío calculado en el servidor
-    const shp = optimisticItems.length > 0 ? estimatedShipping : 0;
-    return {
-      subtotal: sub,
-      ship: shp,
-      total: sub + shp,
-    };
-  }, [optimisticItems, estimatedShipping]);
+  const subtotal = useMemo(
+    () => optimisticItems.reduce((s, i) => s + i.price * i.quantity, 0),
+    [optimisticItems],
+  );
 
   // Handlers
   const updateQuantity = async (id: string, delta: number) => {
@@ -155,8 +144,6 @@ export default function CartGridClient({
 
       <CartSummary
         subtotal={subtotal}
-        ship={ship}
-        total={total}
         onCheckout={() => router.push("/checkout")}
         isPending={isPending}
       />

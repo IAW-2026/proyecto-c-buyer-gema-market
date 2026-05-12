@@ -1,7 +1,7 @@
 import { Card, Icon } from "@/app/components/ui";
 import { fmtARS } from "@/app/lib/utils/format";
 import Image from "next/image";
-import type { CartItemWithProduct } from "@/app/lib/helpers/cart";
+import type { CartItemWithProduct } from "@/app/lib/types/cart";
 import Link from "next/link";
 
 interface CartItemProps {

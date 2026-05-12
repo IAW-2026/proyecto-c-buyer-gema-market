@@ -15,18 +15,6 @@ export type OrderStatus =
   | "refunded"
   | "disputed";
 
-/** Representación de una orden (compra) para la UI del comprador. */
-export interface Order {
-  id: string; // Usamos 'id' para consistencia con el frontend, mapeado de 'order_id'
-  date: string; // ISO string o formato legible (mapeado de 'created_at')
-  status: OrderStatus;
-  items: number; // Cantidad de artículos (simplificado para el mock)
-  total: number; // Monto total (mapeado de 'total_amount')
-  buyer: string; // Nombre del comprador (UI)
-  address: string; // Dirección de entrega
-  trackId: string; // Código de seguimiento
-}
-
 // ── Tipos del flujo de Checkout ───────────────────────────────────────────────
 
 /**
@@ -46,13 +34,14 @@ export interface ShippingQuote {
  * y su propia cotización de envío (una por producto distinto, independiente de quantity).
  */
 export interface CheckoutItem {
-  itemId: string;       // ID del ItemCarrito en BD
-  productId: string;    // FK lógica → Seller App
-  sellerId: string;     // FK lógica → Seller App
-  productTitle: string; // Nombre del producto (de Seller App)
+  itemId: string;        // ID del ItemCarrito en BD
+  productId: string;     // FK lógica → Seller App
+  sellerId: string;      // FK lógica → Seller App
+  productTitle: string;  // Nombre del producto (de Seller App)
+  productImage?: string; // Primera imagen del producto (de Seller App)
   quantity: number;
-  unitPrice: number;    // Precio unitario al momento del checkout
-  quote: ShippingQuote; // Cotización de envío propia de este producto
+  unitPrice: number;     // Precio unitario al momento del checkout
+  quote: ShippingQuote;  // Cotización de envío propia de este producto
 }
 
 /**
@@ -63,4 +52,36 @@ export interface PaymentOrderResult {
   payment_id: string;
   checkout_url: string; // URL a la que se redirige al usuario para pagar
   status: "pending" | "approved" | "rejected" | "cancelled";
+}
+
+// ── Tipos de UI ───────────────────────────────────────────────────────────────
+
+/** Orden para el listado de órdenes del comprador. */
+export interface OrderForUI {
+  id: string;
+  date: string;
+  status: OrderStatus;
+  productTitle: string;
+  productThumbnail: string;
+  quantity: number;
+  unitPrice: number;
+  shippingPrice: number;
+  total: number;
+  paymentId?: string;
+  shippingId?: string;
+}
+
+/** Orden para la vista de detalle. */
+export interface OrderDetailForUI {
+  id: string;
+  status: OrderStatus;
+  date: string;
+  quantity: number;
+  unitPrice: number;
+  shippingPrice: number;
+  total: number;
+  paymentId?: string;
+  shippingId?: string;
+  productTitle: string;
+  productThumbnail: string;
 }

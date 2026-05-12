@@ -1,16 +1,12 @@
 import { ChangeEvent } from "react";
 import { Field, Input, SectionTitle, Card, Icon } from "@/app/components/ui";
-
-export interface Address {
-  street: string;
-  number: string;
-  apt: string;
-  zip: string;
-}
+import type { Address } from "@/app/lib/types/user";
 
 interface CheckoutAddressStepProps {
   addr: Address;
-  handleInput: (key: keyof Address) => (e: ChangeEvent<HTMLInputElement>) => void;
+  handleInput: (
+    key: keyof Address,
+  ) => (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export function CheckoutAddressStep({
@@ -36,13 +32,6 @@ export function CheckoutAddressStep({
             value={addr.number}
             onChange={handleInput("number")}
             placeholder="1234"
-          />
-        </Field>
-        <Field label="Depto" optional>
-          <Input
-            value={addr.apt}
-            onChange={handleInput("apt")}
-            placeholder="3B"
           />
         </Field>
         <Field label="Código postal">

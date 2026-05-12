@@ -21,18 +21,21 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
-import { getCarritoByBuyerId, clearCarritoItems } from "@/app/lib/db/carrito";
-import { createOrden, updateOrden } from "@/app/lib/db/orden";
-import { getProductsBatch } from "@/app/lib/services/seller";
-import { requestShippingQuote } from "@/app/lib/services/shipping";
-import { createPaymentOrder } from "@/app/lib/services/payment";
+import { getCarritoByBuyerId } from "@/app/lib/db/carrito";
+import { getProductsBatch } from "@/app/lib/api/seller";
+import { requestShippingQuote } from "@/app/lib/api/shipping";
+import { createPaymentOrder } from "@/app/lib/api/payments";
+import { RequiredAddressSchema } from "@/app/lib/schemas/address";
+import { prisma } from "@/app/lib/prisma";
+import { generateUlid } from "@/app/lib/utils/ulidGenerator";
 import type { CheckoutItem } from "@/app/lib/types/orders";
 
 // ── Constantes ────────────────────────────────────────────────────────────────
 
 function getReturnUrl(): string {
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
-  return `${base}/checkout/callback`;
+  const base = process.env.NEXT_PUBLIC_BASE_URL;
+  if (!base) throw new Error("NEXT_PUBLIC_BASE_URL must be set in production");
+  return `${base}/orders`;
 }
 
 // ── Tipos de resultado ────────────────────────────────────────────────────────
@@ -64,22 +67,24 @@ export async function requestShippingQuoteAction(address: {
   number: string;
   zip: string;
 }): Promise<QuoteActionResult> {
+  const parsed = RequiredAddressSchema.safeParse(address);
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0].message };
+  }
+
   try {
-    // 1. Validar sesión
     const userId = await getCurrentUserId();
     if (!userId) {
       return { ok: false, error: "Debés iniciar sesión para continuar." };
     }
 
-    // 2. Obtener carrito con items
     const carrito = await getCarritoByBuyerId(userId);
     if (!carrito || carrito.items.length === 0) {
       return { ok: false, error: "Tu carrito está vacío." };
     }
 
-    // 3. Resolver datos de productos desde la Seller App
     const productIds = carrito.items.map((i) => i.productId);
-    const { items: products } = await getProductsBatch(productIds);
+    const { products } = await getProductsBatch(productIds);
 
     if (products.length === 0) {
       return {
@@ -90,36 +95,18 @@ export async function requestShippingQuoteAction(address: {
 
     const productMap = new Map(products.map((p) => [p.product_id, p]));
 
-    // 4. Cotizar envío para cada item en paralelo y construir CheckoutItems
     const quoteResults = await Promise.all(
       carrito.items.map(async (item) => {
         const product = productMap.get(item.productId);
         if (!product) return null;
 
-        const weightKg =
-          "weight" in product && typeof product.weight === "number"
-            ? product.weight
-            : 5;
-        const heightM =
-          "height" in product && typeof product.height === "number"
-            ? product.height
-            : 0.5;
-        const widthM =
-          "width" in product && typeof product.width === "number"
-            ? product.width
-            : 0.5;
-        const depthM =
-          "depth" in product && typeof product.depth === "number"
-            ? product.depth
-            : 0.5;
-
         const quote = await requestShippingQuote({
-          destination_address: address,
+          destination_address: parsed.data,
           product_id: product.product_id,
-          weight_kg: weightKg,
-          height_m: heightM,
-          width_m: widthM,
-          depth_m: depthM,
+          weight_kg: product.weight || 5,
+          height_m: product.height || 0.5,
+          width_m: product.width || 0.5,
+          depth_m: product.depth || 0.5,
         });
 
         return {
@@ -127,6 +114,7 @@ export async function requestShippingQuoteAction(address: {
           productId: item.productId,
           sellerId: product.seller_id,
           productTitle: product.title,
+          productImage: product.images?.[0],
           quantity: item.quantity,
           unitPrice: product.price,
           quote,
@@ -157,18 +145,17 @@ export async function requestShippingQuoteAction(address: {
 /**
  * Orquesta el flujo completo de creación de órdenes y redirige al pago.
  *
- * Cada item ya trae su `quote` embebido (viene de requestShippingQuoteAction).
- * Por eso no se necesita ningún parámetro adicional de envío.
+ * Usa transacciones Prisma en tres fases para garantizar consistencia:
  *
- * Pasos internos:
- *  1. Validar sesión del comprador
- *  2. Crear una Orden en la BD por cada item (con su propio shippingPrice y quoteId)
- *  3. Crear una PaymentOrder en la Payments App agrupando todas las órdenes
- *  4. Actualizar cada Orden con payment_id y status: 'awaiting_payment'
- *  5. Vaciar el carrito
- *  6. Retornar checkout_url para que el componente haga el redirect
+ *  FASE 1 — prisma.$transaction: Crear todas las órdenes atómicamente.
+ *    Si falla la creación de cualquier orden, ninguna se persiste.
  *
- * Rollback: si la Payments App falla, todas las órdenes creadas se marcan 'cancelled'.
+ *  FASE 2 — Llamada externa a Payments App (no puede ser transaccional).
+ *    Si falla: rollback atómico → todas las órdenes pasan a "cancelled".
+ *
+ *  FASE 3 — prisma.$transaction: Actualizar órdenes con paymentId + vaciar carrito.
+ *    Ambas operaciones son atómicas: el carrito no se vacía si falla la
+ *    actualización de las órdenes, preservando consistencia.
  *
  * @param items - CheckoutItems con quote embebido (de requestShippingQuoteAction)
  */
@@ -178,54 +165,57 @@ export async function createCheckoutAction(
   const createdOrderIds: string[] = [];
 
   try {
-    // 1. Validar sesión
     const userId = await getCurrentUserId();
     if (!userId) {
       return { ok: false, error: "Debés iniciar sesión para continuar." };
     }
 
-    // 2. Obtener el carrito para poder vaciarlo al final
     const carrito = await getCarritoByBuyerId(userId);
     if (!carrito || carrito.items.length === 0) {
       return { ok: false, error: "Tu carrito está vacío." };
     }
 
-    // 3. Crear una Orden por cada item, usando su propio quote de envío
-    const ordersForPayment = [];
+    // ── FASE 1: Crear todas las órdenes atómicamente ──────────────────────────
+    // Si cualquier create falla, Prisma hace rollback de todas automáticamente.
+    const createdOrdenes = await prisma.$transaction(
+      items.map((item) =>
+        prisma.orden.create({
+          data: {
+            id: generateUlid("ord"),
+            buyerId: userId,
+            sellerId: item.sellerId,
+            productId: item.productId,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            shippingPrice: item.quote.price,
+            totalAmount: item.unitPrice * item.quantity + item.quote.price,
+            currency: "ARS",
+            status: "created",
+            quoteId: item.quote.quote_id,
+            paymentId: null,
+            shippingId: null,
+          },
+        }),
+      ),
+    );
 
-    for (const item of items) {
-      // totalAmount = precio del producto × cantidad + envío de ese producto
-      const totalAmount = item.unitPrice * item.quantity + item.quote.price;
+    createdOrdenes.forEach((o) => createdOrderIds.push(o.id));
 
-      const orden = await createOrden({
-        buyerId: userId,
-        sellerId: item.sellerId,
-        productId: item.productId,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        shippingPrice: item.quote.price, // precio de envío específico de este producto
-        totalAmount,
-        currency: "ARS",
-        status: "created",
-        quoteId: item.quote.quote_id, // quote_id específico de este producto
-      });
+    const ordersForPayment = createdOrdenes.map((orden, i) => ({
+      order_id: orden.id,
+      seller_id: items[i].sellerId,
+      product_id: items[i].productId,
+      quantity: items[i].quantity,
+      unit_price: items[i].unitPrice,
+      quote: {
+        quote_id: items[i].quote.quote_id,
+        shipping_price: items[i].quote.price,
+      },
+    }));
 
-      createdOrderIds.push(orden.id);
-
-      ordersForPayment.push({
-        order_id: orden.id,
-        seller_id: item.sellerId,
-        product_id: item.productId,
-        quantity: item.quantity,
-        unit_price: item.unitPrice,
-        quote: {
-          quote_id: item.quote.quote_id,
-          shipping_price: item.quote.price,
-        },
-      });
-    }
-
-    // 4. Crear la PaymentOrder en la Payments App agrupando todas las órdenes
+    // ── FASE 2: Llamada externa a Payments App ────────────────────────────────
+    // No puede estar dentro de una transacción Prisma (es una llamada HTTP).
+    // Si falla: rollback atómico de todas las órdenes creadas en Fase 1.
     let paymentResult;
     try {
       paymentResult = await createPaymentOrder({
@@ -235,34 +225,44 @@ export async function createCheckoutAction(
         return_url: getReturnUrl(),
       });
     } catch (paymentError) {
-      // Rollback: cancelar todas las órdenes creadas en este ciclo
       console.error(
         "[createCheckoutAction] Payments App falló, cancelando órdenes:",
         paymentError,
       );
-      for (const orderId of createdOrderIds) {
-        await updateOrden(orderId, { status: "cancelled" }).catch((e) =>
-          console.error(`No se pudo cancelar la orden ${orderId}:`, e),
-        );
-      }
+      await prisma.$transaction(
+        createdOrderIds.map((orderId) =>
+          prisma.orden.update({
+            where: { id: orderId },
+            data: { status: "cancelled" },
+          }),
+        ),
+      );
       return {
         ok: false,
         error: "No se pudo iniciar el pago. Intentá de nuevo.",
       };
     }
 
-    // 5. Actualizar cada orden con payment_id y status: 'awaiting_payment'
-    for (const orderId of createdOrderIds) {
-      await updateOrden(orderId, {
-        paymentId: paymentResult.payment_id,
-        status: "awaiting_payment",
-      });
-    }
+    // ── FASE 3: Confirmar órdenes + eliminar carrito atómicamente ────────────
+    // El carrito se elimina en lugar de vaciarse: CASCADE en la relación
+    // Carrito → ItemCarrito borra los items en una sola operación a nivel DB,
+    // sin roundtrips adicionales. getOrCreateCarrito recrea el carrito vacío
+    // en el próximo addToCart.
+    // Si falla la actualización de órdenes, el carrito no se elimina — el usuario
+    // puede reintentar el checkout con el mismo carrito intacto.
+    await prisma.$transaction([
+      ...createdOrderIds.map((orderId) =>
+        prisma.orden.update({
+          where: { id: orderId },
+          data: {
+            paymentId: paymentResult.payment_id,
+            status: "awaiting_payment",
+          },
+        }),
+      ),
+      prisma.carrito.delete({ where: { id: carrito.id } }),
+    ]);
 
-    // 6. Vaciar el carrito
-    await clearCarritoItems(carrito.id);
-
-    // 7. Revalidar páginas afectadas
     revalidatePath("/cart");
     revalidatePath("/orders");
 
@@ -270,13 +270,19 @@ export async function createCheckoutAction(
   } catch (error) {
     console.error("[createCheckoutAction] Error inesperado:", error);
 
-    // Rollback parcial si hubo órdenes creadas antes del fallo
     if (createdOrderIds.length > 0) {
-      for (const orderId of createdOrderIds) {
-        await updateOrden(orderId, { status: "cancelled" }).catch((e) =>
-          console.error(`No se pudo cancelar la orden ${orderId}:`, e),
+      await prisma
+        .$transaction(
+          createdOrderIds.map((orderId) =>
+            prisma.orden.update({
+              where: { id: orderId },
+              data: { status: "cancelled" },
+            }),
+          ),
+        )
+        .catch((e) =>
+          console.error("[createCheckoutAction] Error en rollback:", e),
         );
-      }
     }
 
     return {

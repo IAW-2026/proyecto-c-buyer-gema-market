@@ -21,30 +21,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const items = MOCK_PRODUCTS.filter((p) =>
+    const products = MOCK_PRODUCTS.filter((p) =>
       product_ids.includes(p.product_id),
     ).map((p) => ({
       product_id: p.product_id,
       seller_id: p.seller_id,
       title: p.title,
+      description: p.description,
       price: p.price,
       currency: p.currency,
       category_id: p.category_id,
+      stock: p.stock,
       status: p.status as "new" | "used",
       thumbnail_url: p.thumbnail_url,
       href: p.href,
+      images: p.images,
       weight: p.weight,
       height: p.height,
       width: p.width,
       depth: p.depth,
     }));
 
-    return NextResponse.json({
-      items,
-      page: 1,
-      page_size: items.length,
-      total: items.length,
-    });
+    return NextResponse.json({ products });
   } catch {
     return NextResponse.json(
       { error: "Invalid request body" },

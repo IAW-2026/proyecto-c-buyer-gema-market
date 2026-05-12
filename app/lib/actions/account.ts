@@ -1,36 +1,9 @@
 "use server";
 
-import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 import { updateUsuario } from "@/app/lib/db/user";
-
-// ---------------------------------------------------------------------------
-// Schema de validación
-// ---------------------------------------------------------------------------
-
-const AddressSchema = z.object({
-  street: z.string().max(200, "Dirección demasiado larga").default(""),
-  city: z.string().max(100, "Ciudad demasiado larga").default(""),
-  postalCode: z.string().max(20, "Código postal demasiado largo").default(""),
-});
-
-const AccountSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, "El nombre debe tener al menos 2 caracteres")
-    .max(100, "El nombre es demasiado largo"),
-  email: z.string().email("El email no es válido"),
-  phoneNumber: z
-    .string()
-    .regex(
-      /^[+\d\s\-().]*$/,
-      "El teléfono solo puede contener números, espacios, +, -, ( y )",
-    )
-    .max(30, "El teléfono es demasiado largo")
-    .default(""),
-  address: AddressSchema,
-});
+import { AccountSchema } from "@/app/lib/schemas/account";
 
 // ---------------------------------------------------------------------------
 // Server Action
@@ -38,9 +11,23 @@ const AccountSchema = z.object({
 
 /**
  * Server Action para actualizar los datos del usuario.
- * Valida el payload con Zod antes de persistir en la base de datos.
+ * Acepta FormData directamente para uso con useActionState sin wrapper intermedio.
  */
-export async function updateAccountAction(data: unknown) {
+export async function updateAccountAction(
+  _prevState: unknown,
+  formData: FormData,
+) {
+  const data = {
+    fullName: formData.get("fullName"),
+    email: formData.get("email"),
+    phoneNumber: formData.get("phoneNumber"),
+    address: {
+      street: formData.get("street"),
+      number: formData.get("number"),
+      zip: formData.get("zip"),
+    },
+  };
+
   // 1. Validar con Zod
   const parsed = AccountSchema.safeParse(data);
   if (!parsed.success) {

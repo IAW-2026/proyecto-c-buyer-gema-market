@@ -28,7 +28,8 @@ import type { CheckoutItem } from "@/app/lib/types/orders";
 
 // ── Tipos ─────────────────────────────────────────────────────────────────────
 
-import { CheckoutAddressStep, type Address } from "./CheckoutAddressStep";
+import type { Address } from "@/app/lib/types/user";
+import { CheckoutAddressStep } from "./CheckoutAddressStep";
 import { CheckoutSummaryStep } from "./CheckoutSummaryStep";
 
 interface CheckoutClientProps {
@@ -95,7 +96,7 @@ export default function CheckoutClient({
       }
 
       // Redirigir a la checkout_url de la Payments App
-      // (en mock: apunta a /checkout/callback?payment_id=...&status=approved)
+      // (en mock: /orders — en producción: URL de Mercado Pago)
       router.push(result.checkout_url);
     });
   }
@@ -114,9 +115,13 @@ export default function CheckoutClient({
 
       <div className="pt-4 px-4 pb-2 max-w-[600px] mx-auto">
         {/* Stepper */}
-        <div className="flex gap-1.5 mb-6">
+        <ol aria-label="Pasos del checkout" className="flex gap-1.5 mb-6">
           {steps.map((s, i) => (
-            <div key={s} className="flex-1">
+            <li
+              key={s}
+              className="flex-1"
+              aria-current={i + 1 === step ? "step" : undefined}
+            >
               <div
                 className={`h-1 rounded-full mb-1.5 transition-colors ${
                   i + 1 <= step ? "bg-forest" : "bg-line-2"
@@ -129,13 +134,16 @@ export default function CheckoutClient({
               >
                 0{i + 1} · {s}
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
 
         {/* Error global */}
         {error && (
-          <div className="mb-4 px-4 py-3 rounded-xl bg-danger/10 border border-danger/20 text-danger text-sm flex gap-2 items-center">
+          <div
+            role="alert"
+            className="mb-4 px-4 py-3 rounded-xl bg-danger/10 border border-danger/20 text-danger text-sm flex gap-2 items-center"
+          >
             <Icon name="alertCircle" size={16} />
             {error}
           </div>
@@ -159,7 +167,8 @@ export default function CheckoutClient({
       </div>
 
       {/* ── Barra inferior fija ───────────────────────────────────────────── */}
-      <div className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line px-4 py-3 flex gap-2.5 max-w-[600px] mx-auto lgx:left-[240px] lgx:max-w-none">
+      <div className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-md border-t border-line">
+        <div className="max-w-[600px] mx-auto px-4 py-3 flex gap-2.5">
         {step > 1 && (
           <Button
             variant="secondary"
@@ -197,6 +206,7 @@ export default function CheckoutClient({
             {isPending ? "Procesando…" : `Pagar ${fmtARS(total)}`}
           </Button>
         )}
+        </div>
       </div>
     </div>
   );

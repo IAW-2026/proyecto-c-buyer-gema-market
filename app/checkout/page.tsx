@@ -22,9 +22,8 @@ export default async function CheckoutPage() {
 
   const initialAddress = {
     street: savedAddress?.street ?? "",
-    number: "",      // el modelo Address no tiene "number" separado aún
-    apt: "",
-    zip: savedAddress?.postalCode ?? "",
+    number: savedAddress?.number ?? "",
+    zip: savedAddress?.zip ?? "",
   };
 
   return <CheckoutClient initialAddress={initialAddress} />;

@@ -81,6 +81,12 @@ export interface Product extends ProductListItem {
   images?: string[];
 }
 
+// ── Batch: POST /api/seller/productos/batch ───────────────────────────────────
+/** Respuesta del endpoint POST /api/seller/productos/batch. */
+export interface BatchProductResponse {
+  products: ProductDetail[];
+}
+
 // ── Tienda: GET /api/seller/shops/:seller_id ──────────────────────────────────
 export interface Shop {
   seller_id: string;

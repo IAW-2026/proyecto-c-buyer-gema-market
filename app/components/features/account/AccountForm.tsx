@@ -1,40 +1,25 @@
 "use client";
 
-import React, { useActionState } from "react";
+import { useActionState } from "react";
 import { Card, Avatar, Field, Input, Button, Icon } from "@/app/components/ui";
 import { SignOutButton } from "@clerk/nextjs";
 import type { Usuario } from "@prisma/client";
-import { Address } from "@/app/lib/db/user";
+import type { Address } from "@/app/lib/types/user";
 import { updateAccountAction } from "../../../lib/actions/account";
 
 interface AccountFormProps {
   initialData: Usuario;
 }
 
-// Wrapper que convierte FormData → objeto y delega al action original
-async function submitAccountForm(_prevState: unknown, formData: FormData) {
-  const data = {
-    fullName: formData.get("fullName") as string,
-    email: formData.get("email") as string,
-    phoneNumber: formData.get("phoneNumber") as string,
-    address: {
-      street: formData.get("street") as string,
-      city: formData.get("city") as string,
-      postalCode: formData.get("postalCode") as string,
-    },
-  };
-  return updateAccountAction(data);
-}
-
 export default function AccountForm({ initialData }: AccountFormProps) {
   const initialAddress = (initialData.address as unknown as Address) || {
     street: "",
-    city: "",
-    postalCode: "",
+    number: "",
+    zip: "",
   };
 
   const [state, formAction, isPending] = useActionState(
-    submitAccountForm,
+    updateAccountAction,
     null,
   );
 
@@ -91,24 +76,23 @@ export default function AccountForm({ initialData }: AccountFormProps) {
                 defaultValue={initialData.phoneNumber ?? ""}
               />
             </Field>
-            <Field label="Ciudad">
-              <Input
-                name="city"
-                icon="pin"
-                defaultValue={initialAddress.city}
-              />
-            </Field>
-            <Field label="Código postal">
-              <Input
-                name="postalCode"
-                defaultValue={initialAddress.postalCode}
-              />
-            </Field>
             <Field label="Dirección">
               <Input
                 name="street"
                 icon="pin"
                 defaultValue={initialAddress.street}
+              />
+            </Field>
+            <Field label="Número">
+              <Input
+                name="number"
+                defaultValue={initialAddress.number}
+              />
+            </Field>
+            <Field label="Código postal">
+              <Input
+                name="zip"
+                defaultValue={initialAddress.zip}
               />
             </Field>
           </div>

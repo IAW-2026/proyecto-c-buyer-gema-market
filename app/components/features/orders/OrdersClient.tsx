@@ -1,73 +1,31 @@
 "use client";
 
-/**
- * OrdersClient — Componente cliente para el listado de órdenes.
- *
- * Recibe las órdenes ya resueltas desde el Server Component (page.tsx)
- * y maneja la interactividad: tabs "Activos" / "Historial" y navegación
- * al detalle de cada orden.
- */
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  TopBar,
-  Tabs,
-  Card,
-  Pill,
-  Icon,
-  EmptyState,
-} from "@/app/components/ui";
-import { UH_STATUS_LABEL } from "@/app/mocks/buyer/data";
-import { fmtARS } from "@/app/lib/utils/format";
-import type { OrdenStatus } from "@prisma/client";
-
-// ── Tipos ─────────────────────────────────────────────────────────────────────
-
-export interface OrderForUI {
-  id: string;
-  date: string;
-  status: OrdenStatus;
-  productTitle: string;
-  productThumbnail: string;
-  quantity: number;
-  unitPrice: number;
-  shippingPrice: number;
-  total: number;
-  paymentId?: string;
-  shippingId?: string;
-}
+import { TopBar, Tabs, EmptyState } from "@/app/components/ui";
+import { OrderCard } from "./OrderCard";
+import { ACTIVE_ORDER_STATUSES } from "@/app/lib/constants/orders";
+import type { OrderForUI } from "@/app/lib/types/orders";
 
 interface OrdersClientProps {
   orders: OrderForUI[];
-  statusLabels: typeof UH_STATUS_LABEL;
 }
 
-// ── Constantes ────────────────────────────────────────────────────────────────
-
-// Estados que se consideran "activos" (el pedido está en curso)
-const ACTIVE_STATUSES: OrdenStatus[] = [
-  "created",
-  "awaiting_payment",
-  "paid",
-  "shipping",
-];
-
-// ── Componente ────────────────────────────────────────────────────────────────
-
-export default function OrdersClient({ orders, statusLabels }: OrdersClientProps) {
+export default function OrdersClient({ orders }: OrdersClientProps) {
   const router = useRouter();
   const [tab, setTab] = useState<"activos" | "historial">("activos");
 
-  const activeOrders = orders.filter((o) => ACTIVE_STATUSES.includes(o.status));
+  const activeOrders = orders.filter((o) =>
+    ACTIVE_ORDER_STATUSES.includes(o.status),
+  );
   const historialOrders = orders.filter(
-    (o) => !ACTIVE_STATUSES.includes(o.status),
+    (o) => !ACTIVE_ORDER_STATUSES.includes(o.status),
   );
   const filtered = tab === "activos" ? activeOrders : historialOrders;
 
   return (
     <div className="pb-6">
-      <TopBar title="Mis pedidos" />
+      <TopBar title="Mis pedidos" back />
 
       <div className="px-4">
         <Tabs
@@ -84,7 +42,12 @@ export default function OrdersClient({ orders, statusLabels }: OrdersClientProps
         />
       </div>
 
-      <div className="p-4 flex flex-col gap-3">
+      <div
+        role="tabpanel"
+        id={`tab-panel-${tab}`}
+        aria-labelledby={`tab-${tab}`}
+        className="p-4 flex flex-col gap-3"
+      >
         {filtered.length === 0 ? (
           <EmptyState
             icon="box"
@@ -96,49 +59,13 @@ export default function OrdersClient({ orders, statusLabels }: OrdersClientProps
             }
           />
         ) : (
-          filtered.map((o) => {
-            const st = statusLabels[o.status];
-            return (
-              <Card
-                key={o.id}
-                padding={16}
-                onClick={() => router.push(`/orders/${o.id}`)}
-                hover
-              >
-                {/* Cabecera: ID + estado */}
-                <div className="flex justify-between items-center mb-2.5">
-                  <div className="text-xs font-mono text-ink-3 truncate max-w-[55%]">
-                    {o.id}
-                  </div>
-                  <Pill tone={st.tone} size="sm">
-                    {st.label}
-                  </Pill>
-                </div>
-
-                {/* Nombre del producto */}
-                <div className="text-sm font-medium mb-2 truncate">
-                  {o.productTitle}
-                  {o.quantity > 1 && (
-                    <span className="text-ink-3 font-normal">
-                      {" "}
-                      × {o.quantity}
-                    </span>
-                  )}
-                </div>
-
-                {/* Pie: fecha + total + chevron */}
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="text-[13px] text-ink-3">{o.date}</div>
-                    <div className="text-base font-semibold">
-                      {fmtARS(o.total)}
-                    </div>
-                  </div>
-                  <Icon name="chevronRight" size={18} className="text-ink-3" />
-                </div>
-              </Card>
-            );
-          })
+          filtered.map((o) => (
+            <OrderCard
+              key={o.id}
+              order={o}
+              onClick={() => router.push(`/orders/${o.id}`)}
+            />
+          ))
         )}
       </div>
     </div>

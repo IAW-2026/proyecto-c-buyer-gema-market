@@ -9,6 +9,7 @@ export async function getAccountData(): Promise<Usuario | null> {
   const userId = await getCurrentUserId();
 
   try {
+    if (!userId) return null;
     return await getUsuarioById(userId);
   } catch (error) {
     console.error("Error fetching account data:", error);
