@@ -104,10 +104,7 @@ export type OrderOption = "asc" | "desc";
 // ── Query params para el listado de productos ─────────────────────────────────
 export interface ProductFilters {
   q?: string;
-  /** Una única categoría (compatibilidad con API real). */
   category_id?: string;
-  /** Múltiples categorías seleccionadas desde el drawer. */
-  category_ids?: string[];
   sort_by?: SortByOption;
   order?: OrderOption;
   min_price?: number;

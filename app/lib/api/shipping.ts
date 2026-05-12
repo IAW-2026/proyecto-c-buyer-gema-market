@@ -12,9 +12,10 @@ import type { RequestQuoteParams } from "@/app/lib/types/api/shipping";
 
 export type { RequestQuoteParams };
 
-const SHIPPING_BASE_URL =
-  process.env.SHIPPING_API_URL ??
-  `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}/api/shipping`;
+if (!process.env.SHIPPING_API_URL)
+  throw new Error("Missing required environment variable: SHIPPING_API_URL");
+
+const SHIPPING_BASE_URL = process.env.SHIPPING_API_URL;
 
 export async function requestShippingQuote(
   params: RequestQuoteParams,

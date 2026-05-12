@@ -16,9 +16,10 @@ import type {
   Shop,
 } from "@/app/lib/types/product";
 
-const SELLER_BASE_URL =
-  process.env.SELLER_API_URL ??
-  `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}/api/seller`;
+if (!process.env.SELLER_API_URL)
+  throw new Error("Missing required environment variable: SELLER_API_URL");
+
+const SELLER_BASE_URL = process.env.SELLER_API_URL;
 
 export async function getProducts(
   filters: ProductFilters = {},
@@ -65,20 +66,6 @@ export async function getCategories(): Promise<Category[]> {
   return res.json();
 }
 
-export async function getShopById(
-  seller_id: string,
-  page = 1,
-  page_size = 20,
-): Promise<Shop | null> {
-  const res = await fetch(
-    `${SELLER_BASE_URL}/shops/${seller_id}?page=${page}&page_size=${page_size}`,
-    { next: { revalidate: 60 } },
-  );
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`Seller API error: ${res.status}`);
-  return res.json();
-}
-
 export async function getProductsBatch(
   productIds: string[],
 ): Promise<BatchProductResponse> {
@@ -90,6 +77,20 @@ export async function getProductsBatch(
     body: JSON.stringify({ product_ids: productIds }),
   });
 
+  if (!res.ok) throw new Error(`Seller API error: ${res.status}`);
+  return res.json();
+}
+
+export async function getShopById(
+  seller_id: string,
+  page = 1,
+  page_size = 20,
+): Promise<Shop | null> {
+  const res = await fetch(
+    `${SELLER_BASE_URL}/shops/${seller_id}?page=${page}&page_size=${page_size}`,
+    { next: { revalidate: 60 } },
+  );
+  if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Seller API error: ${res.status}`);
   return res.json();
 }

@@ -199,6 +199,7 @@ export async function createCheckoutAction(
       ),
     );
 
+    // Lo crea para un posible rollback en Fase 2 (si falla la llamada a Payments App)
     createdOrdenes.forEach((o) => createdOrderIds.push(o.id));
 
     const ordersForPayment = createdOrdenes.map((orden, i) => ({

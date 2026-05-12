@@ -15,9 +15,10 @@ import type {
 
 export type { PaymentOrderItem, CreatePaymentOrderParams };
 
-const PAYMENTS_BASE_URL =
-  process.env.PAYMENTS_API_URL ??
-  `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}/api/payments`;
+if (!process.env.PAYMENTS_API_URL)
+  throw new Error("Missing required environment variable: PAYMENTS_API_URL");
+
+const PAYMENTS_BASE_URL = process.env.PAYMENTS_API_URL;
 
 export async function createPaymentOrder(
   params: CreatePaymentOrderParams,
