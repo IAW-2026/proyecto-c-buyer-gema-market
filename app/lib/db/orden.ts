@@ -1,5 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
-import { OrdenStatus, Prisma } from "@prisma/client";
+import { Orden, OrdenStatus, Prisma } from "@prisma/client";
 import { generateUlid } from "../utils/ulidGenerator";
 
 // ─────────────────────────────────────────────
@@ -30,7 +30,7 @@ type UpdateOrdenInput = Partial<{
   quoteId: string;
 }>;
 
-type OrdenConBuyer = Prisma.OrdenGetPayload<{
+export type OrdenConBuyer = Prisma.OrdenGetPayload<{
   include: { buyer: true };
 }>;
 
@@ -38,15 +38,12 @@ type OrdenConBuyer = Prisma.OrdenGetPayload<{
 // CREATE
 // ─────────────────────────────────────────────
 
-export async function createOrden(
-  data: CreateOrdenInput /**
-   * Crea una nueva orden (compra de un producto)
-   * data: todos los detalles de la orden (comprador, vendedor, producto, precios, etc.)
-   * Valores por defecto: currency='ARS', status='created', IDs de relaciones=null
-   * include: { buyer: true } → retorna orden con datos del comprador
-   * Retorna: Orden creada con todas sus propiedades y datos del buyer
-   */,
-): Promise<OrdenConBuyer> {
+/**
+ * Crea una nueva orden (compra de un producto)
+ * Valores por defecto: currency='ARS', status='created', IDs de relaciones=null
+ * Retorna: Orden creada
+ */
+export async function createOrden(data: CreateOrdenInput): Promise<Orden> {
   return prisma.orden.create({
     data: {
       id: generateUlid("ord"),
@@ -63,7 +60,6 @@ export async function createOrden(
       paymentId: data.paymentId ?? null,
       shippingId: data.shippingId ?? null,
     },
-    include: { buyer: true },
   });
 }
 
@@ -85,35 +81,34 @@ export async function createOrden(
 }
 /**
  * Obtiene TODAS las órdenes del sistema
- * findMany sin where → retorna todas las Órdenes
- * include: { buyer: true } → cada orden trae datos de su comprador
- * Retorna: Array de todas las Órdenes con compradores
- */ export async function getAllOrdenes(): Promise<OrdenConBuyer[]> {
-  return prisma.orden.findMany({
-    include: { buyer: true },
-  });
+ * Retorna: Array de todas las Órdenes
+ */
+export async function getAllOrdenes(): Promise<Orden[]> {
+  return prisma.orden.findMany();
 }
 
 export async function getOrdenesByBuyerId(
   buyerId: string,
+  page = 1,
+  pageSize = 20,
 ): Promise<OrdenConBuyer[]> {
   return prisma.orden.findMany({
     where: { buyerId },
     include: { buyer: true },
     orderBy: { createdAt: "desc" },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
 }
 /**
  * Obtiene todas las órdenes con un estado específico
- * where: { status } → filtra órdenes por estado (created, pending, completed, etc.)
- * include: { buyer: true } → cada orden trae datos del comprador
  * Retorna: Array de Órdenes con ese estado
- */ export async function getOrdenesByStatus(
+ */
+export async function getOrdenesByStatus(
   status: OrdenStatus,
-): Promise<OrdenConBuyer[]> {
+): Promise<Orden[]> {
   return prisma.orden.findMany({
     where: { status },
-    include: { buyer: true },
   });
 }
 
@@ -122,18 +117,16 @@ export async function getOrdenesByBuyerId(
 // ─────────────────────────────────────────────
 /**
  * Actualiza una orden existente
- * where: { id } → localiza la orden exacta
  * data: { quantity?, status?, paymentId?, shippingId?, quoteId? } → cambios parciales
- * include: { buyer: true } → retorna orden actualizada con datos del comprador
- * Retorna: Orden modificada con sus cambios aplicados
- */ export async function updateOrden(
+ * Retorna: Orden modificada
+ */
+export async function updateOrden(
   id: string,
   data: UpdateOrdenInput,
-): Promise<OrdenConBuyer> {
+): Promise<Orden> {
   return prisma.orden.update({
     where: { id },
     data,
-    include: { buyer: true },
   });
 }
 
@@ -142,12 +135,10 @@ export async function getOrdenesByBuyerId(
 // ─────────────────────────────────────────────
 /**
  * Elimina una orden
- * where: { id } → localiza la orden exacta
- * include: { buyer: true } → retorna orden eliminada con datos del comprador
  * Retorna: Orden que fue eliminada
- */ export async function deleteOrden(id: string): Promise<OrdenConBuyer> {
+ */
+export async function deleteOrden(id: string): Promise<Orden> {
   return prisma.orden.delete({
     where: { id },
-    include: { buyer: true },
   });
 }

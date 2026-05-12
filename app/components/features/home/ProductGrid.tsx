@@ -9,7 +9,7 @@
  */
 
 import type { ProductFilters } from "@/app/lib/types/product";
-import { getProducts } from "@/app/lib/services/seller";
+import { getProducts } from "@/app/lib/api/seller";
 import Pagination from "./Pagination";
 import ProductCard from "../../products/ProductCard";
 import { getFavoritosIds } from "@/app/lib/db/favorito";
@@ -20,13 +20,11 @@ interface ProductGridProps {
 }
 
 export default async function ProductGrid({ filters }: ProductGridProps) {
-  //hacemos las llamadas simultaneamente, lo que hace que sea mas rapido
-  const [productsResult, userId] = await Promise.all([
+  const [productsResult, favoriteProductIds] = await Promise.all([
     getProducts(filters),
-    getCurrentUserId(),
+    getCurrentUserId().then((id) => (id ? getFavoritosIds(id) : [])),
   ]);
   const { items, total, page_size } = productsResult;
-  const favoriteProductIds = await getFavoritosIds(userId);
 
   if (items.length === 0) {
     return (

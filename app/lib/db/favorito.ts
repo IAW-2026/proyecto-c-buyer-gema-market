@@ -1,5 +1,5 @@
 import { prisma } from "@/app/lib/prisma";
-import { Favorito, Prisma } from "@prisma/client";
+import { Favorito } from "@prisma/client";
 
 // ─────────────────────────────────────────────
 // Types
@@ -10,27 +10,19 @@ type CreateFavoritoInput = {
   productId: string;
 };
 
-type FavoritoConBuyer = Prisma.FavoritoGetPayload<{
-  include: { buyer: true };
-}>;
-
 // ─────────────────────────────────────────────
 // CREATE
 // ─────────────────────────────────────────────
 /**
  * Agrega un producto a los favoritos de un comprador
- * data: crea nuevo Favorito con buyerId y productId
- * include: { buyer: true } → retorna el favorito con datos del comprador
- * Retorna: Favorito creado con info del comprador
- */ export async function createFavorito(
-  data: CreateFavoritoInput,
-): Promise<FavoritoConBuyer> {
+ * Retorna: Favorito creado
+ */
+export async function createFavorito(data: CreateFavoritoInput): Promise<Favorito> {
   return prisma.favorito.create({
     data: {
       buyerId: data.buyerId,
       productId: data.productId,
     },
-    include: { buyer: true },
   });
 }
 
@@ -40,8 +32,6 @@ type FavoritoConBuyer = Prisma.FavoritoGetPayload<{
 
 /**
  * Busca un favorito específico por comprador y producto
- * where: { buyerId_productId } → busca por clave compuesta única (buyerId + productId)
- * include: { buyer: true } → retorna el favorito con datos del comprador
  * Retorna: Favorito encontrado o null si no existe
  */
 export async function getFavorito(
@@ -50,38 +40,27 @@ export async function getFavorito(
 ): Promise<Favorito | null> {
   return prisma.favorito.findUnique({
     where: {
-      buyerId_productId: {
-        buyerId,
-        productId,
-      },
+      buyerId_productId: { buyerId, productId },
     },
-    include: { buyer: true },
   });
 }
 /**
- * Obtiene todos los favoritos de un comprador
- * where: { buyerId } → filtra favoritos del comprador
- * include: { buyer: true } → cada favorito incluye datos del comprador
- * orderBy: { createdAt: "desc" } → ordena del más reciente al más antiguo
+ * Obtiene todos los favoritos de un comprador ordenados por fecha
  * Retorna: Array de Favoritos del comprador
- */ export async function getFavoritosByBuyerId(
-  buyerId: string,
-): Promise<FavoritoConBuyer[]> {
+ */
+export async function getFavoritosByBuyerId(buyerId: string): Promise<Favorito[]> {
   return prisma.favorito.findMany({
     where: { buyerId },
-    include: { buyer: true },
     orderBy: { createdAt: "desc" },
   });
 }
+
 /**
  * Obtiene todos los favoritos del sistema
- * findMany sin where → retorna todos los Favoritos
- * include: { buyer: true } → cada favorito trae datos del comprador
- * Retorna: Array de todos los Favoritos con sus compradores
- */ export async function getAllFavoritos(): Promise<FavoritoConBuyer[]> {
-  return prisma.favorito.findMany({
-    include: { buyer: true },
-  });
+ * Retorna: Array de todos los Favoritos
+ */
+export async function getAllFavoritos(): Promise<Favorito[]> {
+  return prisma.favorito.findMany();
 }
 /**
  * Verifica si un producto está marcado como favorito por un comprador
@@ -112,21 +91,13 @@ export async function getFavorito(
 // ─────────────────────────────────────────────
 /**
  * Elimina un favorito específico
- * where: { buyerId_productId } → localiza por clave compuesta (comprador + producto)
- * include: { buyer: true } → retorna el favorito eliminado con datos del comprador
  * Retorna: Favorito que fue eliminado
- */ export async function deleteFavorito(
-  buyerId: string,
-  productId: string,
-): Promise<FavoritoConBuyer> {
+ */
+export async function deleteFavorito(buyerId: string, productId: string): Promise<Favorito> {
   return prisma.favorito.delete({
     where: {
-      buyerId_productId: {
-        buyerId,
-        productId,
-      },
+      buyerId_productId: { buyerId, productId },
     },
-    include: { buyer: true },
   });
 }
 /**

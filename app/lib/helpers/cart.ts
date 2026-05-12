@@ -1,15 +1,9 @@
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 import { getCarritoByBuyerId } from "@/app/lib/db/carrito";
-import { getProductsBatch } from "@/app/lib/services/seller";
-import type { ProductListItem } from "@/app/lib/types/product";
+import { getProductsBatch } from "@/app/lib/api/seller";
+import type { CartItemWithProduct } from "@/app/lib/types/cart";
 
-/**
- * Interface que extiende ProductListItem para incluir la cantidad en el carrito.
- */
-export interface CartItemWithProduct extends ProductListItem {
-  quantity: number;
-  item_id: string;
-}
+export type { CartItemWithProduct };
 
 /**
  * Obtiene los productos que están en el carrito del usuario actual,
@@ -35,7 +29,7 @@ export async function getCartWithProducts(): Promise<CartItemWithProduct[]> {
 
     // 3. Obtener los datos de los productos en batch desde el servicio de Seller
     const response = await getProductsBatch(productIds);
-    const products = response?.items || [];
+    const products = response?.products || [];
 
     // 4. Mapear los productos para incluir la cantidad y el ID del item del carrito
     const itemMap = new Map(

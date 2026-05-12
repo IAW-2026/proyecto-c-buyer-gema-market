@@ -76,7 +76,8 @@ export type IconName =
   | "flame"
   | "helmet"
   | "scan"
-  | "alertCircle";
+  | "alertCircle"
+  | "checkCircle";
 
 interface IconProps {
   name: IconName;
@@ -483,6 +484,12 @@ export const Icon = ({
       <>
         <path d="M4 16a8 8 0 0 1 16 0v3H4z" />
         <path d="M9 8c1-3 3-4 3-4s2 1 3 4" />
+      </>
+    ),
+    checkCircle: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="m9 12 2 2 4-4" />
       </>
     ),
     scan: (

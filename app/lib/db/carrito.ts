@@ -19,9 +19,9 @@ type CarritoConRelaciones = Prisma.CarritoGetPayload<{
 // ─────────────────────────────────────────────
 /**
  * Crea un nuevo carrito para un comprador
- * Retorna: el carrito con sus items incluidos (array vacío al inicio)
- * Relaciones: items (ItemCarrito[])
- */ export async function createCarrito(
+ * Retorna: Carrito creado
+ */
+export async function createCarrito(
   data: CreateCarritoInput,
 ): Promise<Carrito> {
   return prisma.carrito.create({
@@ -29,7 +29,6 @@ type CarritoConRelaciones = Prisma.CarritoGetPayload<{
       id: generateUlid("car"),
       buyerId: data.buyerId,
     },
-    include: { items: true },
   });
 }
 
@@ -52,16 +51,30 @@ export async function getCarritoById(
   });
 }
 /**
- * Busca el carrito de un comprador específico
- * where: { buyerId } → filtra por ID del comprador
- * findFirst → retorna el primer (y único) carrito que coincida
- * include: items + buyer → retorna carrito con sus items y datos del comprador
- * Retorna: Carrito con relaciones o null si el comprador no tiene carrito
- */ export async function getCarritoByBuyerId(
+ * Busca el carrito de un comprador específico.
+ * Usa findUnique por el campo único buyerId.
+ */
+export async function getCarritoByBuyerId(
   buyerId: string,
 ): Promise<CarritoConRelaciones | null> {
-  return prisma.carrito.findFirst({
+  return prisma.carrito.findUnique({
     where: { buyerId },
+    include: { items: true },
+  });
+}
+
+/**
+ * Retorna el carrito del comprador si existe, o lo crea si no.
+ * Usa upsert atómico sobre buyerId (@unique) — elimina la race condition
+ * de crear dos carritos si el usuario agrega al carrito desde dos tabs simultáneamente.
+ */
+export async function getOrCreateCarrito(
+  buyerId: string,
+): Promise<CarritoConRelaciones> {
+  return prisma.carrito.upsert({
+    where: { buyerId },
+    create: { id: generateUlid("car"), buyerId },
+    update: {},
     include: { items: true },
   });
 }
@@ -77,42 +90,14 @@ export async function getCarritoById(
 }
 
 // ─────────────────────────────────────────────
-// UPDATE
-// ─────────────────────────────────────────────
-
-/**
- * Actualiza un carrito (actualmente no cambia datos, data: {})
- * where: { id } → localiza el carrito a actualizar
- * data: {} → sin cambios en este caso
- * include: items + buyer → retorna carrito actualizado con sus relaciones
- * Retorna: Carrito modificado con sus items y datos del comprador
- */
-export async function updateCarrito(id: string): Promise<Carrito> {
-  return prisma.carrito.update({
-    where: { id },
-    data: {},
-    include: { items: true, buyer: true },
-  });
-}
-
-// ─────────────────────────────────────────────
 // DELETE
 // ─────────────────────────────────────────────
 
 /**
- * Elimina un carrito y todos sus items
- * 1. deleteMany items: borra todos los ItemCarrito asociados al carrito
- *    where: { carritoId: id } → filtra items del carrito a eliminar
- * 2. delete carrito: borra el carrito después de limpiar sus items
- *    where: { id } → localiza el carrito exacto
- * Retorna: Carrito eliminado (sin relaciones)
+ * Elimina un carrito y todos sus items (cascade a nivel DB)
+ * Retorna: Carrito eliminado
  */
 export async function deleteCarrito(id: string): Promise<Carrito> {
-  // First delete all items in the carrito
-  await prisma.itemCarrito.deleteMany({
-    where: { carritoId: id },
-  });
-  // delete carrito
   return prisma.carrito.delete({
     where: { id },
   });

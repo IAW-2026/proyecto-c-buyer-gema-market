@@ -1,15 +1,15 @@
-import React from "react";
+import { Suspense } from "react";
 import { TopBar } from "@/app/components/ui";
 import { getAccountData } from "@/app/lib/helpers/account";
 import AccountForm from "../components/features/account/AccountForm";
+import AccountSkeleton from "../components/features/account/AccountSkeleton";
 
 export const dynamic = "force-dynamic";
 
-export default async function AccountPage() {
+async function AccountContent() {
   const datos = await getAccountData();
 
   if (!datos) {
-    // Podríamos mostrar un error o redireccionar
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center p-4">
         <p className="text-ink-3">
@@ -19,13 +19,19 @@ export default async function AccountPage() {
     );
   }
 
+  return <AccountForm initialData={datos} />;
+}
+
+export default function AccountPage() {
   return (
-    <div className="min-h-screen bg-cream pb-[188px] lgx:pt-8 lgx:px-7 lgx:pb-32">
+    <div className="min-h-screen bg-cream pb-47 lgx:pt-8 lgx:px-7 lgx:pb-32">
       <div className="lgx:hidden">
         <TopBar title="Cuenta" />
       </div>
 
-      <AccountForm initialData={datos} />
+      <Suspense fallback={<AccountSkeleton />}>
+        <AccountContent />
+      </Suspense>
     </div>
   );
 }

@@ -21,7 +21,13 @@ export interface ProductListItem {
   status: ProductStatus;
   thumbnail_url: string;
   href: string;
+  weight?: number;
+  height?: number;
+  width?: number;
+  depth?: number;
 }
+
+// Uso esos ultimos 4 para enviar a shipping, los recupero con batch product
 
 /** Respuesta paginada del endpoint GET /api/seller/productos. */
 // Estos se mostraran en el listado de productos
@@ -75,6 +81,12 @@ export interface Product extends ProductListItem {
   images?: string[];
 }
 
+// ── Batch: POST /api/seller/productos/batch ───────────────────────────────────
+/** Respuesta del endpoint POST /api/seller/productos/batch. */
+export interface BatchProductResponse {
+  products: ProductDetail[];
+}
+
 // ── Tienda: GET /api/seller/shops/:seller_id ──────────────────────────────────
 export interface Shop {
   seller_id: string;
@@ -92,10 +104,7 @@ export type OrderOption = "asc" | "desc";
 // ── Query params para el listado de productos ─────────────────────────────────
 export interface ProductFilters {
   q?: string;
-  /** Una única categoría (compatibilidad con API real). */
   category_id?: string;
-  /** Múltiples categorías seleccionadas desde el drawer. */
-  category_ids?: string[];
   sort_by?: SortByOption;
   order?: OrderOption;
   min_price?: number;

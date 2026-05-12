@@ -13,7 +13,7 @@ export default function Loading() {
         <div className="mb-6 animate-pulse">
           <Logo size={48} />
         </div>
-        
+
         {/* Spinner elegante */}
         <div className="flex flex-col items-center gap-3">
           <div className="h-1 w-32 overflow-hidden rounded-full bg-bone">

@@ -54,23 +54,15 @@ export async function createItemCarrito(
 export async function upsertItemCarrito(
   data: CreateItemCarritoInput,
 ): Promise<ItemCarrito> {
-  const existing = await prisma.itemCarrito.findFirst({
+  return prisma.itemCarrito.upsert({
     where: {
-      carritoId: data.carritoId,
-      productId: data.productId,
+      carritoId_productId: {
+        carritoId: data.carritoId,
+        productId: data.productId,
+      },
     },
-  });
-
-  if (existing) {
-    return prisma.itemCarrito.update({
-      where: { id: existing.id },
-      data: { quantity: existing.quantity + data.quantity },
-    });
-  }
-
-  // No existe: crear nuevo
-  return prisma.itemCarrito.create({
-    data: {
+    update: { quantity: { increment: data.quantity } },
+    create: {
       id: generateUlid("itm"),
       carritoId: data.carritoId,
       productId: data.productId,
@@ -114,18 +106,16 @@ export async function getItemsByCarritoId(
 
 /**
  * Busca un item específico en el carrito por producto
- * where: { carritoId, productId } → filtra por carrito Y producto
- * findFirst: retorna el primer (único) item que coincida
+ * where: { carritoId_productId } → clave única compuesta @@unique([carritoId, productId])
  * Retorna: ItemCarrito encontrado o null si el producto no está en el carrito
  */
 export async function getItemByCarritoAndProduct(
   carritoId: string,
   productId: string,
 ): Promise<ItemCarrito | null> {
-  return prisma.itemCarrito.findFirst({
+  return prisma.itemCarrito.findUnique({
     where: {
-      carritoId,
-      productId,
+      carritoId_productId: { carritoId, productId },
     },
   });
 }

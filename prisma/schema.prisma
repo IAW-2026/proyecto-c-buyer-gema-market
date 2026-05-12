@@ -44,7 +44,7 @@ model Usuario {
   createdAt     DateTime @default(now()) @map("created_at")
 
   ordenes       Orden[]
-  carritos      Carrito[]
+  carrito       Carrito?
   favoritos     Favorito[]
 
   @@map("usuario")
@@ -74,7 +74,7 @@ model Orden {
 
 model Carrito {
   id        String       @id @db.VarChar(30)
-  buyerId   String       @map("buyer_id")
+  buyerId   String       @unique @map("buyer_id")
   createdAt DateTime     @default(now()) @map("created_at")
 
   buyer     Usuario      @relation(fields: [buyerId], references: [id])
@@ -90,7 +90,7 @@ model ItemCarrito {
   quantity   Int
   addedAt    DateTime @default(now()) @map("added_at")
 
-  carrito    Carrito  @relation(fields: [carritoId], references: [id])
+  carrito    Carrito  @relation(fields: [carritoId], references: [id], onDelete: Cascade)
 
   // Un mismo producto solo puede aparecer una vez por carrito
   @@unique([carritoId, productId])

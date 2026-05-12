@@ -9,7 +9,7 @@
 import { Button, EmptyState } from "@/app/components/ui";
 import React, { useState, useOptimistic, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import type { CartItemWithProduct } from "@/app/lib/helpers/cart";
+import type { CartItemWithProduct } from "@/app/lib/types/cart";
 import {
   updateCartItemQuantityAction,
   removeCartItemAction,
@@ -49,16 +49,10 @@ export default function CartGridClient({ initialItems }: CartGridClientProps) {
     },
   );
 
-  // Cálculos derivados del estado optimista
-  const { subtotal, ship, total } = useMemo(() => {
-    const sub = optimisticItems.reduce((s, i) => s + i.price * i.quantity, 0);
-    const shp = optimisticItems.length > 0 ? 7300 : 0;
-    return {
-      subtotal: sub,
-      ship: shp,
-      total: sub + shp,
-    };
-  }, [optimisticItems]);
+  const subtotal = useMemo(
+    () => optimisticItems.reduce((s, i) => s + i.price * i.quantity, 0),
+    [optimisticItems],
+  );
 
   // Handlers
   const updateQuantity = async (id: string, delta: number) => {
@@ -79,7 +73,7 @@ export default function CartGridClient({ initialItems }: CartGridClientProps) {
 
         // 2. Ejecutamos la acción del servidor
         const result = await updateCartItemQuantityAction(item.item_id, newQty);
-        if (!result.success) {
+        if (!result.ok) {
           console.error(result.error);
         }
       } finally {
@@ -106,7 +100,7 @@ export default function CartGridClient({ initialItems }: CartGridClientProps) {
 
         // 2. Ejecutamos la acción del servidor
         const result = await removeCartItemAction(item.item_id);
-        if (!result.success) {
+        if (!result.ok) {
           console.error(result.error);
         }
       } finally {
@@ -150,8 +144,6 @@ export default function CartGridClient({ initialItems }: CartGridClientProps) {
 
       <CartSummary
         subtotal={subtotal}
-        ship={ship}
-        total={total}
         onCheckout={() => router.push("/checkout")}
         isPending={isPending}
       />

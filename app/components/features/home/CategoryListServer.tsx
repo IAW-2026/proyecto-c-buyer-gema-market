@@ -5,7 +5,7 @@
  * las pasa al CategoryList (Client Component).
  */
 
-import { getCategories } from "@/app/lib/services/seller";
+import { getCategories } from "@/app/lib/api/seller";
 import { CategoryList } from "@/app/components/features/home/CategoryList";
 
 export default async function CategoryListServer() {

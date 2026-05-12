@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import { getProductById } from "@/app/lib/services/seller";
+import { getProductById } from "@/app/lib/api/seller";
 import ProductDetailClient from "../../components/products/ProductDetailClient";
-import { getFavoritosIds } from "@/app/lib/db/favorito";
+import { isFavorited } from "@/app/lib/db/favorito";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 
 interface PageProps {
@@ -13,19 +13,17 @@ interface PageProps {
 export default async function ProductDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
 
-  // 1. Obtenemos el producto y el userId en paralelo
-  const [p, userId] = await Promise.all([
+  // Paralelo: producto + check de favorito.
+  // isFavorited usa findUnique por clave primaria compuesta (buyerId, productId) — O(1).
+  // Es más eficiente que getFavoritosIds que trae todos los IDs para luego hacer includes().
+  const [p, initialFavorite] = await Promise.all([
     getProductById(resolvedParams.id),
-    getCurrentUserId(),
+    getCurrentUserId().then((id) =>
+      id ? isFavorited(id, resolvedParams.id) : false,
+    ),
   ]);
 
-  if (!p) {
-    notFound();
-  }
-
-  // 2. Obtenemos los favoritos del usuario
-  const favoriteProductIds = await getFavoritosIds(userId);
-  const initialFavorite = favoriteProductIds.includes(p.product_id);
+  if (!p) notFound();
 
   return <ProductDetailClient p={p} initialFavorite={initialFavorite} />;
 }

@@ -1,16 +1,9 @@
 import { prisma } from "@/app/lib/prisma";
 import { Usuario, Role } from "@prisma/client";
 import { generateUlid } from "@/app/lib/utils/ulidGenerator";
+import type { Address } from "@/app/lib/types/user";
 
-// ─────────────────────────────────────────────
-// Types
-// ─────────────────────────────────────────────
-
-export type Address = {
-  street: string;
-  city: string;
-  postalCode: string;
-};
+export type { Address };
 
 type CreateUsuarioInput = {
   clerkUserId: string;
