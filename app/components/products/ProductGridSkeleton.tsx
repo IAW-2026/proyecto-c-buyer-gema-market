@@ -3,10 +3,10 @@
  *
  * Placeholder animado que se muestra mientras se resuelve la promesa de
  * carga de productos. Se usa como `fallback` del <Suspense> en page.tsx.
- *
- * El número de tarjetas del skeleton coincide con el page_size por defecto (8).
  */
-const SKELETON_COUNT = 8;
+import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/products";
+
+const SKELETON_COUNT = PRODUCTS_PAGE_SIZE;
 
 function SkeletonCard() {
   return (

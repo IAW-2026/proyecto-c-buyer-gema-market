@@ -60,8 +60,7 @@ export async function POST(req: NextRequest) {
         unit_price: o.unit_price,
         quote_id: o.quote?.quote_id,
         shipping_price: o.quote?.shipping_price ?? 0,
-        amount:
-          o.unit_price * o.quantity + (o.quote?.shipping_price ?? 0),
+        amount: o.unit_price * o.quantity + (o.quote?.shipping_price ?? 0),
       }),
     );
 

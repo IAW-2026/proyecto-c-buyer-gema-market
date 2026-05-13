@@ -1,0 +1,3 @@
+- hacer autorización para apis
+- si tengo dos pages y van a la 4 mostrar la última
+- chequear los post en developer tools que no sea muy chancho

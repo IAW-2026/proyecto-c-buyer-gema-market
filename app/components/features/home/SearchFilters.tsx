@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, ChangeEvent } from "react";
-import { Icon, Input } from "../../ui";
+import { useState, useRef, useEffect } from "react";
+import { Icon, SearchBar } from "../../ui";
 
 import { FiltersPanel } from "./FiltersPanel";
 import { useFilteredParams } from "./hooks/useFilteredParams";
@@ -84,28 +84,17 @@ export default function SearchFilters() {
     >
       <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-2.5 items-center mb-3 relative max-[640px]:grid-cols-[minmax(0,1fr)_auto]">
         {/* Barra de búsqueda */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            applyFilters({
-              ...pendingFilters,
-              searchQuery: pendingFilters.searchQuery,
-            });
-          }}
+        <SearchBar
           className="flex-1"
-        >
-          <Input
-            icon="search"
-            placeholder="Buscar muebles, cocina, deco..."
-            value={pendingFilters.searchQuery}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setPendingFilters((prev) => ({
-                ...prev,
-                searchQuery: e.target.value,
-              }))
-            }
-          />
-        </form>
+          label="Buscar productos"
+          submitLabel="Buscar"
+          placeholder="Buscar muebles, cocina, deco..."
+          value={pendingFilters.searchQuery}
+          onChange={(searchQuery) =>
+            setPendingFilters((prev) => ({ ...prev, searchQuery }))
+          }
+          onSubmit={() => applyFilters(pendingFilters)}
+        />
 
         {/* Botón de filtros */}
         <button

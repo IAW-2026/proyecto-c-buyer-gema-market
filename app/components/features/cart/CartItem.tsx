@@ -20,6 +20,7 @@ export function CartItem({
   onRemove,
   isPending,
 }: CartItemProps) {
+  const reachedStock = item.quantity >= item.stock;
   return (
     <Card padding={14} className={isPending ? "opacity-60 transition-opacity" : ""}>
       <div className="flex gap-3.5">
@@ -57,7 +58,7 @@ export function CartItem({
               </span>
               <button
                 onClick={() => onUpdateQuantity(item.product_id, 1)}
-                disabled={isPending}
+                disabled={isPending || reachedStock}
                 aria-label="Aumentar cantidad"
                 className="px-2.5 h-full active:scale-90 transition-transform disabled:opacity-30"
               >

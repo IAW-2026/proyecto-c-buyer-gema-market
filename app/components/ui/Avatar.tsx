@@ -16,7 +16,7 @@ export const Avatar = ({ name = "", size = 40, src }: AvatarProps) => {
       .slice(0, 2)
       .join("")
       .toUpperCase() || "?";
-  
+
   const palette = ["#a4ac86", "#7f4f24", "#656d4a", "#936639", "#414833"];
   const c = palette[name.charCodeAt(0) % palette.length];
 
@@ -31,7 +31,13 @@ export const Avatar = ({ name = "", size = 40, src }: AvatarProps) => {
       }}
     >
       {src ? (
-        <Image src={src} alt={name} width={size} height={size} className="w-full h-full object-cover" />
+        <Image
+          src={src}
+          alt={name}
+          width={size}
+          height={size}
+          className="w-full h-full object-cover"
+        />
       ) : (
         initials
       )}

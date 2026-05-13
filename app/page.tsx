@@ -1,11 +1,10 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import ProductGrid from "@/app/components/features/home/ProductGrid";
 import { buildFiltersFromParams } from "@/app/lib/utils/product-filters";
 import ProductGridSkeleton from "@/app/components/products/ProductGridSkeleton";
 import { HeaderHomePage } from "@/app/components/features/home/HeaderHomePage";
-
-// TODO: llevarlo a una constante.
-const DEFAULT_PAGE_SIZE = 8;
+import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/products";
 
 /**
  * Home page — Catálogo de productos.
@@ -27,14 +26,28 @@ interface HomePageProps {
 export default async function Home({ searchParams }: HomePageProps) {
   const params = await searchParams;
 
-  const page = Number(params.page) || 1;
-  const pageSize = Number(params.page_size) || DEFAULT_PAGE_SIZE;
+  // page_size es un valor fijo del frontend: si la URL no lo trae o lo trae
+  // distinto al valor canónico, redirigimos para que siempre se vea en la URL.
+  if (params.page_size !== String(PRODUCTS_PAGE_SIZE)) {
+    const fixedParams = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      if (value === undefined || key === "page_size") continue;
+      if (Array.isArray(value)) {
+        for (const v of value) fixedParams.append(key, v);
+      } else {
+        fixedParams.set(key, value);
+      }
+    }
+    fixedParams.set("page_size", String(PRODUCTS_PAGE_SIZE));
+    redirect(`/?${fixedParams.toString()}`);
+  }
 
-  // Agregar a params y pasar a buildFiltersFromParams
+  const page = Number(params.page) || 1;
+
   const paginatedParams = {
     ...params,
     page: String(page),
-    page_size: String(pageSize),
+    page_size: String(PRODUCTS_PAGE_SIZE),
   };
   const filters = buildFiltersFromParams(paginatedParams);
 

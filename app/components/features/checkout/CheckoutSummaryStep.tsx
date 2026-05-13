@@ -36,9 +36,7 @@ export function CheckoutSummaryStep({
             <div className="font-medium text-sm">
               {addr.street} {addr.number}
             </div>
-            <div className="text-[13px] text-ink-3">
-              Bahía Blanca · CP {addr.zip}
-            </div>
+            <div className="text-[13px] text-ink-3"> CP {addr.zip}</div>
           </div>
         </div>
       </Card>

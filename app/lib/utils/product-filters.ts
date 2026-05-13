@@ -4,6 +4,7 @@ import type {
   OrderOption,
   ProductStatus,
 } from "@/app/lib/types/product";
+import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/products";
 
 /**
  * buildFiltersFromParams
@@ -67,7 +68,8 @@ export function buildFiltersFromParams(
   const page = Number(Array.isArray(rawPage) ? rawPage[0] : rawPage) || 1;
   const rawPageSize = params["page_size"];
   const pageSize =
-    Number(Array.isArray(rawPageSize) ? rawPageSize[0] : rawPageSize) || 20;
+    Number(Array.isArray(rawPageSize) ? rawPageSize[0] : rawPageSize) ||
+    PRODUCTS_PAGE_SIZE;
 
   // ── 7. Construir el objeto final omitiendo claves vacías ──────────────────
   return {

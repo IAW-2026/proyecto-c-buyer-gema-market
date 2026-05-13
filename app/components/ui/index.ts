@@ -2,6 +2,7 @@ export * from "./Icon";
 export * from "./Button";
 export * from "./Pill";
 export * from "./Input";
+export * from "./SearchBar";
 export * from "./EmptyState";
 export * from "./Logo";
 export * from "./ProductGlyph";

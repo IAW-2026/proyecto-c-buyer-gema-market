@@ -21,13 +21,15 @@ export default function ProductImageGallery({
   const router = useRouter();
 
   return (
-    <div className="relative lgx:static">
-      <div className="aspect-square max-h-[520px] flex items-center justify-center relative min-[600px]:max-w-[560px] min-[600px]:mx-auto min-[600px]:rounded-r3 min-[600px]:overflow-hidden min-[600px]:border min-[600px]:border-line lgx:max-w-none lgx:rounded-r3 lgx:overflow-hidden lgx:border lgx:border-line lgx:sticky lgx:top-6 lgx:shadow-sh-1 bg-bone">
+    <div className="lgx:sticky lgx:top-6">
+      <div className="aspect-square max-h-130 flex items-center justify-center relative min-[600px]:max-w-140 min-[600px]:mx-auto min-[600px]:rounded-r3 min-[600px]:overflow-hidden min-[600px]:border min-[600px]:border-line lgx:max-w-none lgx:rounded-r3 lgx:overflow-hidden lgx:border lgx:border-line lgx:shadow-sh-1 bg-bone">
         {thumbnailUrl ? (
           <Image
             src={thumbnailUrl}
             alt={title}
             fill
+            priority
+            loading="eager"
             className="object-cover"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
