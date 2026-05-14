@@ -1,18 +1,18 @@
-import type { ProductStatus } from "@/app/lib/types/product";
+import type { ProductCondition } from "@/app/lib/types/product";
 
 export type ValidSort = "price_asc" | "price_desc" | "newest" | "";
 
 export interface ParsedFilters {
   searchQuery: string;
   combinedSort: ValidSort;
-  status: ProductStatus | "";
+  condition: ProductCondition | "";
   maxPrice: number;
 }
 
 // Validadores inline
-function isValidProductStatus(value: unknown): value is ProductStatus {
-  const validStatuses = ["new", "used"] as const;
-  return validStatuses.includes(value as ProductStatus);
+function isValidProductCondition(value: unknown): value is ProductCondition {
+  const validConditions = ["nuevo", "usado"] as const;
+  return validConditions.includes(value as ProductCondition);
 }
 
 function parseNumberSafely(
@@ -47,10 +47,10 @@ export function parseFiltersFromParams(params: URLSearchParams): ParsedFilters {
   const order = params.get("order");
   const combinedSort = buildCombinedSort(sortBy, order);
 
-  let status: ProductStatus | "" = "";
-  const statusParam = params.get("status");
-  if (statusParam && isValidProductStatus(statusParam)) {
-    status = statusParam;
+  let condition: ProductCondition | "" = "";
+  const conditionParam = params.get("condition");
+  if (conditionParam && isValidProductCondition(conditionParam)) {
+    condition = conditionParam;
   }
 
   const maxPrice = validateMaxPrice(
@@ -60,7 +60,7 @@ export function parseFiltersFromParams(params: URLSearchParams): ParsedFilters {
   return {
     searchQuery,
     combinedSort,
-    status,
+    condition,
     maxPrice,
   };
 }

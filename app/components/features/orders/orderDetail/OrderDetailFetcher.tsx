@@ -9,14 +9,18 @@ import { OrderProductCard } from "../OrderProductCard";
 import type { OrderDetailForUI } from "@/app/lib/types/orders";
 
 interface OrderDetailFetcherProps {
-  id: string;
+  params: Promise<{ id: string }>;
 }
 
-export async function OrderDetailFetcher({ id }: OrderDetailFetcherProps) {
-  const userId = await getCurrentUserId();
-  if (!userId) notFound();
+export async function OrderDetailFetcher({ params }: OrderDetailFetcherProps) {
+  const { id } = await params;
 
-  const orden = await getOrdenById(id);
+  const [userId, orden] = await Promise.all([
+    getCurrentUserId(),
+    getOrdenById(id),
+  ]);
+
+  if (!userId) notFound();
   if (!orden || orden.buyerId !== userId) notFound();
 
   const product = await getProductById(orden.productId);
@@ -36,7 +40,7 @@ export async function OrderDetailFetcher({ id }: OrderDetailFetcherProps) {
     paymentId: orden.paymentId ?? undefined,
     shippingId: orden.shippingId ?? undefined,
     productTitle: product?.title ?? "Producto",
-    productThumbnail: product?.thumbnail_url ?? "",
+    productThumbnail: product?.images?.[0] ?? "",
   };
 
   return (

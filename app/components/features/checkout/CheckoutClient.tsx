@@ -169,43 +169,43 @@ export default function CheckoutClient({
       {/* ── Barra inferior fija ───────────────────────────────────────────── */}
       <div className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-md border-t border-line">
         <div className="max-w-[600px] mx-auto px-4 py-3 flex gap-2.5">
-        {step > 1 && (
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setError(null);
-              setStep(1);
-            }}
-            icon="arrowLeft"
-            disabled={isPending}
-          >
-            Atrás
-          </Button>
-        )}
+          {step > 1 && (
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setError(null);
+                setStep(1);
+              }}
+              icon="arrowLeft"
+              disabled={isPending}
+            >
+              Atrás
+            </Button>
+          )}
 
-        {step === 1 ? (
-          <Button
-            full
-            size="lg"
-            variant="accent"
-            iconRight="arrowRight"
-            onClick={handleContinue}
-            loading={isPending}
-            disabled={!addr.street || !addr.number || !addr.zip}
-          >
-            {isPending ? "Cotizando envío…" : "Continuar"}
-          </Button>
-        ) : (
-          <Button
-            full
-            size="lg"
-            variant="accent"
-            onClick={handlePay}
-            loading={isPending}
-          >
-            {isPending ? "Procesando…" : `Pagar ${fmtARS(total)}`}
-          </Button>
-        )}
+          {step === 1 ? (
+            <Button
+              full
+              size="lg"
+              variant="accent"
+              iconRight="arrowRight"
+              onClick={handleContinue}
+              loading={isPending}
+              disabled={!addr.street || !addr.number || !addr.zip}
+            >
+              {isPending ? "Cotizando envío…" : "Continuar"}
+            </Button>
+          ) : (
+            <Button
+              full
+              size="lg"
+              variant="accent"
+              onClick={handlePay}
+              loading={isPending}
+            >
+              {isPending ? "Procesando…" : `Pagar ${fmtARS(total)}`}
+            </Button>
+          )}
         </div>
       </div>
     </div>

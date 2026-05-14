@@ -6,17 +6,16 @@
  *  2. Montar CheckoutClient con esa dirección inicial
  *
  * El flujo real de negocio (cotización + creación de órdenes) ocurre dentro
- * de CheckoutClient a través de Server Actions.
+ * de CheckoutClient a través de Server Action
  */
 
+import { Suspense } from "react";
 import { getAccountData } from "@/app/lib/helpers/account";
 import { parseAddress } from "@/app/lib/db/user";
 import CheckoutClient from "@/app/components/features/checkout/CheckoutClient";
+import CheckoutSkeleton from "@/app/components/features/checkout/CheckoutSkeleton";
 
-export const dynamic = "force-dynamic";
-
-export default async function CheckoutPage() {
-  // Prefill con la dirección guardada del usuario; si no tiene, campos vacíos
+async function CheckoutFetcher() {
   const usuario = await getAccountData();
   const savedAddress = usuario ? parseAddress(usuario) : null;
 
@@ -27,4 +26,12 @@ export default async function CheckoutPage() {
   };
 
   return <CheckoutClient initialAddress={initialAddress} />;
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<CheckoutSkeleton />}>
+      <CheckoutFetcher />
+    </Suspense>
+  );
 }

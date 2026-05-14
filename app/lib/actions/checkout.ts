@@ -114,7 +114,7 @@ export async function requestShippingQuoteAction(address: {
           productId: item.productId,
           sellerId: product.seller_id,
           productTitle: product.title,
-          productImage: product.images?.[0],
+          productImage: product.thumbnail_url,
           quantity: item.quantity,
           unitPrice: product.price,
           quote,

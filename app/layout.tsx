@@ -1,11 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 
 import { inter, jetbrainsMono } from "./lib/fonts";
 import { SideNav } from "./components/layout/SideNav";
 import { BottomNav } from "./components/layout/BottomNav";
 import { ClerkProvider } from "@clerk/nextjs";
-import { syncCurrentUser } from "./lib/auth/sync-usuario";
 
 export const metadata: Metadata = {
   title: "UniHousing — Tu mudanza simplificada",
@@ -23,13 +23,11 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await syncCurrentUser();
-
   return (
     <ClerkProvider>
       <html
@@ -38,7 +36,9 @@ export default async function RootLayout({
       >
         <body className="min-h-full bg-cream text-ink font-sans">
           {/* Desktop sidebar */}
-          <SideNav />
+          <Suspense fallback={<aside className="hidden lgx:block lgx:fixed lgx:left-0 lgx:top-0 lgx:bottom-0 lgx:w-60 lgx:bg-paper lgx:border-r lgx:border-line" />}>
+            <SideNav />
+          </Suspense>
 
           {/* Page content — layout adjusted based on nav presence */}
           <main className="lgx:pb-0 lgx:[aside+&]:ml-60 [&:has(+nav)]:pb-16">
@@ -46,7 +46,9 @@ export default async function RootLayout({
           </main>
 
           {/* Mobile bottom navigation */}
-          <BottomNav />
+          <Suspense fallback={<nav className="fixed bottom-0 left-0 right-0 h-16 bg-paper border-t border-line lgx:hidden" />}>
+            <BottomNav />
+          </Suspense>
         </body>
       </html>
     </ClerkProvider>

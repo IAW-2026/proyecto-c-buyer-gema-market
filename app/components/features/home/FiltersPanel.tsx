@@ -2,7 +2,7 @@
 
 import { ChangeEvent } from "react";
 import { Icon, Pill, Button, Input } from "../../ui";
-import type { ProductStatus } from "@/app/lib/types/product";
+import type { ProductCondition } from "@/app/lib/types/product";
 import { CONDITION_OPTIONS, SORT_OPTIONS } from "./utils/constants";
 import type { ParsedFilters } from "./utils/filterParser";
 import { fmtARS } from "@/app/lib/utils/format";
@@ -85,11 +85,11 @@ export function FiltersPanel({
           {Object.entries(CONDITION_OPTIONS).map(([value, label]) => (
             <Pill
               key={value}
-              active={filters.status === value}
+              active={filters.condition === value}
               onClick={() =>
                 handleFilterUpdate(
-                  "status",
-                  filters.status === value ? "" : (value as ProductStatus),
+                  "condition",
+                  filters.condition === value ? "" : (value as ProductCondition),
                 )
               }
               size="md"
