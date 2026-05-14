@@ -74,7 +74,7 @@ export default function SearchFilters() {
   // Contar filtros activos desde la URL
   const activeFilterCount =
     (urlFilters.combinedSort ? 1 : 0) +
-    (urlFilters.status ? 1 : 0) +
+    (urlFilters.condition ? 1 : 0) +
     (urlFilters.maxPrice < 1000000 ? 1 : 0);
 
   return (

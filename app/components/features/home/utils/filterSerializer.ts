@@ -1,10 +1,10 @@
-import type { ProductStatus } from "@/app/lib/types/product";
+import type { ProductCondition } from "@/app/lib/types/product";
 import type { ValidSort } from "./filterParser";
 
 export interface FiltersToSerialize {
   searchQuery: string;
   combinedSort: ValidSort;
-  status: ProductStatus | "";
+  condition: ProductCondition | "";
   maxPrice: number;
 }
 
@@ -32,11 +32,11 @@ export function serializeFiltersToParams(
     params.delete("order");
   }
 
-  // Serializar status
-  if (filters.status) {
-    params.set("status", filters.status);
+  // Serializar condición
+  if (filters.condition) {
+    params.set("condition", filters.condition);
   } else {
-    params.delete("status");
+    params.delete("condition");
   }
 
   // Serializar búsqueda

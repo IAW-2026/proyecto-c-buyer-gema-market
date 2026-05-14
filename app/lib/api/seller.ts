@@ -33,7 +33,7 @@ export async function getProducts(
   if (filters.max_price !== undefined)
     params.set("max_price", String(filters.max_price));
   if (filters.seller_id) params.set("seller_id", filters.seller_id);
-  if (filters.status) params.set("status", filters.status);
+  if (filters.condition) params.set("condition", filters.condition);
   if (filters.sort_by) params.set("sort_by", filters.sort_by);
   if (filters.order) params.set("order", filters.order);
   if (filters.page) params.set("page", String(filters.page));

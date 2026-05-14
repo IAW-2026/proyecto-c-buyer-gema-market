@@ -1,29 +1,27 @@
-"use client";
-
-import { Pill, Card, Icon } from "@/app/components/ui";
+import { Pill } from "@/app/components/ui";
 import { fmtARS } from "@/app/lib/utils/format";
+import type { ProductCondition } from "@/app/lib/types/product";
 
 interface ProductInfoProps {
   title: string;
   price: number;
   stock: number;
-  status: string;
+  condition: ProductCondition;
 }
 
 export default function ProductInfo({
   title,
   price,
   stock,
-  status,
+  condition,
 }: ProductInfoProps) {
-  const condition = status === "new" ? "Nuevo" : "Usado";
-  const shipping = 5000; // Simulated shipping
+  const conditionLabel = condition === "nuevo" ? "Nuevo" : "Usado";
 
   return (
     <div className="w-full">
       <div className="flex items-center gap-1.5 mb-2">
         <Pill tone="sage" size="sm">
-          {condition}
+          {conditionLabel}
         </Pill>
       </div>
       <h1 className="text-2xl tracking-[-0.02em] font-semibold m-0 mb-2">
@@ -37,21 +35,6 @@ export default function ProductInfo({
           {fmtARS(price)}
         </span>
       </div>
-
-      {/* Card de envío */}
-      {/* <Card padding={14} className="mb-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-bone flex items-center justify-center">
-            <Icon name="truck" size={20} className="text-moss" />
-          </div>
-          <div className="flex-1">
-            <div className="text-xs text-ink-3">Llega pronto</div>
-          </div>
-          <span className="font-semibold text-sm">
-            {shipping > 0 ? fmtARS(shipping) : "Gratis"}
-          </span>
-        </div>
-      </Card> */}
     </div>
   );
 }

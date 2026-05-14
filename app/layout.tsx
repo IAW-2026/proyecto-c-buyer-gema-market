@@ -5,7 +5,6 @@ import { inter, jetbrainsMono } from "./lib/fonts";
 import { SideNav } from "./components/layout/SideNav";
 import { BottomNav } from "./components/layout/BottomNav";
 import { ClerkProvider } from "@clerk/nextjs";
-import { syncCurrentUser } from "./lib/auth/sync-usuario";
 
 export const metadata: Metadata = {
   title: "UniHousing — Tu mudanza simplificada",
@@ -23,13 +22,11 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  await syncCurrentUser();
-
   return (
     <ClerkProvider>
       <html

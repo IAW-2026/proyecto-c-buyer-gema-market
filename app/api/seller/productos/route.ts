@@ -11,7 +11,7 @@ import { MOCK_PRODUCTS } from "@/app/mocks/seller/data";
  *   min_price   – precio mínimo
  *   max_price   – precio máximo
  *   seller_id   – filtro por vendedor
- *   status      – "new" | "used"
+ *   condition   – "nuevo" | "usado" | "all"
  *   sort_by     – "price" | "title" | "created_at"
  *   order       – "asc" | "desc"
  *   page        – número de página (default: 1)
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
     ? Number(searchParams.get("max_price"))
     : undefined;
   const seller_id = searchParams.get("seller_id") ?? undefined;
-  const status = searchParams.get("status") ?? undefined;
+  const condition = searchParams.get("condition") ?? undefined;
   const sort_by = searchParams.get("sort_by") ?? undefined;
   const order = searchParams.get("order") ?? "desc";
   const page = Number(searchParams.get("page") ?? 1);
@@ -54,8 +54,8 @@ export async function GET(req: NextRequest) {
   if (seller_id) {
     items = items.filter((p) => p.seller_id === seller_id);
   }
-  if (status) {
-    items = items.filter((p) => p.status === status);
+  if (condition && condition !== "all") {
+    items = items.filter((p) => p.condition === condition);
   }
 
   // ── Ordenamiento ───────────────────────────────────────────────────────────
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
       price,
       currency,
       category_id,
-      status,
+      condition,
       thumbnail_url,
       href,
     }) => ({
@@ -96,7 +96,7 @@ export async function GET(req: NextRequest) {
       price,
       currency,
       category_id,
-      status,
+      condition,
       thumbnail_url,
       href,
     }),

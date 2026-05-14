@@ -59,7 +59,7 @@ export function CheckoutSummaryStep({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-ink-3">
+                <div className="w-full h-full flex items-center justify-center text-ink-3" aria-hidden="true">
                   <Icon name="image" size={20} />
                 </div>
               )}

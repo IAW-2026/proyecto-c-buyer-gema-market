@@ -53,7 +53,7 @@ export function useClearFilters() {
         await applyFilters({
           searchQuery, // Mantiene la búsqueda actual
           combinedSort: "",
-          status: "",
+          condition: "",
           maxPrice: 1000000,
         });
       } catch (error) {

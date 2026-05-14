@@ -10,6 +10,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 - **Formato de nombres**: todos los campos JSON en `snake_case` (ej: `user_id`, `product_id`, `order_id`, `payment_id`, `shipping_id`). Prohibido mezclar `camelCase`.
 - **Identificador correlacional**: `order_id` se genera en la Buyer App al iniciar la compra y se propaga como referencia a Seller, Payments y Shipping.
+- **`condition` vs `status`**: en los endpoints públicos los productos exponen su **condición** (`condition`: `nuevo` | `usado`). El **estado interno de publicación** (`status`: `active` | `paused`) es visible únicamente en los endpoints administrativos. Los endpoints públicos solo devuelven productos con `status = active`.
 
 ---
 
@@ -77,22 +78,6 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 - **Response 200**: `{ "ok": true }`
 
-### `POST /api/buyer/ordenes/:order_id/disputa-resuelta`
-
-- **Consumido por**: Payments App.
-- **Descripción**: notifica al comprador la resolución definitiva de una disputa sobre su orden.
-- **Request body**:
-
-```json
-{
-  "dispute_id": "dsp_01HXYZ...",
-  "resolution": "refunded",
-  "resolved_at": "2026-04-17T14:32:00Z"
-}
-```
-
-- **Response 200**: `{ "ok": true }`
-
 ---
 
 ## Seller App — Endpoints expuestos
@@ -106,7 +91,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
   - `category_id` — filtrar por categoría.
   - `min_price`, `max_price` — rango de precio.
   - `seller_id` — filtrar por vendedor.
-  - `status` — filtrar por estado del producto (`new`, `used`, `all`). Default: `All`.
+  - `condition` — filtrar por condición del producto (`nuevo`, `usado`, `all`). Default: `all`.
   - `sort_by` — campo de ordenamiento. Valores permitidos: `price`, `created_at`, `title`. Default: `created_at`.
   - `order` — dirección de ordenamiento: `asc` | `desc`. Default: `desc`.
   - `page` — número de página (1-indexed). Default: `1`.
@@ -123,7 +108,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
       "price": 15000.0,
       "currency": "ARS",
       "category_id": "cat_muebles",
-      "status": "all",
+      "condition": "nuevo",
       "thumbnail_url": "https://...",
       "href": "https://.../api/seller/productos/prd_01HXYZ..."
     }
@@ -145,18 +130,25 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 ```json
 {
   "product_id": "prd_01HXYZ...",
-  "seller_id": "usr_01HXYZ...",
+  "seller": {
+    "seller_id": "usr_01HXYZ...",
+    "shop_name": "MaderPlac",
+    "logo_url": "https://..."
+  },
   "title": "Escritorio de madera",
   "description": "Escritorio de madera maciza, ideal para estudiantes. Muy buen estado.",
+  "category_id": "cat_muebles",
+  "category_name": "Muebles",
   "weight": 15,
   "height": 75,
   "width": 120,
   "depth": 60,
+  "material": "Madera maciza",
+  "color": "Marrón",
   "price": 15000.0,
   "currency": "ARS",
-  "category_id": "cat_muebles",
   "stock": 1,
-  "status": "active",
+  "condition": "nuevo",
   "images": ["https://..."],
   "created_at": "2026-04-10T10:00:00Z"
 }
@@ -184,14 +176,18 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
   "products": [
     {
       "product_id": "prd_01HXYZ...",
-      "seller_id": "usr_01HXYZ...",
+      "seller": {
+        "seller_id": "usr_01HXYZ...",
+        "shop_name": "MaderPlac",
+        "logo_url": "https://..."
+      },
       "title": "Escritorio de madera",
-      "description": "Escritorio de madera maciza, ideal para estudiantes.",
+      "category_id": "cat_muebles",
       "price": 15000.0,
       "currency": "ARS",
       "stock": 1,
-      "status": "active",
-      "images": ["https://..."],
+      "condition": "nuevo",
+      "thumbnail_url": "https://...",
       "weight": 15,
       "height": 75,
       "width": 120,
@@ -224,7 +220,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 ### `GET /api/seller/categorias`
 
 - **Consumido por**: Buyer App, Control Plane.
-- **Descripción**: devuelve el listado jerárquico de las categorías de productos disponibles.
+- **Descripción**: devuelve el listado plano de las categorías de productos disponibles.
 - **Response 200**:
 
 ```json
@@ -252,7 +248,10 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 ```json
 {
   "seller_id": "usr_01HXYZ...",
-  "store_name": "Muebles del Sur",
+  "shop_name": "Muebles del Sur",
+  "bio": "Vendemos muebles de madera maciza hechos a mano.",
+  "logo_url": "https://...",
+  "cover_url": "https://...",
   "city": "Bahía Blanca",
   "total_products": 134,
   "categories": [
@@ -273,7 +272,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
         "price": 15000.0,
         "currency": "ARS",
         "category_id": "cat_muebles",
-        "status": "active",
+        "condition": "nuevo",
         "thumbnail_url": "https://...",
         "href": "https://.../api/seller/productos/prd_01HXYZ..."
       }
@@ -290,8 +289,8 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 ### `POST /api/seller/productos/:product_id/reservar`
 
 - **Consumido por**: Payments App.
-- **Descripción**: reserva el stock del producto para una orden en curso.
-- **Request body**: `{ "order_id": "ord_01HXYZ...", "buyer_id": "usr_01HXYZ...", "product_id": "prd_01HXYZ...", "quantity": 3 }`
+- **Descripción**: reserva el stock del producto para una orden en curso. La Seller App asigna `expires_at` internamente (TTL definido en el modelo de datos), por lo que el Buyer App no lo envía.
+- **Request body**: `{ "order_id": "ord_01HXYZ...", "buyer_id": "usr_01HXYZ...", "buyer_name": "Juan Pérez", "product_id": "prd_01HXYZ...", "quantity": 3 }`
 - **Response 200**: `{ "ok": true }`
 - **Response 409**: `CONFLICT` si ya está reservado o vendido.
 
@@ -299,14 +298,14 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 - **Consumido por**: Payments App.
 - **Descripción**: libera la reserva de stock de un producto, dejándolo disponible nuevamente.
-- **Request body**: `{ "order_id": "ord_01HXYZ...", "product_id": "prd_01HXYZ...", "quantity": 3 }`
+- **Request body**: `{ "order_id": "ord_01HXYZ..." }`
 - **Response 200**: `{ "ok": true }`
 - **Response 404**: `NOT FOUND` si no existe una reserva activa para la orden.
 
 ### `POST /api/seller/pagos/:payment_id/confirmado`
 
 - **Consumido por**: Payments App.
-- **Descripción**: notifica al vendedor que el pago de sus productos fue aprobado.
+- **Descripción**: notifica al vendedor que el pago de sus productos fue aprobado. El Seller App resuelve `buyer_id`, `buyer_name` y la cantidad de unidades a partir de la `Reserva` previa identificada por `order_id` + `product_id`, por lo que Payments no necesita reenviarlos.
 - **Request body**:
 
 ```json
@@ -331,7 +330,8 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 ### `POST /api/seller/ventas/:order_id/estado-envio`
 
 - **Consumido por**: Shipping App.
-- **Descripción**: notifica al vendedor las actualizaciones logísticas sobre el envío de su producto.
+- **Descripción**: notifica al vendedor las actualizaciones logísticas sobre el envío de su producto. Una orden corresponde a un único producto (puede incluir varias unidades del mismo), por lo que la actualización aplica a una sola venta.
+- **Nota sobre `status`**: el valor recibido corresponde al vocabulario de la Shipping App (ej: `in_transit`, `delivered`, `failed`). El Seller App lo mapea a su enum interno (`shipping`, `delivered`, `shipping_failed`) al persistir la venta.
 - **Request body**:
 
 ```json
@@ -340,38 +340,6 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
   "status": "in_transit",
   "tracking_code": "BB-0001-2026",
   "updated_at": "2026-04-17T14:32:00Z"
-}
-```
-
-- **Response 200**: `{ "ok": true }`
-
-### `POST /api/seller/ventas/:order_id/disputa-abierta`
-
-- **Consumido por**: Payments App.
-- **Descripción**: notifica al vendedor que el comprador inició un reclamo por un problema en la operación.
-- **Request body**:
-
-```json
-{
-  "dispute_id": "dsp_01HXYZ...",
-  "reason": "product_not_as_described",
-  "description": "El producto llegó dañado."
-}
-```
-
-- **Response 200**: `{ "ok": true }`
-
-### `POST /api/seller/ventas/:order_id/disputa-resuelta`
-
-- **Consumido por**: Payments App.
-- **Descripción**: notifica al vendedor el resultado y resolución de una disputa abierta.
-- **Request body**:
-
-```json
-{
-  "dispute_id": "dsp_01HXYZ...",
-  "resolution": "refunded",
-  "resolved_at": "2026-04-17T14:32:00Z"
 }
 ```
 
@@ -389,7 +357,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 ```json
 {
-  "destination_address": { "street": "...", "number": "...", "zip": "8000" },
+  "destination_address": { "street": "...", "zip": "8000" },
   "product_id": "prd_01HXYZ...",
   "weight_kg": 25,
   "height_m": 0.8,
@@ -593,37 +561,6 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
 
 - **Response 200**: `OK`
 
-### `POST /api/payments/disputas`
-
-- **Consumido por**: Buyer App.
-- **Descripción**: permite a un usuario abrir un reclamo oficial por un problema durante la compra.
-- **Request body**:
-
-```json
-{
-  "order_id": "ord_01HXYZ...",
-  "reason": "product_not_as_described",
-  "description": "El producto llegó dañado."
-}
-```
-
-- **Response 201**: `{ "dispute_id": "dsp_01HXYZ...", "status": "open" }`
-
-### `POST /api/payments/disputas/:dispute_id/resolver`
-
-- **Consumido por**: Control Plane.
-- **Descripción**: permite a un administrador resolver una disputa a favor del comprador (reembolso) o del vendedor (rechazar reclamo).
-- **Request body**:
-
-```json
-{
-  "resolution": "refunded",
-  "notes": "Se comprobó el daño en base a las fotos enviadas."
-}
-```
-
-- **Response 200**: `{ "ok": true }`
-
 ---
 
 ## Endpoints Administrativos (Control Plane / Analytics)
@@ -638,7 +575,7 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
 
 - **Consumido por**: Control Plane, Analytics Dashboard.
 - **Descripción**: listado paginado de **todos** los productos del marketplace (incluye estados no activos), con filtros extendidos.
-- **Query params**: `q`, `category_id`, `seller_id`, `status` (sin default — muestra todos), `min_price`, `max_price`, `date_from`, `date_to`, `sort_by`, `order`, `page`, `page_size`.
+- **Query params**: `q`, `category_id`, `seller_id`, `status` (sin default — muestra todos; valores: `active`, `paused`), `condition` (`nuevo`, `usado`, `all`), `min_price`, `max_price`, `date_from`, `date_to`, `sort_by`, `order`, `page`, `page_size`.
 - **Response 200**:
 
 ```json
@@ -647,11 +584,14 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
     {
       "product_id": "prd_01HXYZ...",
       "seller_id": "usr_01HXYZ...",
+      "seller_name": "MaderPlac",
       "title": "Escritorio de madera",
+      "thumbnail_url": "https://...",
       "price": 15000.0,
       "currency": "ARS",
       "category_id": "cat_muebles",
       "status": "active",
+      "condition": "nuevo",
       "stock": 1,
       "created_at": "2026-04-10T10:00:00Z"
     }
@@ -705,9 +645,7 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
   "total_products": 312,
   "products_by_status": {
     "active": 198,
-    "paused": 45,
-    "sold": 62,
-    "blocked": 7
+    "paused": 45
   },
   "total_sales": 87,
   "total_revenue": 1245000.0,
@@ -762,8 +700,7 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
     "shipping": 18,
     "delivered": 170,
     "cancelled": 10,
-    "refunded": 4,
-    "disputed": 3
+    "refunded": 4
   },
   "average_ticket": 14250.5,
   "currency": "ARS"
@@ -860,33 +797,6 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
 }
 ```
 
-#### `GET /api/payments/admin/disputas`
-
-- **Consumido por**: Control Plane, Analytics Dashboard.
-- **Descripción**: listado paginado de todas las disputas.
-- **Query params**: `status`, `date_from`, `date_to`, `sort_by`, `order`, `page`, `page_size`.
-- **Response 200**:
-
-```json
-{
-  "items": [
-    {
-      "dispute_id": "dsp_01HXYZ...",
-      "order_id": "ord_01HXYZ...",
-      "payment_id": "pay_01HXYZ...",
-      "reason": "product_not_as_described",
-      "status": "open",
-      "resolved_at": null
-    }
-  ],
-  "page": 1,
-  "page_size": 20,
-  "total": 15,
-  "sort_by": "created_at",
-  "order": "desc"
-}
-```
-
 #### `GET /api/payments/admin/stats`
 
 - **Consumido por**: Analytics Dashboard.
@@ -907,8 +817,7 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
   },
   "total_volume": 3756000.0,
   "currency": "ARS",
-  "approval_rate": 0.862,
-  "open_disputes": 3
+  "approval_rate": 0.862
 }
 ```
 

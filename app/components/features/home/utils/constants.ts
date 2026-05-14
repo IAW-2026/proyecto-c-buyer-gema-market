@@ -2,8 +2,8 @@
  * Convierte cadenas de condición a valores intereños
  */
 export const CONDITION_OPTIONS = {
-  new: "Nuevo",
-  used: "Usado",
+  nuevo: "Nuevo",
+  usado: "Usado",
 } as const;
 
 /**

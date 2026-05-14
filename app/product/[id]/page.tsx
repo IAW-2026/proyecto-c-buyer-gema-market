@@ -1,8 +1,6 @@
-import { notFound } from "next/navigation";
-import { getProductById } from "@/app/lib/api/seller";
-import ProductDetailClient from "../../components/products/ProductDetailClient";
-import { isFavorited } from "@/app/lib/db/favorito";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { Suspense } from "react";
+import { ProductDetailFetcher } from "@/app/components/products/detail/ProductDetailFetcher";
+import { ProductDetailSkeleton } from "@/app/components/products/detail/ProductDetailSkeleton";
 
 interface PageProps {
   params: Promise<{
@@ -11,19 +9,13 @@ interface PageProps {
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const resolvedParams = await params;
+  const { id } = await params;
 
-  // Paralelo: producto + check de favorito.
-  // isFavorited usa findUnique por clave primaria compuesta (buyerId, productId) — O(1).
-  // Es más eficiente que getFavoritosIds que trae todos los IDs para luego hacer includes().
-  const [p, initialFavorite] = await Promise.all([
-    getProductById(resolvedParams.id),
-    getCurrentUserId().then((id) =>
-      id ? isFavorited(id, resolvedParams.id) : false,
-    ),
-  ]);
-
-  if (!p) notFound();
-
-  return <ProductDetailClient p={p} initialFavorite={initialFavorite} />;
+  return (
+    <div className="pb-24 lgx:pt-8 lgx:px-7 lgx:pb-14 lgx:bg-cream lgx:min-h-screen">
+      <Suspense fallback={<ProductDetailSkeleton />}>
+        <ProductDetailFetcher id={id} />
+      </Suspense>
+    </div>
+  );
 }

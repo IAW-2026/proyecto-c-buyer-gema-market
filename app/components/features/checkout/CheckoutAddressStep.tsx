@@ -39,31 +39,28 @@ export function CheckoutAddressStep({
 
       <div className="grid grid-cols-2 gap-3 mb-3">
         <div className="col-span-2">
-          <Field label="Calle" error={errors.street}>
+          <Field label="Calle" error={errors.street} inputId="street">
             <Input
               value={addr.street}
               onChange={handleInput("street")}
               placeholder="Av. Colón"
-              aria-invalid={!!errors.street}
             />
           </Field>
         </div>
-        <Field label="Número" error={errors.number}>
+        <Field label="Número" error={errors.number} inputId="number">
           <Input
             value={addr.number}
             onChange={onlyDigits("number")}
             placeholder="1234"
             inputMode="numeric"
-            aria-invalid={!!errors.number}
           />
         </Field>
-        <Field label="Código postal" error={errors.zip}>
+        <Field label="Código postal" error={errors.zip} inputId="zip">
           <Input
             value={addr.zip}
             onChange={onlyDigits("zip")}
             placeholder="8000"
             inputMode="numeric"
-            aria-invalid={!!errors.zip}
           />
         </Field>
       </div>

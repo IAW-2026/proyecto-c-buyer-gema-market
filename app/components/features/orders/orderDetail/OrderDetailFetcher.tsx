@@ -13,12 +13,12 @@ interface OrderDetailFetcherProps {
 }
 
 export async function OrderDetailFetcher({ id }: OrderDetailFetcherProps) {
-  const userId = await getCurrentUserId();
+  const [userId, orden] = await Promise.all([
+    getCurrentUserId(),
+    getOrdenById(id),
+  ]);
   if (!userId) notFound();
-
-  const orden = await getOrdenById(id);
   if (!orden || orden.buyerId !== userId) notFound();
-
   const product = await getProductById(orden.productId);
 
   const detail: OrderDetailForUI = {
@@ -36,7 +36,7 @@ export async function OrderDetailFetcher({ id }: OrderDetailFetcherProps) {
     paymentId: orden.paymentId ?? undefined,
     shippingId: orden.shippingId ?? undefined,
     productTitle: product?.title ?? "Producto",
-    productThumbnail: product?.thumbnail_url ?? "",
+    productThumbnail: product?.images?.[0] ?? "",
   };
 
   return (

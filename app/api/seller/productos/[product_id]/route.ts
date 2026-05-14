@@ -21,5 +21,40 @@ export async function GET(
     );
   }
 
-  return NextResponse.json(product);
+  // El detalle no expone `thumbnail_url`: trae el arreglo `images` completo.
+  const {
+    product_id: id,
+    seller_id,
+    title,
+    description,
+    price,
+    currency,
+    category_id,
+    condition,
+    stock,
+    weight,
+    height,
+    width,
+    depth,
+    images,
+    created_at,
+  } = product;
+
+  return NextResponse.json({
+    product_id: id,
+    seller_id,
+    title,
+    description,
+    price,
+    currency,
+    category_id,
+    condition,
+    stock,
+    weight,
+    height,
+    width,
+    depth,
+    images,
+    created_at,
+  });
 }
