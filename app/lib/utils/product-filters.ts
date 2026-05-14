@@ -2,8 +2,9 @@ import type {
   ProductFilters,
   SortByOption,
   OrderOption,
-  ProductStatus,
+  ProductCondition,
 } from "@/app/lib/types/product";
+import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/products";
 
 /**
  * buildFiltersFromParams
@@ -56,18 +57,19 @@ export function buildFiltersFromParams(
     ? Number(Array.isArray(rawMax) ? rawMax[0] : rawMax)
     : undefined;
 
-  // ── 5. Estado / Condición (?status=new) ───────────────────────────────────
-  const rawStatus = params["status"];
-  const status = (Array.isArray(rawStatus) ? rawStatus[0] : rawStatus) as
-    | ProductStatus
-    | undefined;
+  // ── 5. Condición (?condition=nuevo) ───────────────────────────────────────
+  const rawCondition = params["condition"];
+  const condition = (Array.isArray(rawCondition)
+    ? rawCondition[0]
+    : rawCondition) as ProductCondition | undefined;
 
   // ── 6. Paginación (?page=1&page_size=20) ───────────────────────────────────
   const rawPage = params["page"];
   const page = Number(Array.isArray(rawPage) ? rawPage[0] : rawPage) || 1;
   const rawPageSize = params["page_size"];
   const pageSize =
-    Number(Array.isArray(rawPageSize) ? rawPageSize[0] : rawPageSize) || 20;
+    Number(Array.isArray(rawPageSize) ? rawPageSize[0] : rawPageSize) ||
+    PRODUCTS_PAGE_SIZE;
 
   // ── 7. Construir el objeto final omitiendo claves vacías ──────────────────
   return {
@@ -75,7 +77,7 @@ export function buildFiltersFromParams(
     ...(category_id ? { category_id } : {}),
     ...(min_price !== undefined ? { min_price } : {}),
     ...(max_price !== undefined ? { max_price } : {}),
-    ...(status ? { status } : {}),
+    ...(condition ? { condition } : {}),
     ...(sort_by ? { sort_by } : {}),
     ...(order ? { order } : {}),
     ...(page ? { page } : {}),

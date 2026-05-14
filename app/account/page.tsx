@@ -4,8 +4,6 @@ import { getAccountData } from "@/app/lib/helpers/account";
 import AccountForm from "../components/features/account/AccountForm";
 import AccountSkeleton from "../components/features/account/AccountSkeleton";
 
-export const dynamic = "force-dynamic";
-
 async function AccountContent() {
   const datos = await getAccountData();
 

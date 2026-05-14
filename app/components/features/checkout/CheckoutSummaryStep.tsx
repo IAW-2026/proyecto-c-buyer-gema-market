@@ -36,9 +36,7 @@ export function CheckoutSummaryStep({
             <div className="font-medium text-sm">
               {addr.street} {addr.number}
             </div>
-            <div className="text-[13px] text-ink-3">
-              Bahía Blanca · CP {addr.zip}
-            </div>
+            <div className="text-[13px] text-ink-3"> CP {addr.zip}</div>
           </div>
         </div>
       </Card>
@@ -61,7 +59,7 @@ export function CheckoutSummaryStep({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-ink-3">
+                <div className="w-full h-full flex items-center justify-center text-ink-3" aria-hidden="true">
                   <Icon name="image" size={20} />
                 </div>
               )}

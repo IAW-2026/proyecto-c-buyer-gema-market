@@ -1,16 +1,16 @@
-import { getAccountData } from "@/app/lib/helpers/account";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 import { getOrdenesByBuyerId } from "@/app/lib/db/orden";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import OrdersClient from "./OrdersClient";
 import type { OrderForUI } from "@/app/lib/types/orders";
 
 export async function OrdersFetcher() {
-  const usuario = await getAccountData();
-  if (!usuario) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
     return <OrdersClient orders={[]} />;
   }
 
-  const ordenes = await getOrdenesByBuyerId(usuario.id);
+  const ordenes = await getOrdenesByBuyerId(userId);
   if (ordenes.length === 0) {
     return <OrdersClient orders={[]} />;
   }

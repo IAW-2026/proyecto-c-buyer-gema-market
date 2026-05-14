@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import { Icon, Logo } from "../../ui";
-import CategoryListServer from "@/app/components/features/home/CategoryListServer";
+import CategoryListFetcher from "@/app/components/features/home/CategoryListFetcher";
 import SearchFilters from "./SearchFilters";
 
 export function HeaderHomePage() {
@@ -58,7 +58,7 @@ export function HeaderHomePage() {
           </div>
         }
       >
-        <CategoryListServer />
+        <CategoryListFetcher />
       </Suspense>
     </div>
   );

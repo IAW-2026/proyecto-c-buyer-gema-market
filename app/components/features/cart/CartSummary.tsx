@@ -7,9 +7,13 @@ interface CartSummaryProps {
   isPending?: boolean;
 }
 
-export function CartSummary({ subtotal, onCheckout, isPending }: CartSummaryProps) {
+export function CartSummary({
+  subtotal,
+  onCheckout,
+  isPending,
+}: CartSummaryProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line px-4 py-3 z-50 lgx:left-[240px]">
+    <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom))] lgx:bottom-0 left-0 right-0 bg-paper/95 backdrop-blur-[12px] border-t border-line px-4 py-3 z-50 lgx:left-[240px]">
       <div className="w-full max-w-[760px] mx-auto">
         <div className="grid gap-1.5 text-[13px] mb-3">
           <div className="flex justify-between">

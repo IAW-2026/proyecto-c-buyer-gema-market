@@ -1,13 +1,12 @@
 /**
  * Tipos de producto según la documentación de la Seller App.
- * @see docs/03-apis.md  — GET /api/seller/productos
- * @see docs/04-modelo-de-datos.md — entidad `producto`
+ * @see docs/apis.md  — GET /api/seller/productos
  *
- * Convención: todos los campos en snake_case (per docs/03-apis.md).
+ * Convención: todos los campos en snake_case (per docs/apis.md).
  */
 
-// ── Estado del producto (ahora usado para la condición: nuevo/usado) ─────────
-export type ProductStatus = "new" | "used";
+// ── Condición del producto (nuevo/usado) ─────────────────────────────────────
+export type ProductCondition = "nuevo" | "usado";
 
 // ── Respuesta del listado: GET /api/seller/productos ──────────────────────────
 /** Ítem de producto tal como llega del endpoint de listado de la Seller App. */
@@ -18,7 +17,7 @@ export interface ProductListItem {
   price: number;
   currency: string; // "ARS"
   category_id: string;
-  status: ProductStatus;
+  condition: ProductCondition;
   thumbnail_url: string;
   href: string;
   weight?: number;
@@ -41,15 +40,25 @@ export interface ProductListResponse {
 }
 
 // ── Detalle completo: GET /api/seller/productos/:product_id ───────────────────
-/** Producto con todos sus campos (respuesta del endpoint de detalle). */
-// Se muestra cuando entra a la pagina de detalle del producto
-export interface ProductDetail extends ProductListItem {
+/**
+ * Producto con todos sus campos (respuesta del endpoint de detalle).
+ * El detalle NO incluye `thumbnail_url`: trae el arreglo `images` con todas las
+ * imágenes del producto para mostrar en la galería.
+ */
+export interface ProductDetail {
+  product_id: string;
+  seller_id: string;
+  title: string;
   description: string;
+  price: number;
+  currency: string;
+  category_id: string;
+  condition: ProductCondition;
+  stock: number;
   weight: number; // kg
   height: number; // m
   width: number; // m
   depth: number; // m
-  stock: number;
   images: string[]; // URLs
   created_at: string; // ISO 8601
 }
@@ -82,9 +91,22 @@ export interface Product extends ProductListItem {
 }
 
 // ── Batch: POST /api/seller/productos/batch ───────────────────────────────────
+/**
+ * Ítem de producto devuelto por el endpoint batch.
+ * Coincide con ProductListItem (incluye `thumbnail_url`) más las dimensiones
+ * requeridas para cotizar envío. No incluye `description` ni `images`.
+ */
+export interface BatchProductItem extends ProductListItem {
+  stock: number;
+  weight: number;
+  height: number;
+  width: number;
+  depth: number;
+}
+
 /** Respuesta del endpoint POST /api/seller/productos/batch. */
 export interface BatchProductResponse {
-  products: ProductDetail[];
+  products: BatchProductItem[];
 }
 
 // ── Tienda: GET /api/seller/shops/:seller_id ──────────────────────────────────
@@ -109,7 +131,7 @@ export interface ProductFilters {
   order?: OrderOption;
   min_price?: number;
   max_price?: number;
-  status?: ProductStatus;
+  condition?: ProductCondition;
   seller_id?: string;
   page?: number;
   page_size?: number;
