@@ -8,10 +8,12 @@ import ProductCartActions from "./ProductCartActions";
 import ProductTabsSection from "./ProductTabsSection";
 
 interface ProductDetailFetcherProps {
-  id: string;
+  params: Promise<{ id: string }>;
 }
 
-export async function ProductDetailFetcher({ id }: ProductDetailFetcherProps) {
+export async function ProductDetailFetcher({ params }: ProductDetailFetcherProps) {
+  const { id } = await params;
+
   // Paralelo: producto + check de favorito.
   // isFavorited usa findUnique por clave primaria compuesta (buyerId, productId) — O(1).
   const [product, initialFavorite] = await Promise.all([

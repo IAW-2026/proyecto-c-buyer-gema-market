@@ -4,8 +4,6 @@ import CartGridClient from "@/app/components/features/cart/CartGridClient";
 import { getCartWithProducts } from "@/app/lib/helpers/cart";
 import CartSkeleton from "@/app/components/features/cart/CartSkeleton";
 
-export const dynamic = "force-dynamic";
-
 async function CartContent() {
   const items = await getCartWithProducts();
   return <CartGridClient initialItems={items} />;

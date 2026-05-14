@@ -5,7 +5,6 @@ export * from "./Input";
 export * from "./SearchBar";
 export * from "./EmptyState";
 export * from "./Logo";
-export * from "./ProductGlyph";
 export * from "./Card";
 export * from "./Avatar";
 export * from "./SectionTitle";

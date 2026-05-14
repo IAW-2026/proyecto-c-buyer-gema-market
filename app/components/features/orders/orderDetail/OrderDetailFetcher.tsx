@@ -9,16 +9,20 @@ import { OrderProductCard } from "../OrderProductCard";
 import type { OrderDetailForUI } from "@/app/lib/types/orders";
 
 interface OrderDetailFetcherProps {
-  id: string;
+  params: Promise<{ id: string }>;
 }
 
-export async function OrderDetailFetcher({ id }: OrderDetailFetcherProps) {
+export async function OrderDetailFetcher({ params }: OrderDetailFetcherProps) {
+  const { id } = await params;
+
   const [userId, orden] = await Promise.all([
     getCurrentUserId(),
     getOrdenById(id),
   ]);
+
   if (!userId) notFound();
   if (!orden || orden.buyerId !== userId) notFound();
+
   const product = await getProductById(orden.productId);
 
   const detail: OrderDetailForUI = {

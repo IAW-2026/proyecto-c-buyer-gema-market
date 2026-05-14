@@ -8,13 +8,11 @@ interface PageProps {
   }>;
 }
 
-export default async function ProductDetailPage({ params }: PageProps) {
-  const { id } = await params;
-
+export default function ProductDetailPage({ params }: PageProps) {
   return (
     <div className="pb-24 lgx:pt-8 lgx:px-7 lgx:pb-14 lgx:bg-cream lgx:min-h-screen">
       <Suspense fallback={<ProductDetailSkeleton />}>
-        <ProductDetailFetcher id={id} />
+        <ProductDetailFetcher params={params} />
       </Suspense>
     </div>
   );

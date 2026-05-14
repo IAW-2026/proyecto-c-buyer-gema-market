@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 
 import { inter, jetbrainsMono } from "./lib/fonts";
@@ -35,7 +36,9 @@ export default function RootLayout({
       >
         <body className="min-h-full bg-cream text-ink font-sans">
           {/* Desktop sidebar */}
-          <SideNav />
+          <Suspense fallback={<aside className="hidden lgx:block lgx:fixed lgx:left-0 lgx:top-0 lgx:bottom-0 lgx:w-60 lgx:bg-paper lgx:border-r lgx:border-line" />}>
+            <SideNav />
+          </Suspense>
 
           {/* Page content — layout adjusted based on nav presence */}
           <main className="lgx:pb-0 lgx:[aside+&]:ml-60 [&:has(+nav)]:pb-16">
@@ -43,7 +46,9 @@ export default function RootLayout({
           </main>
 
           {/* Mobile bottom navigation */}
-          <BottomNav />
+          <Suspense fallback={<nav className="fixed bottom-0 left-0 right-0 h-16 bg-paper border-t border-line lgx:hidden" />}>
+            <BottomNav />
+          </Suspense>
         </body>
       </html>
     </ClerkProvider>
