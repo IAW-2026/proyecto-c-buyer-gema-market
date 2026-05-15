@@ -4,6 +4,8 @@
  * @see prisma/schema.prisma — enum `OrdenStatus`
  */
 
+import type { ShippingQuote } from "@/app/lib/types/api/shipping";
+
 export type OrderStatus =
   | "created"
   | "awaiting_payment"
@@ -11,23 +13,9 @@ export type OrderStatus =
   | "shipping"
   | "delivered"
   | "shipping_failed"
-  | "cancelled"
-  | "refunded"
-  | "disputed";
+  | "cancelled";
 
 // ── Tipos del flujo de Checkout ───────────────────────────────────────────────
-
-/**
- * Cotización de envío retornada por la Shipping App.
- * @see docs/apis.md — POST /api/shipping/cotizaciones
- */
-export interface ShippingQuote {
-  quote_id: string;
-  price: number;
-  currency: string;
-  estimated_days: number;
-  valid_until: string; // ISO string
-}
 
 /**
  * Un ítem del checkout: producto del carrito enriquecido con datos de la Seller App
@@ -42,16 +30,6 @@ export interface CheckoutItem {
   quantity: number;
   unitPrice: number;     // Precio unitario al momento del checkout
   quote: ShippingQuote;  // Cotización de envío propia de este producto
-}
-
-/**
- * Resultado de crear una orden de pago en la Payments App.
- * @see docs/apis.md — POST /api/payments/ordenes-de-pago
- */
-export interface PaymentOrderResult {
-  payment_id: string;
-  checkout_url: string; // URL a la que se redirige al usuario para pagar
-  status: "pending" | "approved" | "rejected" | "cancelled";
 }
 
 // ── Tipos de UI ───────────────────────────────────────────────────────────────

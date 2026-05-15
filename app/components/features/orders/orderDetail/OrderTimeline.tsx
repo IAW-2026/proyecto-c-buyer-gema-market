@@ -17,12 +17,7 @@ const ORDER_SEQUENCE: OrderStatus[] = [
   "delivered",
 ];
 
-const FAILED_STATUSES: OrderStatus[] = [
-  "cancelled",
-  "refunded",
-  "disputed",
-  "shipping_failed",
-];
+const FAILED_STATUSES: OrderStatus[] = ["cancelled", "shipping_failed"];
 
 interface OrderTimelineProps {
   status: OrderStatus;

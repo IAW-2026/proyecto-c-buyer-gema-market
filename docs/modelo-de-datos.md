@@ -43,7 +43,7 @@ También identificar posibles duplicados entre apps (ej: usuarios) y definir có
 | shipping_price | int | |
 | total_amount | decimal | |
 | currency | string(3) | `ARS` |
-| status | enum | `created`, `awaiting_payment`, `paid`, `shipping`, `delivered`, `shipping_failed`, `cancelled`, `refunded`, `disputed` |
+| status | enum | `created`, `awaiting_payment`, `paid`, `shipping`, `delivered`, `shipping_failed`, `cancelled` |
 | payment_id | string | FK lógica → Payments App. Permite trackear el pago |
 | shipping_id | string | FK lógica → Shipping App |
 | created_at | timestamp | |

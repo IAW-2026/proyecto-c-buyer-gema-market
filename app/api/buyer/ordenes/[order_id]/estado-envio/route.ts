@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateOrden } from "@/app/lib/db/orden";
+import {
+  ShippingStatusUpdateSchema,
+  type ShippingStatusUpdateInput,
+} from "@/app/lib/schemas/shipping";
 import type { OrdenStatus } from "@prisma/client";
 
 /**
@@ -8,15 +12,19 @@ import type { OrdenStatus } from "@prisma/client";
  * Notifica cambios en el estado logístico del envío asociado a la orden.
  *
  * Mapeo de estados de Shipping → Orden:
- *   pending_pickup → paid     (esperando retiro, sin cambio de estado de orden)
- *   in_transit     → shipping
- *   delivered      → delivered
- *   failed         → cancelled
+ *   in_transit → shipping
+ *   delivered  → delivered
+ *   failed     → shipping_failed
+ *
+ * `pending_pickup` no es aceptado: el schema lo rechaza con 400.
  *
  * @see docs/apis.md — POST /api/buyer/ordenes/:order_id/estado-envio
  */
 
-const SHIPPING_TO_ORDER_STATUS: Record<string, OrdenStatus> = {
+const SHIPPING_TO_ORDER_STATUS: Record<
+  ShippingStatusUpdateInput["status"],
+  OrdenStatus
+> = {
   in_transit: "shipping",
   delivered: "delivered",
   failed: "shipping_failed",
@@ -28,30 +36,31 @@ export async function POST(
 ) {
   try {
     const { order_id } = await params;
-    const body = await req.json();
-
-    const { shipping_id, status } = body as {
-      shipping_id: string;
-      status: string;
-      tracking_code: string;
-      updated_at: string;
-    };
-
-    if (!shipping_id || !status) {
+    const parsed = ShippingStatusUpdateSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      console.warn(
+        "[POST /api/buyer/ordenes/estado-envio] body inválido:",
+        parsed.error.issues,
+      );
       return NextResponse.json(
-        { error: "shipping_id y status son requeridos" },
+        { error: "Body inválido", issues: parsed.error.issues },
         { status: 400 },
       );
     }
 
-    const ordenStatus = SHIPPING_TO_ORDER_STATUS[status];
+    const { shipping_id, status } = parsed.data;
 
-    if (ordenStatus) {
-      await updateOrden(order_id, { status: ordenStatus, shippingId: shipping_id });
-    }
+    await updateOrden(order_id, {
+      status: SHIPPING_TO_ORDER_STATUS[status],
+      shippingId: shipping_id,
+    });
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error(
+      "[POST /api/buyer/ordenes/estado-envio] Error:",
+      error,
+    );
     return NextResponse.json(
       { error: "Error al procesar actualización de envío" },
       { status: 500 },

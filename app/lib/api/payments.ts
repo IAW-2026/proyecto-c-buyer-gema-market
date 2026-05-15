@@ -7,13 +7,13 @@
  * @see docs/apis.md — Payments App endpoints
  */
 
-import type { PaymentOrderResult } from "@/app/lib/types/orders";
 import type {
   PaymentOrderItem,
   CreatePaymentOrderParams,
+  PaymentOrderResult,
 } from "@/app/lib/types/api/payments";
 
-export type { PaymentOrderItem, CreatePaymentOrderParams };
+export type { PaymentOrderItem, CreatePaymentOrderParams, PaymentOrderResult };
 
 if (!process.env.PAYMENTS_API_URL)
   throw new Error("Missing required environment variable: PAYMENTS_API_URL");
@@ -28,6 +28,7 @@ export async function createPaymentOrder(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       buyer_id: params.buyer_id,
+      buyer_name: params.buyer_name,
       orders: params.orders,
       currency: params.currency ?? "ARS",
       return_url: params.return_url,

@@ -25,8 +25,6 @@ enum OrdenStatus {
   delivered
   shipping_failed
   cancelled
-  refunded
-  disputed
 }
 
 // ─────────────────────────────────────────────

@@ -4,8 +4,7 @@ import type { OrderStatus } from "@/app/lib/types/orders";
 
 function statusCardColor(status: OrderStatus) {
   if (status === "delivered") return "bg-success text-paper border-0";
-  if (status === "cancelled" || status === "refunded" || status === "disputed")
-    return "bg-danger text-paper border-0";
+  if (status === "cancelled") return "bg-danger text-paper border-0";
   return "bg-forest text-paper border-0";
 }
 
