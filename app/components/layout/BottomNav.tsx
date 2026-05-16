@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { Icon, IconName } from "../ui";
 
 interface NavItem {
@@ -11,15 +12,24 @@ interface NavItem {
   route: string;
 }
 
+const BASE_ITEMS: NavItem[] = [
+  { id: "home", label: "Inicio", icon: "home", route: "/" },
+  { id: "cart", label: "Carrito", icon: "cart", route: "/cart" },
+  { id: "fav", label: "Favoritos", icon: "heart", route: "/favorites" },
+  { id: "orders", label: "Pedidos", icon: "box", route: "/orders" },
+  { id: "me", label: "Cuenta", icon: "user", route: "/account" },
+];
+
 export const BottomNav = () => {
   const pathname = usePathname();
+  const { user } = useUser();
+  const isAdmin = user?.publicMetadata?.role === "admin_buyer";
 
   const items: NavItem[] = [
-    { id: "home", label: "Inicio", icon: "home", route: "/" },
-    { id: "cart", label: "Carrito", icon: "cart", route: "/cart" },
-    { id: "fav", label: "Favoritos", icon: "heart", route: "/favorites" },
-    { id: "orders", label: "Pedidos", icon: "box", route: "/orders" },
-    { id: "me", label: "Cuenta", icon: "user", route: "/account" },
+    ...BASE_ITEMS,
+    ...(isAdmin
+      ? [{ id: "admin", label: "Admin", icon: "shield" as IconName, route: "/admin" }]
+      : []),
   ];
 
   // Rutas donde no queremos mostrar la navegación inferior

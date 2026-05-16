@@ -10,7 +10,7 @@ export interface ToastProps {
   message: string;
   action?: {
     label: string;
-    href: string;
+    href?: string;
   };
 }
 
@@ -32,19 +32,15 @@ export function Toast({ show, type, message, action }: ToastProps) {
             : "bg-red-600/90 border-red-500/20 text-paper"
         }`}
       >
-        <Icon
-          name={type === "success" ? "check" : "alertCircle"}
-          size={20}
-        />
-        <span className="font-medium text-sm tracking-tight">
-          {message}
-        </span>
+        <Icon name={type === "success" ? "check" : "alertCircle"} size={20} />
+        <span className="font-medium text-sm tracking-tight">{message}</span>
+
         {action && (
           <Button
             size="sm"
             variant="secondary"
             className="ml-2 bg-paper/20 hover:bg-paper/30 border-transparent text-paper h-8 px-3"
-            onClick={() => router.push(action.href)}
+            onClick={() => action.href && router.push(action.href)}
           >
             {action.label}
           </Button>

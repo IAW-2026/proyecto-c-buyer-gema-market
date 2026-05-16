@@ -7,10 +7,12 @@
  * @see docs/apis.md — Shipping App endpoints
  */
 
-import type { ShippingQuote } from "@/app/lib/types/orders";
-import type { RequestQuoteParams } from "@/app/lib/types/api/shipping";
+import type {
+  RequestQuoteParams,
+  ShippingQuote,
+} from "@/app/lib/types/api/shipping";
 
-export type { RequestQuoteParams };
+export type { RequestQuoteParams, ShippingQuote };
 
 if (!process.env.SHIPPING_API_URL)
   throw new Error("Missing required environment variable: SHIPPING_API_URL");

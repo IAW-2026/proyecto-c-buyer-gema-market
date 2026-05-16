@@ -13,3 +13,4 @@ export * from "./Tabs";
 export * from "./Field";
 export * from "./TopBar";
 export * from "./Toast";
+export * from "./Pagination";

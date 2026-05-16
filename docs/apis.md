@@ -78,6 +78,27 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 - **Response 200**: `{ "ok": true }`
 
+### `POST /api/buyer/:buyer_id`
+- **Consumido por**: Shipping App.
+- **Descripción**: Retorna los datos del buyer correspondiente al buyer_id.
+- **Response 200**:
+
+```json
+{
+    "id": "usr__01KR9...",
+    "email": "buyer@mail.com",
+    "full_name": "Carlos Perez",
+    "phone_number": "291....",
+    "address": {
+        "zip": "8000",
+        "number": "777",
+        "street": "Lavalle "
+    },
+    "created_at": "2026-05-10T13:20:36.559Z"
+}
+```
+
+
 ---
 
 ## Seller App — Endpoints expuestos
@@ -480,6 +501,7 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 ```json
 {
   "buyer_id": "usr_01HXYZ...",
+  "buyer_name": "Carlos Perez"
   "orders": [
     {
       "order_id": "ord_01HXYZ...",

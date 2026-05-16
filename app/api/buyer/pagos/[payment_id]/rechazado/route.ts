@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateOrden } from "@/app/lib/db/orden";
+import { PaymentRejectedSchema } from "@/app/lib/schemas/payments";
 
 /**
  * POST /api/buyer/pagos/:payment_id/rechazado
@@ -10,30 +11,27 @@ import { updateOrden } from "@/app/lib/db/orden";
  */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-
-    const { orders } = body as {
-      payment_id: string;
-      orders: {
-        order_id: string;
-        status: string;
-        reason: string;
-      }[];
-    };
-
-    if (!Array.isArray(orders) || orders.length === 0) {
+    const parsed = PaymentRejectedSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      console.warn(
+        "[POST /api/buyer/pagos/rechazado] body inválido:",
+        parsed.error.issues,
+      );
       return NextResponse.json(
-        { error: "orders is required and must be a non-empty array" },
+        { error: "Body inválido", issues: parsed.error.issues },
         { status: 400 },
       );
     }
+
+    const { orders } = parsed.data;
 
     await Promise.all(
       orders.map((o) => updateOrden(o.order_id, { status: "cancelled" })),
     );
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error("[POST /api/buyer/pagos/rechazado] Error:", error);
     return NextResponse.json(
       { error: "Error al procesar rechazo de pago" },
       { status: 500 },

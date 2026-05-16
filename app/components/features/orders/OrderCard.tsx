@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { Card, Pill, Icon } from "@/app/components/ui";
 import { fmtARS } from "@/app/lib/utils/format";
@@ -8,14 +9,15 @@ export type { OrderForUI };
 
 interface OrderCardProps {
   order: OrderForUI;
-  onClick: () => void;
+  href: string;
 }
 
-export function OrderCard({ order: o, onClick }: OrderCardProps) {
+export function OrderCard({ order: o, href }: OrderCardProps) {
   const st = ORDER_STATUS_LABEL[o.status];
 
   return (
-    <Card padding={16} onClick={onClick} hover>
+    <Link href={href} className="block">
+    <Card padding={16} hover className="cursor-pointer">
       <div className="flex justify-between items-center mb-2.5">
         <div className="text-xs font-mono text-ink-3 truncate max-w-[55%]">
           {o.id}
@@ -55,5 +57,6 @@ export function OrderCard({ order: o, onClick }: OrderCardProps) {
         <Icon name="chevronRight" size={18} className="text-ink-3" />
       </div>
     </Card>
+    </Link>
   );
 }

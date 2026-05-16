@@ -1,15 +1,17 @@
 "use client";
 
-import { Icon } from "../../ui";
 import clsx from "clsx";
 import Link from "next/link";
-import { generatePagination } from "@/app/lib/utils/pagination";
 import { usePathname, useSearchParams } from "next/navigation";
+import { generatePagination } from "@/app/lib/utils/pagination";
+import { Icon } from "./Icon";
 
-export default function Pagination({ totalPages }: { totalPages: number }) {
+export function Pagination({ totalPages }: { totalPages: number }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
+
+  if (totalPages <= 1) return null;
 
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
@@ -20,7 +22,6 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const allPages = generatePagination(currentPage, totalPages);
 
   return (
-    <>
     <nav aria-label="Paginación" className="flex items-center gap-2">
       <PaginationArrow
         direction="left"
@@ -55,7 +56,6 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
         isDisabled={currentPage >= totalPages}
       />
     </nav>
-    </>
   );
 }
 

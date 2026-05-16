@@ -167,3 +167,22 @@ export async function getFavoritosIds(buyerId: string): Promise<string[]> {
   });
   return favoritos.map((f) => f.productId);
 }
+
+export async function getFavoritosIdsPaginated(
+  buyerId: string,
+  page: number,
+  pageSize: number,
+): Promise<string[]> {
+  const favoritos = await prisma.favorito.findMany({
+    where: { buyerId },
+    select: { productId: true },
+    orderBy: { createdAt: "desc" },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+  });
+  return favoritos.map((f) => f.productId);
+}
+
+export async function countFavoritosByBuyerId(buyerId: string): Promise<number> {
+  return prisma.favorito.count({ where: { buyerId } });
+}

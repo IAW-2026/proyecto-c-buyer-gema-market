@@ -30,7 +30,6 @@ export async function GET(
       full_name: usuario.fullName,
       phone_number: usuario.phoneNumber,
       address: usuario.address,
-      role: usuario.role,
       created_at: usuario.createdAt,
     });
   } catch (error) {
