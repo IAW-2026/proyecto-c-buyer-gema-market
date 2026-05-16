@@ -84,13 +84,26 @@ export async function getUsuarioByClerkId(
 }
 
 /**
- * Obtiene TODOS los usuarios del sistema
- * findMany sin where → retorna todos los Usuarios
- * Sin include: retorna solo usuarios sin relaciones
- * Retorna: Array de todos los Usuarios
+ * Obtiene usuarios con paginación opcional, ordenados por fecha de creación (descendente).
+ * Sin opciones: retorna todos los usuarios.
+ * Con { skip, take }: retorna la página correspondiente.
  */
-export async function getAllUsuarios(): Promise<Usuario[]> {
-  return prisma.usuario.findMany();
+export async function getAllUsuarios(opts?: {
+  skip?: number;
+  take?: number;
+}): Promise<Usuario[]> {
+  return prisma.usuario.findMany({
+    skip: opts?.skip,
+    take: opts?.take,
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+/**
+ * Cuenta total de usuarios — útil para calcular páginas en listados paginados.
+ */
+export async function countUsuarios(): Promise<number> {
+  return prisma.usuario.count();
 }
 
 // ─────────────────────────────────────────────

@@ -17,10 +17,21 @@ const isPublicRoute = createRouteMatcher([
   "/product(.*)",
 ]);
 
+// Rutas que además de autenticación requieren rol "admin_buyer"
+const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
+
 export default clerkMiddleware(async (auth, req) => {
   // Si la ruta NO es pública, requiere autenticación
   if (!isPublicRoute(req)) {
     await auth.protect();
+  }
+
+  // Rutas /admin solo accesibles con rol admin_buyer en publicMetadata
+  if (isAdminRoute(req)) {
+    const { sessionClaims } = await auth();
+    if (sessionClaims?.metadata?.role !== "admin_buyer") {
+      return Response.redirect(new URL("/", req.url));
+    }
   }
 });
 
