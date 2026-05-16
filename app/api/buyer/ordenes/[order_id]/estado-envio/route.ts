@@ -6,24 +6,9 @@ import {
 } from "@/app/lib/schemas/shipping";
 import type { OrdenStatus } from "@prisma/client";
 
-/**
- * POST /api/buyer/ordenes/:order_id/estado-envio
- * Consumido por: Shipping App.
- * Notifica cambios en el estado logístico del envío asociado a la orden.
- *
- * Mapeo de estados de Shipping → Orden:
- *   in_transit → shipping
- *   delivered  → delivered
- *   failed     → shipping_failed
- *
- * `pending_pickup` no es aceptado: el schema lo rechaza con 400.
- *
- * @see docs/apis.md — POST /api/buyer/ordenes/:order_id/estado-envio
- */
 
-const SHIPPING_TO_ORDER_STATUS: Record<
-  ShippingStatusUpdateInput["status"],
-  OrdenStatus
+const SHIPPING_TO_ORDER_STATUS: Partial<
+  Record<ShippingStatusUpdateInput["status"], OrdenStatus>
 > = {
   in_transit: "shipping",
   delivered: "delivered",
@@ -49,11 +34,14 @@ export async function POST(
     }
 
     const { shipping_id, status } = parsed.data;
+    const ordenStatus = SHIPPING_TO_ORDER_STATUS[status];
 
-    await updateOrden(order_id, {
-      status: SHIPPING_TO_ORDER_STATUS[status],
-      shippingId: shipping_id,
-    });
+    if (ordenStatus) {
+      await updateOrden(order_id, {
+        status: ordenStatus,
+        shippingId: shipping_id,
+      });
+    }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
