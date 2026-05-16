@@ -1,3 +1,8 @@
+export function parsePage(raw: string | string[] | undefined): number {
+  const n = Number(Array.isArray(raw) ? raw[0] : raw);
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 1;
+}
+
 export const generatePagination = (currentPage: number, totalPages: number) => {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);

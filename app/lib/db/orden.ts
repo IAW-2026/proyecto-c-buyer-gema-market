@@ -89,15 +89,24 @@ export async function getAllOrdenes(): Promise<Orden[]> {
 
 export async function getOrdenesByBuyerId(
   buyerId: string,
-  page = 1,
-  pageSize = 20,
+  opts: { page?: number; pageSize?: number; statuses?: OrdenStatus[] } = {},
 ): Promise<OrdenConBuyer[]> {
+  const { page = 1, pageSize = 20, statuses } = opts;
   return prisma.orden.findMany({
-    where: { buyerId },
+    where: { buyerId, ...(statuses ? { status: { in: statuses } } : {}) },
     include: { buyer: true },
     orderBy: { createdAt: "desc" },
     skip: (page - 1) * pageSize,
     take: pageSize,
+  });
+}
+
+export async function countOrdenesByBuyerId(
+  buyerId: string,
+  statuses?: OrdenStatus[],
+): Promise<number> {
+  return prisma.orden.count({
+    where: { buyerId, ...(statuses ? { status: { in: statuses } } : {}) },
   });
 }
 /**

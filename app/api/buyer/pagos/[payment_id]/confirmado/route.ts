@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateOrden } from "@/app/lib/db/orden";
+import { PaymentConfirmedSchema } from "@/app/lib/schemas/payments";
 
 /**
  * POST /api/buyer/pagos/:payment_id/confirmado
@@ -10,26 +11,19 @@ import { updateOrden } from "@/app/lib/db/orden";
  */
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-
-    const { orders } = body as {
-      payment_id: string;
-      orders: {
-        order_id: string;
-        mp_payment_id: string;
-        status: string;
-        amount: number;
-        currency: string;
-        paid_at: string;
-      }[];
-    };
-
-    if (!Array.isArray(orders) || orders.length === 0) {
+    const parsed = PaymentConfirmedSchema.safeParse(await req.json());
+    if (!parsed.success) {
+      console.warn(
+        "[POST /api/buyer/pagos/confirmado] body inválido:",
+        parsed.error.issues,
+      );
       return NextResponse.json(
-        { error: "orders is required and must be a non-empty array" },
+        { error: "Body inválido", issues: parsed.error.issues },
         { status: 400 },
       );
     }
+
+    const { orders } = parsed.data;
 
     await Promise.all(
       orders.map((o) => updateOrden(o.order_id, { status: "paid" })),

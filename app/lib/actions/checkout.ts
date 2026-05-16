@@ -170,6 +170,17 @@ export async function createCheckoutAction(
       return { ok: false, error: "Debés iniciar sesión para continuar." };
     }
 
+    const buyer = await prisma.usuario.findUnique({
+      where: { id: userId },
+      select: { fullName: true },
+    });
+    if (!buyer?.fullName) {
+      return {
+        ok: false,
+        error: "Completá tu nombre en el perfil para continuar.",
+      };
+    }
+
     const carrito = await getCarritoByBuyerId(userId);
     if (!carrito || carrito.items.length === 0) {
       return { ok: false, error: "Tu carrito está vacío." };
@@ -221,6 +232,7 @@ export async function createCheckoutAction(
     try {
       paymentResult = await createPaymentOrder({
         buyer_id: userId,
+        buyer_name: buyer.fullName,
         orders: ordersForPayment,
         currency: "ARS",
         return_url: getReturnUrl(),

@@ -4,7 +4,7 @@ import type {
   OrderOption,
   ProductCondition,
 } from "@/app/lib/types/product";
-import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/products";
+import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/pagination";
 
 /**
  * buildFiltersFromParams

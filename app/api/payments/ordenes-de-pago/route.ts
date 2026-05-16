@@ -10,6 +10,7 @@ import { createMockPaymentOrder } from "@/app/mocks/payments/data";
  * Body esperado:
  * {
  *   buyer_id: string,
+ *   buyer_name: string,
  *   orders: [{
  *     order_id, seller_id, product_id, quantity, unit_price,
  *     quote: { quote_id, shipping_price }
@@ -27,11 +28,18 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { buyer_id, orders, currency, return_url } = body;
+    const { buyer_id, buyer_name, orders, currency, return_url } = body;
 
     if (!buyer_id || !orders || !Array.isArray(orders) || orders.length === 0) {
       return NextResponse.json(
         { error: "buyer_id y orders son requeridos" },
+        { status: 400 },
+      );
+    }
+
+    if (!buyer_name || typeof buyer_name !== "string") {
+      return NextResponse.json(
+        { error: "buyer_name es requerido" },
         { status: 400 },
       );
     }

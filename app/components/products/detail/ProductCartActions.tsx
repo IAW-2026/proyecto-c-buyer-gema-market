@@ -16,6 +16,16 @@ export default function ProductCartActions({
   const [quantity, setQuantity] = useState(1);
   const { isPending, notification, handleAddToCart } = useCart(productId);
 
+  // Mantener la última notificación visible durante la animación de salida del Toast,
+  // así no parpadea cambiando de "Ver carrito" a "Reintentar" cuando notification pasa a null.
+  const [displayNotification, setDisplayNotification] = useState(notification);
+  const [prevNotification, setPrevNotification] = useState(notification);
+
+  if (prevNotification !== notification) {
+    setPrevNotification(notification);
+    if (notification) setDisplayNotification(notification);
+  }
+
   return (
     <>
       <div className="fixed bottom-[calc(64px+env(safe-area-inset-bottom))] left-0 right-0 bg-paper/95 backdrop-blur-md border-t border-line px-4 py-3 flex gap-2.5 z-50 max-w-150 mx-auto lgx:static lgx:max-w-none lgx:bg-transparent lgx:backdrop-blur-none lgx:border-t lgx:border-line lgx:px-0 lgx:pt-4 lgx:pb-0 lgx:mt-5">
@@ -56,12 +66,12 @@ export default function ProductCartActions({
 
       <Toast
         show={!!notification}
-        type={notification?.type || "success"}
-        message={notification?.message || ""}
+        type={displayNotification?.type || "success"}
+        message={displayNotification?.message || ""}
         action={
-          notification?.type === "success"
-            ? { label: "Ver carrito", href: "/cart" }
-            : { label: "Reintentar", href: "/cart" }
+          displayNotification?.type === "error"
+            ? { label: "Error, intentalo de nuevo" }
+            : { label: "Ver carrito", href: "/cart" }
         }
       />
     </>

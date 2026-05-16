@@ -5,9 +5,11 @@ import {
   updateItemCarritoQuantity,
   deleteItemCarrito,
   upsertItemCarrito,
+  getItemByCarritoAndProduct,
 } from "@/app/lib/db/item_carrito";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 import { getCarritoByBuyerId, getOrCreateCarrito } from "@/app/lib/db/carrito";
+import { getProductById } from "@/app/lib/api/seller";
 
 
 // Helper reutilizable: verifica que el item pertenezca al carrito del usuario actual.
@@ -42,6 +44,31 @@ export async function addToCartAction(productId: string, quantity: number) {
     // si el usuario abre dos tabs y hace addToCart en ambas simultáneamente,
     // no se crean dos carritos — la transacción garantiza que solo exista uno.
     const carrito = await getOrCreateCarrito(userId);
+
+    // Validación de stock: el stock del producto no se descuenta hasta el checkout,
+    // así que sin este chequeo el usuario podría acumular en el carrito una cantidad
+    // mayor al stock disponible clickeando "Agregar" varias veces.
+    // Esto es UX — la autoridad real sigue siendo la creación de la orden.
+    const [existingItem, product] = await Promise.all([
+      getItemByCarritoAndProduct(carrito.id, productId),
+      getProductById(productId),
+    ]);
+
+    if (!product) {
+      return { ok: false, error: "Producto no encontrado" };
+    }
+
+    const qtyExistente = existingItem?.quantity ?? 0;
+    if (qtyExistente + quantity > product.stock) {
+      const disponible = product.stock - qtyExistente;
+      return {
+        ok: false,
+        error:
+          disponible <= 0
+            ? `Ya tenés el stock máximo en el carrito (${product.stock} ${product.stock === 1 ? "unidad" : "unidades"})`
+            : `Solo hay ${disponible} ${disponible === 1 ? "unidad disponible" : "unidades disponibles"}`,
+      };
+    }
 
     await upsertItemCarrito({
       carritoId: carrito.id,

@@ -22,8 +22,6 @@ export const ORDER_STATUS_LABEL: Record<
   delivered: { label: "Entregado", tone: "success" },
   shipping_failed: { label: "Envío fallido", tone: "danger" },
   cancelled: { label: "Cancelado", tone: "danger" },
-  refunded: { label: "Reembolsado", tone: "outline" },
-  disputed: { label: "En disputa", tone: "warn" },
 };
 
 export const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
@@ -31,4 +29,10 @@ export const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
   "awaiting_payment",
   "paid",
   "shipping",
+];
+
+export const HISTORIAL_ORDER_STATUSES: OrderStatus[] = [
+  "delivered",
+  "shipping_failed",
+  "cancelled",
 ];

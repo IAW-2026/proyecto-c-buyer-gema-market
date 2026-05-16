@@ -10,7 +10,7 @@
 
 import type { ProductFilters } from "@/app/lib/types/product";
 import { getProducts } from "@/app/lib/api/seller";
-import Pagination from "./Pagination";
+import { Pagination } from "@/app/components/ui";
 import ProductCard from "../../products/ProductCard";
 import { getFavoritosIds } from "@/app/lib/db/favorito";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";

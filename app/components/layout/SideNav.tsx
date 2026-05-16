@@ -14,7 +14,6 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { id: "home", label: "Inicio", icon: "home", route: "/" },
-  //{ id: "search", label: "Buscar",    icon: "search", route: "/search" },
   { id: "cart", label: "Carrito", icon: "cart", route: "/cart" },
   { id: "fav", label: "Favoritos", icon: "heart", route: "/favorites" },
   { id: "orders", label: "Pedidos", icon: "box", route: "/orders" },
@@ -23,9 +22,12 @@ const NAV_ITEMS: NavItem[] = [
 
 export const SideNav = () => {
   const pathname = usePathname();
-  const { isSignedIn, isLoaded } = useUser();
+  const { isSignedIn, isLoaded, user } = useUser();
+  const isAdmin = user?.publicMetadata?.role === "admin_buyer";
 
-  const isAuthPage = pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
+  // Si esta en una página de autenticación o checkout, no mostrar la barra lateral
+  const isAuthPage =
+    pathname.startsWith("/sign-in") || pathname.startsWith("/sign-up");
   if (isAuthPage || pathname.startsWith("/checkout")) return null;
 
   return (
@@ -49,8 +51,19 @@ export const SideNav = () => {
         className="flex flex-col gap-0.5 flex-1"
       >
         <ul className="flex flex-col gap-0.5 list-none p-0 m-0">
-          {/* original index.html filters out search from the sidebar */}
-          {NAV_ITEMS.filter((it) => it.id !== "search").map((it) => {
+          {[
+            ...NAV_ITEMS,
+            ...(isAdmin
+              ? [
+                  {
+                    id: "admin",
+                    label: "Admin",
+                    icon: "shield" as IconName,
+                    route: "/admin",
+                  },
+                ]
+              : []),
+          ].map((it) => {
             const isActive =
               pathname === it.route ||
               (it.route !== "/" && pathname.startsWith(it.route));
