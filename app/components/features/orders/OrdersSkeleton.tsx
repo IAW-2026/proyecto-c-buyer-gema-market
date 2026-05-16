@@ -1,4 +1,4 @@
-import { TopBar, Skeleton } from "@/app/components/ui";
+import { Skeleton } from "@/app/components/ui";
 
 function OrderCardSkeleton() {
   return (
@@ -25,7 +25,6 @@ function OrderCardSkeleton() {
 export function OrdersSkeleton() {
   return (
     <div className="pb-6">
-      <TopBar title="Mis pedidos" back />
       <div className="px-4 mb-4">
         <Skeleton w="100%" h={40} r={12} />
       </div>

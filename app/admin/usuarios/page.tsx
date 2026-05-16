@@ -2,15 +2,10 @@ import { Suspense } from "react";
 import { SectionTitle, EmptyState, Pagination } from "@/app/components/ui";
 import { requireAdmin } from "@/app/lib/auth/roles";
 import { getAllUsuarios, countUsuarios } from "@/app/lib/db/user";
+import { parsePage } from "@/app/lib/utils/pagination";
+import { ADMIN_USERS_PAGE_SIZE } from "@/app/lib/constants/pagination";
 import { UsuariosTable } from "./_components/UsuariosTable";
 import { UsuariosTableSkeleton } from "./_components/UsuariosTableSkeleton";
-
-const PAGE_SIZE = 7;
-
-function parsePage(raw: string | string[] | undefined): number {
-  const n = Number(Array.isArray(raw) ? raw[0] : raw);
-  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 1;
-}
 
 async function UsuariosListContent({
   searchParams,
@@ -22,7 +17,7 @@ async function UsuariosListContent({
   const page = parsePage(pageParam);
 
   const [usuarios, total] = await Promise.all([
-    getAllUsuarios({ skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE }),
+    getAllUsuarios({ skip: (page - 1) * ADMIN_USERS_PAGE_SIZE, take: ADMIN_USERS_PAGE_SIZE }),
     countUsuarios(),
   ]);
 
@@ -39,12 +34,9 @@ async function UsuariosListContent({
       ) : (
         <>
           <UsuariosTable usuarios={usuarios} />
-          <Pagination
-            basePath="/admin/usuarios"
-            page={page}
-            pageSize={PAGE_SIZE}
-            total={total}
-          />
+          <div className="flex justify-center mt-6">
+            <Pagination totalPages={Math.max(1, Math.ceil(total / ADMIN_USERS_PAGE_SIZE))} />
+          </div>
         </>
       )}
     </>
@@ -67,7 +59,7 @@ function UsuariosListSkeleton() {
   return (
     <>
       <SectionTitle eyebrow="…">Usuarios</SectionTitle>
-      <UsuariosTableSkeleton rows={PAGE_SIZE} />
+      <UsuariosTableSkeleton rows={ADMIN_USERS_PAGE_SIZE} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import Link from "next/link";
 import type { Usuario } from "@prisma/client";
 import { Card, Field, Input, Button, Icon } from "@/app/components/ui";
@@ -19,6 +19,23 @@ export function UsuarioForm({ usuario }: UsuarioFormProps) {
   // No se puede usar un arrow function: rompe la referencia RPC a la server action.
   const action = updateUsuarioAdminAction.bind(null, usuario.id);
   const [state, formAction, isPending] = useActionState(action, null);
+
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    if (!state) return;
+    // Se envuelve en un setTimeout para que el banner aparezca después de
+    // que el DOM se actualice con el nuevo estado. Sino state cambia a null
+    // justo después de la acción, y el banner no alcanza a renderizarse con
+    // el mensaje de éxito o error.
+    const showTimer = setTimeout(() => setShowBanner(true), 0);
+    const hideTimer = setTimeout(() => setShowBanner(false), 3500);
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [state]);
+
   const initialAddress = (usuario.address as unknown as Address) || {
     street: "",
     number: "",
@@ -81,12 +98,10 @@ export function UsuarioForm({ usuario }: UsuarioFormProps) {
           </Field>
         </div>
 
-        {state && (
+        {state && showBanner && (
           <div
             className={`mt-6 p-3.5 rounded-2xl flex items-center gap-3 ${
-              state.ok
-                ? "bg-forest/10 text-forest"
-                : "bg-danger/10 text-danger"
+              state.ok ? "bg-forest/10 text-forest" : "bg-danger/10 text-danger"
             }`}
           >
             <div

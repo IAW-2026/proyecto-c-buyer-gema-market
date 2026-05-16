@@ -4,7 +4,7 @@
  * Placeholder animado que se muestra mientras se resuelve la promesa de
  * carga de productos. Se usa como `fallback` del <Suspense> en page.tsx.
  */
-import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/products";
+import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/pagination";
 
 const SKELETON_COUNT = PRODUCTS_PAGE_SIZE;
 

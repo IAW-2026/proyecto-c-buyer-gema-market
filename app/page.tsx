@@ -3,7 +3,7 @@ import ProductGrid from "@/app/components/features/home/ProductGrid";
 import { buildFiltersFromParams } from "@/app/lib/utils/product-filters";
 import ProductGridSkeleton from "@/app/components/products/ProductGridSkeleton";
 import { HeaderHomePage } from "@/app/components/features/home/HeaderHomePage";
-import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/products";
+import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/pagination";
 
 /**
  * Home page — Catálogo de productos.

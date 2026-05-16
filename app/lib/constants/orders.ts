@@ -30,3 +30,9 @@ export const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
   "paid",
   "shipping",
 ];
+
+export const HISTORIAL_ORDER_STATUSES: OrderStatus[] = [
+  "delivered",
+  "shipping_failed",
+  "cancelled",
+];

@@ -29,12 +29,12 @@ export default function AdminLayout({
           </h1>
         </header>
 
-        <nav className="mb-6 flex flex-wrap gap-2">
+        <nav className="mb-6 flex gap-2 overflow-x-auto no-scrollbar pb-1">
           {ADMIN_SECTIONS.map((s) => (
             <Link
               key={s.href}
               href={s.href}
-              className="inline-flex items-center gap-2 px-3.5 h-[34px] rounded-full text-[13px] font-medium bg-paper border border-line-2 text-ink hover:border-olive transition-colors"
+              className="inline-flex shrink-0 items-center gap-2 px-3.5 h-[34px] rounded-full text-[13px] font-medium bg-paper border border-line-2 text-ink hover:border-olive transition-colors"
             >
               <Icon name={s.icon} size={16} />
               {s.label}

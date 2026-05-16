@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState, useEffect } from "react";
 import { Card, Avatar, Field, Input, Button, Icon } from "@/app/components/ui";
 import { SignOutButton } from "@clerk/nextjs";
 import type { Usuario } from "@prisma/client";
@@ -22,6 +22,18 @@ export default function AccountForm({ initialData }: AccountFormProps) {
     updateAccountAction,
     null,
   );
+
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    if (!state) return;
+    const showTimer = setTimeout(() => setShowBanner(true), 0);
+    const hideTimer = setTimeout(() => setShowBanner(false), 3500);
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, [state]);
 
   return (
     <div className="p-4 min-[600px]:max-w-[760px] min-[600px]:mx-auto min-[600px]:p-6 lgx:max-w-[760px] lgx:mx-auto lgx:p-0">
@@ -98,7 +110,7 @@ export default function AccountForm({ initialData }: AccountFormProps) {
           </div>
 
           {/* Notificación de resultado */}
-          {state && (
+          {state && showBanner && (
             <div
               className={`mt-6 p-3.5 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300 ${
                 state.ok

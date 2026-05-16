@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Button, Icon, Toast } from "@/app/components/ui";
 import { useCart } from "@/app/components/products/hooks/useCart";
 
@@ -18,9 +18,13 @@ export default function ProductCartActions({
 
   // Mantener la última notificación visible durante la animación de salida del Toast,
   // así no parpadea cambiando de "Ver carrito" a "Reintentar" cuando notification pasa a null.
-  const lastNotificationRef = useRef(notification);
-  if (notification) lastNotificationRef.current = notification;
-  const displayNotification = notification ?? lastNotificationRef.current;
+  const [displayNotification, setDisplayNotification] = useState(notification);
+  const [prevNotification, setPrevNotification] = useState(notification);
+
+  if (prevNotification !== notification) {
+    setPrevNotification(notification);
+    if (notification) setDisplayNotification(notification);
+  }
 
   return (
     <>
@@ -66,7 +70,7 @@ export default function ProductCartActions({
         message={displayNotification?.message || ""}
         action={
           displayNotification?.type === "error"
-            ? { label: "Ver carrito", href: "/cart" }
+            ? { label: "Error, intentalo de nuevo" }
             : { label: "Ver carrito", href: "/cart" }
         }
       />
