@@ -9,11 +9,12 @@
 
 import type {
   RequestQuoteParams,
+  ShipmentDetail,
   ShippingQuote,
 } from "@/app/lib/types/api/shipping";
 import { hashApiKey } from "@/app/lib/utils/hmac";
 
-export type { RequestQuoteParams, ShippingQuote };
+export type { RequestQuoteParams, ShipmentDetail, ShippingQuote };
 
 if (!process.env.SHIPPING_API_URL)
   throw new Error("Missing required environment variable: SHIPPING_API_URL");
@@ -30,6 +31,16 @@ export async function requestShippingQuote(
     method: "POST",
     headers: { "Content-Type": "application/json", "x-api-key-hash": API_KEY_HASH },
     body: JSON.stringify(params),
+    cache: "no-store",
+  });
+
+  if (!res.ok) throw new Error(`Shipping API error: ${res.status}`);
+  return res.json();
+}
+
+export async function getShipmentByOrderId(orderId: string): Promise<ShipmentDetail> {
+  const res = await fetch(`${SHIPPING_BASE_URL}/envios/${orderId}`, {
+    headers: { "x-api-key-hash": API_KEY_HASH },
     cache: "no-store",
   });
 

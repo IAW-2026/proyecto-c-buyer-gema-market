@@ -28,7 +28,7 @@ export function calcShippingPrice(
   const volume_m3 = height_m * width_m * depth_m;
   const volumetric_weight = volume_m3 * 250;
   const effective_weight = Math.max(weight_kg, volumetric_weight);
-  
+
   return Math.round(BASE_PRICE + effective_weight * RATE_PER_KG);
 }
 
@@ -92,6 +92,37 @@ export type MockEnvio = {
   order_id: string;
   status: "pending_pickup" | "in_transit" | "delivered" | "failed";
   tracking_code: string;
+  tracking_url: string;
+  delivery_address: { street: string; number: string; zip: string };
+  picked_up_at: string;
+  delivered_at: string | null;
 };
 
 export const ENVIO_STORE = new Map<string, MockEnvio>(); // order_id → MockEnvio
+
+/**
+ * Crea y almacena un envío mock para una orden. Devuelve el envío existente si ya existe.
+ * picked_up_at = ahora − 2h; tracking_code derivado del order_id.
+ */
+
+const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+export function createMockEnvio(order_id: string): MockEnvio {
+  const existing = ENVIO_STORE.get(order_id);
+  if (existing) return existing;
+
+  const tracking_code = `BB-${order_id.slice(-4).toUpperCase()}-2026`;
+  const envio: MockEnvio = {
+    shipping_id: generateUlid("shp"),
+    order_id,
+    status: "in_transit",
+    tracking_code,
+    tracking_url: `${NEXT_PUBLIC_BASE_URL}`,
+    delivery_address: { street: "Alsina", number: "456", zip: "8000" },
+    picked_up_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    delivered_at: null,
+  };
+
+  ENVIO_STORE.set(order_id, envio);
+  return envio;
+}
