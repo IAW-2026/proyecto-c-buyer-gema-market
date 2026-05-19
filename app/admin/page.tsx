@@ -7,44 +7,28 @@ import { AdminDashboardSkeleton } from "./_components/AdminDashboardSkeleton";
 
 const SECTIONS = [
   {
-    href: "/admin/usuarios",
+    href: "/admin/users",
     label: "Usuarios",
     icon: "user" as const,
     key: "usuarios" as const,
     enabled: true,
   },
   {
-    href: "/admin/ordenes",
+    href: "/admin/orders",
     label: "Órdenes",
     icon: "box" as const,
     key: "ordenes" as const,
-    enabled: false,
-  },
-  {
-    href: "/admin/carritos",
-    label: "Carritos",
-    icon: "cart" as const,
-    key: "carritos" as const,
-    enabled: false,
-  },
-  {
-    href: "/admin/favoritos",
-    label: "Favoritos",
-    icon: "heart" as const,
-    key: "favoritos" as const,
-    enabled: false,
+    enabled: true,
   },
 ];
 
 async function AdminDashboardContent() {
   await requireAdmin();
-  const [usuarios, ordenes, carritos, favoritos] = await Promise.all([
+  const [usuarios, ordenes] = await Promise.all([
     prisma.usuario.count(),
     prisma.orden.count(),
-    prisma.carrito.count(),
-    prisma.favorito.count(),
   ]);
-  const counts = { usuarios, ordenes, carritos, favoritos };
+  const counts = { usuarios, ordenes };
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lgx:grid-cols-4 gap-3.5">

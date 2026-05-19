@@ -17,7 +17,7 @@ export default function ProductCartActions({
   const { isPending, notification, handleAddToCart } = useCart(productId);
 
   // Mantener la última notificación visible durante la animación de salida del Toast,
-  // así no parpadea cambiando de "Ver carrito" a "Reintentar" cuando notification pasa a null.
+  // así no parpadea cambiando de "Ver carrito" a null cuando notification pasa a null.
   const [displayNotification, setDisplayNotification] = useState(notification);
   const [prevNotification, setPrevNotification] = useState(notification);
 
@@ -69,16 +69,11 @@ export default function ProductCartActions({
         type={displayNotification?.type || "success"}
         message={displayNotification?.message || ""}
         action={
-          displayNotification?.type === "error"
-            ? { label: "Error, intentalo de nuevo" }
-            : { label: "Ver carrito", href: "/cart" }
+          displayNotification?.type !== "error"
+            ? { label: "Ver carrito", href: "/cart" }
+            : undefined
         }
       />
     </>
   );
 }
-
-// Reintentar deberia volver a intentar la acción que falló, no redirigir al carrito.
-// Esto es un placeholder rápido para mostrar el toast. Idealmente, el hook debería
-// exponer una función de retry que vuelva a intentar la última acción fallida
-// (en este caso, agregar al carrito).

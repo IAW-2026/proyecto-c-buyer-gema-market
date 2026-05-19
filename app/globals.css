@@ -71,6 +71,7 @@
   }
 }
 
+/* Reglas que aplican a todos los elementos sin clase o id específico, como resets y estilos globales. */
 @layer base {
   * {
     box-sizing: border-box;

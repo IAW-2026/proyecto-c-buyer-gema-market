@@ -1,23 +1,9 @@
 import { prisma } from "@/app/lib/prisma";
 import { Usuario, Role } from "@prisma/client";
-import { generateUlid } from "@/app/lib/utils/ulidGenerator";
 import type { Address } from "@/app/lib/types/user";
 
 export type { Address };
 
-type CreateUsuarioInput = {
-  clerkUserId: string;
-  email: string;
-  fullName: string;
-  phoneNumber?: string;
-  address?: Address;
-  role?: Role;
-};
-
-// Que sea partial significa que puede ser opcional
-// Si quiero actualizar solo uno, no necesito pasar los demás.
-// Por ejemplo: si quiero actualizar solo el email, no necesito pasar
-// fullName, address y role.
 type UpdateUsuarioInput = Partial<{
   email: string;
   fullName: string;
@@ -25,33 +11,6 @@ type UpdateUsuarioInput = Partial<{
   address: Address;
   role: Role;
 }>;
-
-// ─────────────────────────────────────────────
-// CREATE
-// ─────────────────────────────────────────────
-
-/**
- * Crea un nuevo usuario (comprador)
- * data: info básica del usuario (clerkUserId, email, nombre, etc.)
- * Valores por defecto: role='buyer', address=undefined si no se proporciona
- * Sin include: retorna solo el usuario, sin relaciones
- * Retorna: Usuario creado con sus propiedades
- */
-export async function createUsuario(
-  data: CreateUsuarioInput,
-): Promise<Usuario> {
-  return prisma.usuario.create({
-    data: {
-      id: generateUlid("usr"),
-      clerkUserId: data.clerkUserId,
-      email: data.email,
-      fullName: data.fullName,
-      phoneNumber: data.phoneNumber ?? null,
-      address: data.address ?? undefined,
-      role: data.role ?? "buyer",
-    },
-  });
-}
 
 // ─────────────────────────────────────────────
 // READ
@@ -70,20 +29,6 @@ export async function getUsuarioById(id: string): Promise<Usuario | null> {
 }
 
 /**
- * Busca un usuario por su ID de Clerk (autenticación externa)
- * where: { clerkUserId } → localiza por ID del proveedor de auth
- * Sin include: retorna solo el usuario, sin relaciones
- * Retorna: Usuario encontrado o null si no existe en BD
- */
-export async function getUsuarioByClerkId(
-  clerkUserId: string,
-): Promise<Usuario | null> {
-  return prisma.usuario.findUnique({
-    where: { clerkUserId },
-  });
-}
-
-/**
  * Obtiene usuarios con paginación opcional, ordenados por fecha de creación (descendente).
  * Sin opciones: retorna todos los usuarios.
  * Con { skip, take }: retorna la página correspondiente.
@@ -91,8 +36,18 @@ export async function getUsuarioByClerkId(
 export async function getAllUsuarios(opts?: {
   skip?: number;
   take?: number;
+  search?: string;
 }): Promise<Usuario[]> {
+  const where = opts?.search
+    ? {
+        OR: [
+          { fullName: { contains: opts.search, mode: "insensitive" as const } },
+          { email: { contains: opts.search, mode: "insensitive" as const } },
+        ],
+      }
+    : undefined;
   return prisma.usuario.findMany({
+    where,
     skip: opts?.skip,
     take: opts?.take,
     orderBy: { createdAt: "desc" },
@@ -102,8 +57,16 @@ export async function getAllUsuarios(opts?: {
 /**
  * Cuenta total de usuarios — útil para calcular páginas en listados paginados.
  */
-export async function countUsuarios(): Promise<number> {
-  return prisma.usuario.count();
+export async function countUsuarios(search?: string): Promise<number> {
+  const where = search
+    ? {
+        OR: [
+          { fullName: { contains: search, mode: "insensitive" as const } },
+          { email: { contains: search, mode: "insensitive" as const } },
+        ],
+      }
+    : undefined;
+  return prisma.usuario.count({ where });
 }
 
 // ─────────────────────────────────────────────

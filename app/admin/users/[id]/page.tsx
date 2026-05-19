@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { SectionTitle } from "@/app/components/ui";
 import { requireAdmin } from "@/app/lib/auth/roles";
 import { getUsuarioById } from "@/app/lib/db/user";
-import { UsuarioForm } from "../_components/UsuarioForm";
-import { UsuarioFormSkeleton } from "../_components/UsuarioFormSkeleton";
+import { UsuarioForm } from "../_components/UserForm";
+import { UsuarioFormSkeleton } from "../_components/UserFormSkeleton";
 
 async function UsuarioDetailContent({
   params,

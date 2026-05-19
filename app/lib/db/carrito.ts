@@ -78,31 +78,6 @@ export async function getOrCreateCarrito(
     include: { items: true },
   });
 }
-/**
- * Obtiene todos los carritos del sistema
- * findMany sin where → retorna todos los carritos
- * include: items + buyer → cada carrito trae sus items y datos del comprador
- * Retorna: Array de Carritos con sus relaciones
- */ export async function getAllCarritos(): Promise<CarritoConRelaciones[]> {
-  return prisma.carrito.findMany({
-    include: { items: true },
-  });
-}
-
-// ─────────────────────────────────────────────
-// DELETE
-// ─────────────────────────────────────────────
-
-/**
- * Elimina un carrito y todos sus items (cascade a nivel DB)
- * Retorna: Carrito eliminado
- */
-export async function deleteCarrito(id: string): Promise<Carrito> {
-  return prisma.carrito.delete({
-    where: { id },
-  });
-}
-
 // ─────────────────────────────────────────────
 // HELPER
 // ─────────────────────────────────────────────
@@ -118,3 +93,4 @@ export async function clearCarritoItems(carritoId: string): Promise<void> {
     where: { carritoId },
   });
 }
+
