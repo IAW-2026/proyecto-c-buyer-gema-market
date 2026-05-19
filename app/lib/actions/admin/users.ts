@@ -38,8 +38,8 @@ export async function updateUsuarioAdminAction(
 
   try {
     await updateUsuario(id, parsed.data);
-    revalidatePath("/admin/usuarios");
-    revalidatePath(`/admin/usuarios/${id}`);
+    revalidatePath("/admin/users");
+    revalidatePath(`/admin/users/${id}`);
     return { ok: true };
   } catch (error) {
     console.error("[updateUsuarioAdminAction] failed:", error);
@@ -58,7 +58,7 @@ export async function deleteUsuarioAdminAction(
 
   try {
     await deleteUsuario(id);
-    revalidatePath("/admin/usuarios");
+    revalidatePath("/admin/users");
     return { ok: true };
   } catch (error) {
     if (

@@ -12,15 +12,6 @@ type CreateItemCarritoInput = {
   quantity: number;
 };
 
-// Que sea partial significa que puede ser opcional
-// Si quiero actualizar solo uno, no necesito pasar los demás.
-// Por ejemplo: si quiero actualizar solo la cantidad, no necesito pasar
-// el productId.
-type UpdateItemCarritoInput = Partial<{
-  quantity: number;
-  productId: string;
-}>;
-
 // ─────────────────────────────────────────────
 // CREATE
 // ─────────────────────────────────────────────
@@ -76,35 +67,6 @@ export async function upsertItemCarrito(
 // ─────────────────────────────────────────────
 
 /**
- * Busca un item del carrito por su ID
- * where: { id } → localiza el item único
- * Sin include: retorna solo el item, sin relaciones
- * Retorna: ItemCarrito encontrado o null si no existe
- */
-export async function getItemCarritoById(
-  id: string,
-): Promise<ItemCarrito | null> {
-  return prisma.itemCarrito.findUnique({
-    where: { id },
-  });
-}
-
-/**
- * Obtiene todos los items de un carrito específico
- * where: { carritoId } → filtra items del carrito
- * orderBy: { addedAt: "desc" } → ordena del más reciente al más antiguo
- * Retorna: Array de ItemCarrito del carrito (ordenado)
- */
-export async function getItemsByCarritoId(
-  carritoId: string,
-): Promise<ItemCarrito[]> {
-  return prisma.itemCarrito.findMany({
-    where: { carritoId },
-    orderBy: { addedAt: "desc" },
-  });
-}
-
-/**
  * Busca un item específico en el carrito por producto
  * where: { carritoId_productId } → clave única compuesta @@unique([carritoId, productId])
  * Retorna: ItemCarrito encontrado o null si el producto no está en el carrito
@@ -118,15 +80,6 @@ export async function getItemByCarritoAndProduct(
       carritoId_productId: { carritoId, productId },
     },
   });
-}
-
-/**
- * Obtiene TODOS los items de TODOS los carritos
- * findMany sin where → retorna todos los ItemCarrito del sistema
- * Retorna: Array de todos los items
- */
-export async function getAllItemsCarrito(): Promise<ItemCarrito[]> {
-  return prisma.itemCarrito.findMany();
 }
 
 // ─────────────────────────────────────────────
@@ -146,22 +99,6 @@ export async function updateItemCarritoQuantity(
   return prisma.itemCarrito.update({
     where: { id },
     data: { quantity },
-  });
-}
-
-/**
- * Actualiza uno o varios campos de un item del carrito
- * where: { id } → localiza el item exacto
- * data: { quantity?, productId? } → cambios parciales (solo qué envíes)
- * Retorna: ItemCarrito actualizado con los cambios aplicados
- */
-export async function updateItemCarrito(
-  id: string,
-  data: UpdateItemCarritoInput,
-): Promise<ItemCarrito> {
-  return prisma.itemCarrito.update({
-    where: { id },
-    data,
   });
 }
 

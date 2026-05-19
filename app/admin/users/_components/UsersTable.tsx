@@ -40,7 +40,7 @@ export function UsuariosTable({ usuarios }: { usuarios: Usuario[] }) {
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link
-                    href={`/admin/usuarios/${u.id}`}
+                    href={`/admin/users/${u.id}`}
                     className="text-[13px] font-semibold text-olive hover:underline"
                   >
                     Ver

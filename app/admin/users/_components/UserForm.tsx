@@ -5,8 +5,8 @@ import Link from "next/link";
 import type { Usuario } from "@prisma/client";
 import { Card, Field, Input, Button, Icon } from "@/app/components/ui";
 import type { Address } from "@/app/lib/types/user";
-import { updateUsuarioAdminAction } from "@/app/lib/actions/admin/usuarios";
-import { DeleteUsuarioButton } from "./DeleteUsuarioButton";
+import { updateUsuarioAdminAction } from "@/app/lib/actions/admin/users";
+import { DeleteUsuarioButton } from "./DeleteUserButton";
 
 interface UsuarioFormProps {
   usuario: Usuario;
@@ -80,9 +80,6 @@ export function UsuarioForm({ usuario }: UsuarioFormProps) {
               defaultValue={usuario.phoneNumber ?? ""}
             />
           </Field>
-          <Field label="Clerk User ID">
-            <Input defaultValue={usuario.clerkUserId} disabled readOnly />
-          </Field>
           <Field label="Dirección">
             <Input
               name="street"
@@ -120,7 +117,7 @@ export function UsuarioForm({ usuario }: UsuarioFormProps) {
 
       <div className="flex flex-wrap gap-2.5 justify-between">
         <div className="flex gap-2.5">
-          <Link href="/admin/usuarios">
+          <Link href="/admin/users">
             <Button variant="secondary" icon="arrowLeft">
               Volver
             </Button>

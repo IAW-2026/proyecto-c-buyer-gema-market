@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateOrden } from "@/app/lib/db/orden";
 import { PaymentConfirmedSchema } from "@/app/lib/schemas/payments";
+import { validateApiKey } from "@/app/lib/utils/hmac";
 
 /**
  * POST /api/buyer/pagos/:payment_id/confirmado
@@ -10,6 +11,10 @@ import { PaymentConfirmedSchema } from "@/app/lib/schemas/payments";
  * @see docs/apis.md — POST /api/buyer/pagos/:payment_id/confirmado
  */
 export async function POST(req: NextRequest) {
+  if (!validateApiKey(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const parsed = PaymentConfirmedSchema.safeParse(await req.json());
     if (!parsed.success) {

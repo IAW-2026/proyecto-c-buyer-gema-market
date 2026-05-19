@@ -45,24 +45,6 @@ export async function getFavorito(
   });
 }
 /**
- * Obtiene todos los favoritos de un comprador ordenados por fecha
- * Retorna: Array de Favoritos del comprador
- */
-export async function getFavoritosByBuyerId(buyerId: string): Promise<Favorito[]> {
-  return prisma.favorito.findMany({
-    where: { buyerId },
-    orderBy: { createdAt: "desc" },
-  });
-}
-
-/**
- * Obtiene todos los favoritos del sistema
- * Retorna: Array de todos los Favoritos
- */
-export async function getAllFavoritos(): Promise<Favorito[]> {
-  return prisma.favorito.findMany();
-}
-/**
  * Verifica si un producto está marcado como favorito por un comprador
  * findUnique: busca por clave compuesta (buyerId_productId)
  * where: { buyerId_productId } → localizador único
@@ -100,20 +82,6 @@ export async function deleteFavorito(buyerId: string, productId: string): Promis
     },
   });
 }
-/**
- * Elimina todos los favoritos de un producto específico
- * deleteMany: borra múltiples registros
- * where: { productId } → filtra favoritos que contengan ese producto
- * Retorna: número de favoritos que fueron eliminados
- */ export async function deleteFavoritosByProductId(
-  productId: string,
-): Promise<number> {
-  const result = await prisma.favorito.deleteMany({
-    where: { productId },
-  });
-  return result.count;
-}
-
 // ─────────────────────────────────────────────
 // HELPER
 // ─────────────────────────────────────────────
@@ -186,3 +154,4 @@ export async function getFavoritosIdsPaginated(
 export async function countFavoritosByBuyerId(buyerId: string): Promise<number> {
   return prisma.favorito.count({ where: { buyerId } });
 }
+

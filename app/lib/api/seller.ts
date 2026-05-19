@@ -15,11 +15,15 @@ import type {
   ProductDetail,
   Shop,
 } from "@/app/lib/types/product";
+import { hashApiKey } from "@/app/lib/utils/hmac";
 
 if (!process.env.SELLER_API_URL)
   throw new Error("Missing required environment variable: SELLER_API_URL");
+if (!process.env.INTERNAL_API_KEY)
+  throw new Error("Missing required environment variable: INTERNAL_API_KEY");
 
 const SELLER_BASE_URL = process.env.SELLER_API_URL;
+const API_KEY_HASH = hashApiKey(process.env.INTERNAL_API_KEY);
 
 export async function getProducts(
   filters: ProductFilters = {},
@@ -40,6 +44,7 @@ export async function getProducts(
   if (filters.page_size) params.set("page_size", String(filters.page_size));
 
   const res = await fetch(`${SELLER_BASE_URL}/productos?${params.toString()}`, {
+    headers: { "x-api-key-hash": API_KEY_HASH },
     next: { revalidate: 60 },
   });
 
@@ -51,6 +56,7 @@ export async function getProductById(
   product_id: string,
 ): Promise<ProductDetail | null> {
   const res = await fetch(`${SELLER_BASE_URL}/productos/${product_id}`, {
+    headers: { "x-api-key-hash": API_KEY_HASH },
     next: { revalidate: 30 },
   });
   if (res.status === 404) return null;
@@ -60,6 +66,7 @@ export async function getProductById(
 
 export async function getCategories(): Promise<Category[]> {
   const res = await fetch(`${SELLER_BASE_URL}/categorias`, {
+    headers: { "x-api-key-hash": API_KEY_HASH },
     next: { revalidate: 43200 },
   });
   if (!res.ok) throw new Error(`Seller API error: ${res.status}`);
@@ -73,7 +80,7 @@ export async function getProductsBatch(
 
   const res = await fetch(`${SELLER_BASE_URL}/productos/batch`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-api-key-hash": API_KEY_HASH },
     body: JSON.stringify({ product_ids: productIds }),
   });
 
@@ -88,7 +95,7 @@ export async function getShopById(
 ): Promise<Shop | null> {
   const res = await fetch(
     `${SELLER_BASE_URL}/shops/${seller_id}?page=${page}&page_size=${page_size}`,
-    { next: { revalidate: 60 } },
+    { headers: { "x-api-key-hash": API_KEY_HASH }, next: { revalidate: 60 } },
   );
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`Seller API error: ${res.status}`);
