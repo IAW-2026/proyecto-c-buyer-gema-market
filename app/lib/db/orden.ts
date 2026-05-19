@@ -79,13 +79,6 @@ export async function createOrden(data: CreateOrdenInput): Promise<Orden> {
     include: { buyer: true },
   });
 }
-/**
- * Obtiene TODAS las órdenes del sistema
- * Retorna: Array de todas las Órdenes
- */
-export async function getAllOrdenes(): Promise<Orden[]> {
-  return prisma.orden.findMany();
-}
 
 export async function getOrdenesByBuyerId(
   buyerId: string,
@@ -109,16 +102,43 @@ export async function countOrdenesByBuyerId(
     where: { buyerId, ...(statuses ? { status: { in: statuses } } : {}) },
   });
 }
-/**
- * Obtiene todas las órdenes con un estado específico
- * Retorna: Array de Órdenes con ese estado
- */
-export async function getOrdenesByStatus(
-  status: OrdenStatus,
-): Promise<Orden[]> {
+
+export async function getOrdenesPaginatedAdmin(opts: {
+  skip: number;
+  take: number;
+  search?: string;
+}): Promise<OrdenConBuyer[]> {
+  const where = opts.search
+    ? {
+        buyer: {
+          OR: [
+            { fullName: { contains: opts.search, mode: "insensitive" as const } },
+            { email: { contains: opts.search, mode: "insensitive" as const } },
+          ],
+        },
+      }
+    : undefined;
   return prisma.orden.findMany({
-    where: { status },
+    where,
+    include: { buyer: true },
+    orderBy: { createdAt: "desc" },
+    skip: opts.skip,
+    take: opts.take,
   });
+}
+
+export async function countOrdenesAdmin(search?: string): Promise<number> {
+  const where = search
+    ? {
+        buyer: {
+          OR: [
+            { fullName: { contains: search, mode: "insensitive" as const } },
+            { email: { contains: search, mode: "insensitive" as const } },
+          ],
+        },
+      }
+    : undefined;
+  return prisma.orden.count({ where });
 }
 
 // ─────────────────────────────────────────────
@@ -139,15 +159,3 @@ export async function updateOrden(
   });
 }
 
-// ─────────────────────────────────────────────
-// DELETE
-// ─────────────────────────────────────────────
-/**
- * Elimina una orden
- * Retorna: Orden que fue eliminada
- */
-export async function deleteOrden(id: string): Promise<Orden> {
-  return prisma.orden.delete({
-    where: { id },
-  });
-}

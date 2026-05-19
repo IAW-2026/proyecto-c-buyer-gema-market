@@ -4,38 +4,53 @@ import { requireAdmin } from "@/app/lib/auth/roles";
 import { getAllUsuarios, countUsuarios } from "@/app/lib/db/user";
 import { parsePage } from "@/app/lib/utils/pagination";
 import { ADMIN_USERS_PAGE_SIZE } from "@/app/lib/constants/pagination";
-import { UsuariosTable } from "./_components/UsuariosTable";
-import { UsuariosTableSkeleton } from "./_components/UsuariosTableSkeleton";
+import { SearchBar } from "@/app/admin/_components/SearchBar";
+import { UsuariosTable } from "./_components/UsersTable";
+import { UsuariosTableSkeleton } from "./_components/UsersTableSkeleton";
+
+type SearchParams = Promise<{ page?: string | string[]; search?: string | string[] }>;
 
 async function UsuariosListContent({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string | string[] }>;
+  searchParams: SearchParams;
 }) {
   await requireAdmin();
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, search: searchParam } = await searchParams;
   const page = parsePage(pageParam);
+  const search = Array.isArray(searchParam) ? searchParam[0] : searchParam;
 
   const [usuarios, total] = await Promise.all([
-    getAllUsuarios({ skip: (page - 1) * ADMIN_USERS_PAGE_SIZE, take: ADMIN_USERS_PAGE_SIZE }),
-    countUsuarios(),
+    getAllUsuarios({
+      skip: (page - 1) * ADMIN_USERS_PAGE_SIZE,
+      take: ADMIN_USERS_PAGE_SIZE,
+      search,
+    }),
+    countUsuarios(search),
   ]);
 
   return (
     <>
-      <SectionTitle eyebrow={`${total} usuarios`}>Usuarios</SectionTitle>
+      <SectionTitle eyebrow={`${total} usuario${total !== 1 ? "s" : ""}`}>Usuarios</SectionTitle>
+      <SearchBar placeholder="Buscar por nombre o email…" />
 
       {total === 0 ? (
         <EmptyState
           icon="user"
           title="Sin usuarios"
-          body="Todavía no hay usuarios sincronizados desde Clerk."
+          body={
+            search
+              ? "No se encontraron usuarios con ese nombre."
+              : "Todavía no hay usuarios sincronizados desde Clerk."
+          }
         />
       ) : (
         <>
           <UsuariosTable usuarios={usuarios} />
           <div className="flex justify-center mt-6">
-            <Pagination totalPages={Math.max(1, Math.ceil(total / ADMIN_USERS_PAGE_SIZE))} />
+            <Pagination
+              totalPages={Math.max(1, Math.ceil(total / ADMIN_USERS_PAGE_SIZE))}
+            />
           </div>
         </>
       )}
@@ -46,7 +61,7 @@ async function UsuariosListContent({
 export default function AdminUsuariosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string | string[] }>;
+  searchParams: SearchParams;
 }) {
   return (
     <Suspense fallback={<UsuariosListSkeleton />}>

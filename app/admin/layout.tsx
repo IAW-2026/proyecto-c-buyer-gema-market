@@ -3,10 +3,8 @@ import { Icon, IconName } from "@/app/components/ui";
 
 const ADMIN_SECTIONS: { href: string; label: string; icon: IconName }[] = [
   { href: "/admin", label: "Inicio", icon: "home" },
-  { href: "/admin/usuarios", label: "Usuarios", icon: "user" },
-  { href: "/admin/carritos", label: "Carritos", icon: "cart" },
-  { href: "/admin/ordenes", label: "Órdenes", icon: "box" },
-  { href: "/admin/favoritos", label: "Favoritos", icon: "heart" },
+  { href: "/admin/users", label: "Usuarios", icon: "user" },
+  { href: "/admin/orders", label: "Órdenes", icon: "box" },
 ];
 
 // Layout síncrono para mantener el shell estático bajo PPR (cacheComponents).

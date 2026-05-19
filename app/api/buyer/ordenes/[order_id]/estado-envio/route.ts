@@ -5,6 +5,7 @@ import {
   type ShippingStatusUpdateInput,
 } from "@/app/lib/schemas/shipping";
 import type { OrdenStatus } from "@prisma/client";
+import { validateApiKey } from "@/app/lib/utils/hmac";
 
 
 const SHIPPING_TO_ORDER_STATUS: Partial<
@@ -19,6 +20,10 @@ export async function POST(
   req: NextRequest,
   { params }: { params: Promise<{ order_id: string }> },
 ) {
+  if (!validateApiKey(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { order_id } = await params;
     const parsed = ShippingStatusUpdateSchema.safeParse(await req.json());

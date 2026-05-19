@@ -19,14 +19,14 @@ export function Toast({ show, type, message, action }: ToastProps) {
 
   return (
     <div
-      className={`fixed top-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-500 ease-out transform ${
+      className={`fixed top-6 left-4 right-4 lgx:left-1/2 lgx:right-auto lgx:w-max lgx:-translate-x-1/2 z-100 transition-all duration-500 ease-out transform ${
         show
           ? "translate-y-0 opacity-100"
           : "-translate-y-8 opacity-0 pointer-events-none"
       }`}
     >
       <div
-        className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-sh-2 border backdrop-blur-md transition-colors ${
+        className={`flex items-center justify-center gap-3 px-5 py-3.5 rounded-2xl shadow-sh-2 border backdrop-blur-md transition-colors ${
           type === "success"
             ? "bg-moss/90 border-moss/20 text-paper"
             : "bg-red-600/90 border-red-500/20 text-paper"

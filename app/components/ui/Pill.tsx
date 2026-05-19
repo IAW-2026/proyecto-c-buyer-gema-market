@@ -28,12 +28,12 @@ export const Pill = ({
 }: PillProps) => {
   const toneMap = {
     neutral: "bg-bone text-olive",
-    sand: "bg-[#ede4cc] text-cocoa",
-    sage: "bg-[#dde2c9] text-forest",
+    sand: "bg-sand/20 text-cocoa",
+    sage: "bg-sage/20 text-forest",
     forest: "bg-forest text-paper",
-    success: "bg-[#d8e3c8] text-success",
-    warn: "bg-[#f3e4c4] text-warn",
-    danger: "bg-[#f0d9d1] text-danger",
+    success: "bg-success/20 text-success",
+    warn: "bg-warn/20 text-warn",
+    danger: "bg-danger/15 text-danger",
     outline: "bg-transparent text-ink-2 border border-line-2",
   };
   const sizeMap = {
