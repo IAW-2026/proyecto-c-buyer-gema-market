@@ -6,7 +6,7 @@ import { Icon, SearchBar } from "../../ui";
 import { FiltersPanel } from "./FiltersPanel";
 import { useFilteredParams } from "./hooks/useFilteredParams";
 import { useApplyFilters, useClearFilters } from "./hooks/useApplyFilters";
-import type { ParsedFilters } from "./utils/filterParser";
+import type { ParsedFilters } from "@/app/lib/utils/filterParser";
 
 /**
  * SearchFilters - Componente refactorizado que gestiona filtrado, búsqueda y ordenamiento

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { parseFiltersFromParams } from "../utils/filterParser";
-import type { ParsedFilters } from "../utils/filterParser";
+import { parseFiltersFromParams } from "@/app/lib/utils/filterParser";
+import type { ParsedFilters } from "@/app/lib/utils/filterParser";
 
 /**
  * Hook para sincronizar filtros con URL sin duplicar estado

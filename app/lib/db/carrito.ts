@@ -83,6 +83,18 @@ export async function getOrCreateCarrito(
 // ─────────────────────────────────────────────
 
 /**
+ * Retorna la suma total de unidades en el carrito de un comprador.
+ */
+export async function getCarritoItemCount(buyerId: string): Promise<number> {
+  const result = await prisma.carrito.findUnique({
+    where: { buyerId },
+    select: { items: { select: { quantity: true } } },
+  });
+  if (!result) return 0;
+  return result.items.reduce((sum, i) => sum + i.quantity, 0);
+}
+
+/**
  * Vacía un carrito: elimina todos sus items sin borrar el carrito
  * deleteMany: borra múltiples items
  * where: { carritoId } → filtra solo los items del carrito especificado
