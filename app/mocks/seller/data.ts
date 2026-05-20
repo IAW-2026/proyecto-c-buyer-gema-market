@@ -3,6 +3,14 @@
  * Cuando la Seller App real esté disponible, estos archivos simplemente se eliminan.
  */
 
+export const MOCK_SELLERS: Record<string, { shop_name: string; logo_url: string }> = {
+  usr_01HSELLER01: { shop_name: "MaderPlac", logo_url: "https://api.dicebear.com/9.x/initials/png?seed=MaderPlac&backgroundColor=b6e3f4&size=64" },
+  usr_01HSELLER02: { shop_name: "Ergonómica BA", logo_url: "https://api.dicebear.com/9.x/initials/png?seed=Ergon%C3%B3mica+BA&backgroundColor=c0aede&size=64" },
+  usr_01HSELLER03: { shop_name: "Café & Más", logo_url: "https://api.dicebear.com/9.x/initials/png?seed=Caf%C3%A9+%26+M%C3%A1s&backgroundColor=ffd5dc&size=64" },
+  usr_01HSELLER04: { shop_name: "TechStudy", logo_url: "https://api.dicebear.com/9.x/initials/png?seed=TechStudy&backgroundColor=d1f4cc&size=64" },
+  usr_01HSELLER05: { shop_name: "UniHousing", logo_url: "https://api.dicebear.com/9.x/initials/png?seed=UniHousing&backgroundColor=ffdfbf&size=64" },
+};
+
 export const MOCK_CATEGORIES = [
   { category_id: "cat_inmobiliaria", name: "Inmobiliaria" },
   { category_id: "cat_muebles", name: "Muebles" },
@@ -32,6 +40,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80",
     ],
+    material: "Madera maciza",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF001",
     created_at: "2026-04-10T10:00:00Z",
   },
@@ -55,6 +64,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
     ],
+    material: "Nylon y acero",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF002",
     created_at: "2026-04-12T09:00:00Z",
   },
@@ -79,6 +89,7 @@ export const MOCK_PRODUCTS = [
       "https://images.unsplash.com/photo-1574269909862-7e1d70bb8078?w=800&q=80",
       "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80",
     ],
+    material: "Acero y plástico",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF003",
     created_at: "2026-04-14T11:00:00Z",
   },
@@ -102,6 +113,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=800&q=80",
     ],
+    material: "Madera",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF004",
     created_at: "2026-04-16T08:30:00Z",
   },
@@ -122,6 +134,7 @@ export const MOCK_PRODUCTS = [
     stock: 5,
     thumbnail_url: "",
     images: [],
+    material: "Papel",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF005",
     created_at: "2026-04-18T14:00:00Z",
   },
@@ -145,6 +158,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&q=80",
     ],
+    material: "Aluminio y plástico ABS",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF006",
     created_at: "2026-04-20T16:00:00Z",
   },
@@ -168,6 +182,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
     ],
+    material: "Plástico ABS",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF007",
     created_at: "2026-04-22T10:00:00Z",
   },
@@ -191,6 +206,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&q=80",
     ],
+    material: "Espuma de alta densidad",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF008",
     created_at: "2026-04-25T09:00:00Z",
   },
@@ -214,6 +230,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1584622781564-1d9876a13d00?w=800&q=80",
     ],
+    material: "Acero y plástico",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF009",
     created_at: "2026-04-26T12:00:00Z",
   },
@@ -237,6 +254,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1574607383476-f517f260d30b?w=800&q=80",
     ],
+    material: "Plástico ABS",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF010",
     created_at: "2026-04-27T10:30:00Z",
   },
@@ -260,6 +278,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=800&q=80",
     ],
+    material: "Acero",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF011",
     created_at: "2026-04-28T09:15:00Z",
   },
@@ -283,6 +302,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1583485088034-7160b52c814b?w=800&q=80",
     ],
+    material: "Plástico",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF012",
     created_at: "2026-04-29T15:45:00Z",
   },
@@ -306,6 +326,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1618944847023-38aa001235f0?w=800&q=80",
     ],
+    material: "Plástico y acero",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF013",
     created_at: "2026-04-30T11:20:00Z",
   },
@@ -329,6 +350,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?w=800&q=80",
     ],
+    material: "Madera laqueada",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF014",
     created_at: "2026-05-01T08:00:00Z",
   },
@@ -375,6 +397,7 @@ export const MOCK_PRODUCTS = [
     images: [
       "https://images.unsplash.com/photo-1594041680534-e8c8cdebd659?w=800&q=80",
     ],
+    material: "Acero inoxidable",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF016",
     created_at: "2026-05-03T09:45:00Z",
   },

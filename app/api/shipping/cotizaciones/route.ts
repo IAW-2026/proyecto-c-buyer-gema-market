@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMockQuote } from "@/app/mocks/shipping/data";
+import { validateApiKey } from "@/app/lib/utils/hmac";
 
 /**
  * POST /api/shipping/cotizaciones
@@ -23,6 +24,10 @@ import { createMockQuote } from "@/app/mocks/shipping/data";
  * }
  */
 export async function POST(req: NextRequest) {
+  if (!validateApiKey(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
 

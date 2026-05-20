@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMockPaymentOrder } from "@/app/mocks/payments/data";
+import { validateApiKey } from "@/app/lib/utils/hmac";
 
 /**
  * POST /api/payments/ordenes-de-pago
@@ -25,6 +26,10 @@ import { createMockPaymentOrder } from "@/app/mocks/payments/data";
  * }
  */
 export async function POST(req: NextRequest) {
+  if (!validateApiKey(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
 

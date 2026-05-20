@@ -37,7 +37,9 @@ export interface ShipmentDetail {
   status: string;
   tracking_code: string;
   tracking_url: string;
-  delivery_address: { street: string; number: string; zip: string };
+  pickup_address: { street: string; number: string; zip: string };
+  delivery_address: { street: string; number: string; floor?: string; zip: string };
+  price: number;
   picked_up_at: string;
   delivered_at: string | null;
 }

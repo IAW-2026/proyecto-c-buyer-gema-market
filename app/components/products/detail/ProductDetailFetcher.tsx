@@ -1,3 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/app/lib/api/seller";
 import { isFavorited } from "@/app/lib/db/favorito";
@@ -47,12 +49,30 @@ export async function ProductDetailFetcher({ params }: ProductDetailFetcherProps
           stock={product.stock}
         />
 
+        <Link
+          href={`/shop/${product.seller.seller_id}`}
+          className="flex items-center gap-2 mt-4 text-sm text-ink-2 hover:text-ink-1 transition-colors"
+        >
+          {product.seller.logo_url && (
+            <Image
+              src={product.seller.logo_url}
+              alt={product.seller.shop_name}
+              width={28}
+              height={28}
+              className="rounded-full object-cover shrink-0"
+            />
+          )}
+          <span className="font-medium">{product.seller.shop_name}</span>
+          <span className="text-ink-3">→ Ver tienda</span>
+        </Link>
+
         <ProductTabsSection
           description={product.description}
           width={product.width}
           height={product.height}
           depth={product.depth}
           weight={product.weight}
+          material={product.material}
         />
       </div>
     </div>

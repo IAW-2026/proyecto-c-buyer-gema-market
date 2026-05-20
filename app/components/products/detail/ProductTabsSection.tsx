@@ -9,6 +9,7 @@ interface ProductTabsSectionProps {
   height?: number | null;
   depth?: number | null;
   weight?: number | null;
+  material?: string | null;
 }
 
 export default function ProductTabsSection({
@@ -17,6 +18,7 @@ export default function ProductTabsSection({
   height,
   depth,
   weight,
+  material,
 }: ProductTabsSectionProps) {
   const [tab, setTab] = useState("descripcion");
 
@@ -54,6 +56,12 @@ export default function ProductTabsSection({
               <div className="text-ink-3">Peso</div>
               <div className="font-medium">{weight} kg</div>
             </div>
+            {material && (
+              <div>
+                <div className="text-ink-3">Material</div>
+                <div className="font-medium">{material}</div>
+              </div>
+            )}
           </div>
         )}
       </div>
