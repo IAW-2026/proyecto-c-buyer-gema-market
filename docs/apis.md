@@ -370,6 +370,32 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
 
 ## Shipping App — Endpoints expuestos
 
+### `POST /api/shipping/sellers/verificar-origen`
+
+- **Consumido por**: Seller App.
+- **Descripción**: verifica que una dirección de origen exista y esté dentro del área de cobertura (Bahía Blanca). El Seller App lo llama cuando el vendedor registra o actualiza la dirección de un producto, antes de publicarlo.
+- **Request body**:
+
+```json
+{
+  "product_id": "prd_01HXYZ...",
+  "street": "San Martín",
+  "number": "123",
+  "zip": "8000"
+}
+```
+
+- **Response 200**: `{ "valid": true, "in_coverage_area": true }`
+- **Response 422**:
+
+```json
+{ "valid": false, "error": "La dirección no existe", "code": "INVALID_ADDRESS" }
+```
+
+```json
+{ "valid": false, "error": "La dirección está fuera de Bahía Blanca", "code": "OUTSIDE_COVERAGE" }
+```
+
 ### `POST /api/shipping/cotizaciones`
 
 - **Consumido por**: Buyer App.
@@ -397,6 +423,20 @@ Documentar cada endpoint que una app expone para ser consumido por otra app del 
   "estimated_days": 2,
   "valid_until": "2026-04-17T15:32:00Z"
 }
+```
+
+- **Response 400**:
+
+```json
+{ "error": "La dirección de destino está fuera del área de cobertura (Bahía Blanca)." }
+```
+
+```json
+{ "error": "El producto está fuera del área de cobertura." }
+```
+
+```json
+{ "error": "No se pudo calcular la cotización" }
 ```
 
 ### `POST /api/shipping/cotizaciones/reservar`

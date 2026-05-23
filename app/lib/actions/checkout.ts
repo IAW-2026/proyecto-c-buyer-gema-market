@@ -133,9 +133,10 @@ export async function requestShippingQuoteAction(address: {
     return { ok: true, items: checkoutItems };
   } catch (error) {
     console.error("[requestShippingQuoteAction] Error:", error);
+    const msg = error instanceof Error ? error.message : null;
     return {
       ok: false,
-      error: "No se pudo calcular el envío. Intentá de nuevo.",
+      error: msg ?? "No se pudo calcular el envío. Intentá de nuevo.",
     };
   }
 }

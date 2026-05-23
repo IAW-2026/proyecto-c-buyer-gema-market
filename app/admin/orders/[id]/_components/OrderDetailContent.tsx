@@ -68,7 +68,6 @@ export async function OrderDetailContent({ params }: { params: Promise<{ id: str
         <OrderTimeline
           status={status}
           paymentId={orden.paymentId ?? undefined}
-          shippingId={orden.shippingId ?? undefined}
         />
         <OrderProductCard
           status={status}
