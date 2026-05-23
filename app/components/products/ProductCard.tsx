@@ -11,12 +11,14 @@ interface ProductCardProps {
   product: ProductListItem;
   compact?: boolean;
   initialFavorite?: boolean;
+  priority?: boolean;
 }
 
 export default function ProductCard({
   product,
   compact,
   initialFavorite = false,
+  priority = false,
 }: ProductCardProps) {
   const formattedPrice = fmtARS(product.price);
 
@@ -32,6 +34,7 @@ export default function ProductCard({
               alt={product.title}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              priority={priority}
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
           ) : (

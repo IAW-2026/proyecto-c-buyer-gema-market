@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createMockQuote } from "@/app/mocks/shipping/data";
+import { validateApiKey } from "@/app/lib/utils/hmac";
 
 /**
  * POST /api/shipping/cotizaciones
@@ -23,10 +24,21 @@ import { createMockQuote } from "@/app/mocks/shipping/data";
  * }
  */
 export async function POST(req: NextRequest) {
+  if (!validateApiKey(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body = await req.json();
 
-    const { product_id, weight_kg, height_m, width_m, depth_m } = body;
+    const { destination_address, product_id, weight_kg, height_m, width_m, depth_m } = body;
+
+    if (destination_address?.zip !== "8000") {
+      return NextResponse.json(
+        { error: "La dirección de destino está fuera del área de cobertura (Bahía Blanca)." },
+        { status: 400 },
+      );
+    }
 
     if (!product_id) {
       return NextResponse.json(

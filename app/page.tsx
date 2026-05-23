@@ -1,36 +1,22 @@
 import { Suspense } from "react";
 import ProductGrid from "@/app/components/features/home/ProductGrid";
-import { buildFiltersFromParams } from "@/app/lib/utils/product-filters";
+import { nextParamsToURLSearchParams, toProductFilters } from "@/app/lib/utils/product-filters";
+import { parseFiltersFromParams } from "@/app/lib/utils/filterParser";
 import ProductGridSkeleton from "@/app/components/products/ProductGridSkeleton";
 import { HeaderHomePage } from "@/app/components/features/home/HeaderHomePage";
 import { PRODUCTS_PAGE_SIZE } from "@/app/lib/constants/pagination";
 
-/**
- * Home page — Catálogo de productos.
- *
- * Arquitectura de datos:
- *  • La barra de navegación y el footer se renderizan en layout.tsx.
- *  • FilterDrawerServer (Server) carga categorías y monta FilterDrawer (Client).
- *  • FilterDrawer actualiza la URL al aplicar filtros → Next.js re-renderiza
- *    ProductGrid con los nuevos searchParams en una única query a la API/BD.
- *  • ProductGrid está en su propio <Suspense>: muestra skeleton mientras carga,
- *    mientras que el botón y el título ya están visibles (streaming SSR).
- */
 interface HomePageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 async function ProductGridSection({ searchParams }: HomePageProps) {
   const params = await searchParams;
-
+  const urlParams = nextParamsToURLSearchParams(params);
+  const parsed = parseFiltersFromParams(urlParams);
   const page = Number(params.page) || 1;
-  const paginatedParams = {
-    ...params,
-    page: String(page),
-    page_size: String(PRODUCTS_PAGE_SIZE),
-  };
-  const filters = buildFiltersFromParams(paginatedParams);
-
+  const cat = typeof params.cat === "string" ? params.cat : undefined;
+  const filters = toProductFilters(parsed, page, PRODUCTS_PAGE_SIZE, cat);
   return <ProductGrid filters={filters} />;
 }
 

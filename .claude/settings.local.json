@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm tsc *)"
+      "Bash(pnpm tsc *)",
+      "WebFetch(domain:unsplash.com)",
+      "WebSearch"
     ]
   }
 }

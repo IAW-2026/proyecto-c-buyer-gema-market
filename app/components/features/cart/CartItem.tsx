@@ -30,6 +30,7 @@ export function CartItem({
               src={item.thumbnail_url}
               alt={item.title}
               fill
+              sizes="84px"
               className="object-cover"
             />
           ) : (

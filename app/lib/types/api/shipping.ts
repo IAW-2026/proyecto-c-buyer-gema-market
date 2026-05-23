@@ -29,3 +29,17 @@ export interface ShippingQuote {
   estimated_days: number;
   valid_until: string;
 }
+
+// ── Response: GET /api/shipping/envios/:order_id ──────────────────────────────
+export interface ShipmentDetail {
+  shipping_id: string;
+  order_id: string;
+  status: string;
+  tracking_code: string;
+  tracking_url: string;
+  pickup_address: { street: string; number: string; zip: string };
+  delivery_address: { street: string; number: string; floor?: string; zip: string };
+  price: number;
+  picked_up_at: string;
+  delivered_at: string | null;
+}

@@ -47,7 +47,11 @@ export interface ProductListResponse {
  */
 export interface ProductDetail {
   product_id: string;
-  seller_id: string;
+  seller: {
+    seller_id: string;
+    shop_name: string;
+    logo_url: string;
+  };
   title: string;
   description: string;
   price: number;
@@ -59,6 +63,7 @@ export interface ProductDetail {
   height: number; // m
   width: number; // m
   depth: number; // m
+  material?: string;
   images: string[]; // URLs
   created_at: string; // ISO 8601
 }
@@ -112,7 +117,7 @@ export interface BatchProductResponse {
 // ── Tienda: GET /api/seller/shops/:seller_id ──────────────────────────────────
 export interface Shop {
   seller_id: string;
-  store_name: string;
+  shop_name: string;
   city: string;
   total_products: number;
   categories: Category[];

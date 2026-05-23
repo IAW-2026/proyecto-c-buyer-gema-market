@@ -41,7 +41,7 @@ export default function RootLayout({
           </Suspense>
 
           {/* Page content — layout adjusted based on nav presence */}
-          <main className="lgx:pb-0 lgx:[aside+&]:ml-60 [&:has(+nav)]:pb-16">
+          <main className="lgx:pb-0 lgx:[aside+&]:ml-60 [&:has(+nav)]:pb-[calc(4.5rem+env(safe-area-inset-bottom,0))]">
             {children}
           </main>
 

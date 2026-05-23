@@ -1,5 +1,5 @@
 import type { ProductCondition } from "@/app/lib/types/product";
-import type { ValidSort } from "./filterParser";
+import type { ValidSort } from "@/app/lib/utils/filterParser";
 
 export interface FiltersToSerialize {
   searchQuery: string;
