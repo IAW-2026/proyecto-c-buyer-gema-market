@@ -14,18 +14,27 @@ const ORDER_SEQUENCE: OrderStatus[] = [
   "awaiting_payment",
   "paid",
   "shipping",
+  "shipping_failed",
   "delivered",
 ];
 
-const FAILED_STATUSES: OrderStatus[] = ["cancelled", "shipping_failed"];
+const FAILED_STATUSES: OrderStatus[] = ["cancelled"];
 
 interface OrderTimelineProps {
   status: OrderStatus;
   paymentId?: string;
-  shippingId?: string;
+  trackingCode?: string;
+  trackingUrl?: string;
+  deliveryAddress?: { street: string; number: string; zip: string };
 }
 
-export function OrderTimeline({ status, paymentId, shippingId }: OrderTimelineProps) {
+export function OrderTimeline({
+  status,
+  paymentId,
+  trackingCode,
+  trackingUrl,
+  deliveryAddress,
+}: OrderTimelineProps) {
   if (FAILED_STATUSES.includes(status)) return null;
 
   const currentIdx = ORDER_SEQUENCE.indexOf(status);
@@ -56,7 +65,11 @@ export function OrderTimeline({ status, paymentId, shippingId }: OrderTimelinePr
                 className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 relative z-[1] transition-all duration-300 ${
                   done ? "bg-forest text-paper" : "bg-bone text-ink-3"
                 }`}
-                style={active ? { boxShadow: "0 0 0 4px rgba(101,109,74,.2)" } : undefined}
+                style={
+                  active
+                    ? { boxShadow: "0 0 0 4px rgba(101,109,74,.2)" }
+                    : undefined
+                }
               >
                 <Icon name={done ? "check" : step.icon} size={14} />
               </div>
@@ -75,16 +88,33 @@ export function OrderTimeline({ status, paymentId, shippingId }: OrderTimelinePr
         })}
       </div>
 
-      {(paymentId || shippingId) && (
-        <div className="mt-4 pt-3 border-t border-line space-y-1">
+      {(paymentId || trackingCode) && (
+        <div className="mt-4 pt-3 border-t border-line space-y-2">
           {paymentId && (
             <div className="text-xs text-ink-3">
               Pago: <span className="font-mono">{paymentId}</span>
             </div>
           )}
-          {shippingId && (
+          {trackingCode && trackingUrl && (
             <div className="text-xs text-ink-3">
-              Envío: <span className="font-mono">{shippingId}</span>
+              Seguimiento:{" "}
+              <a
+                href={trackingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-forest underline underline-offset-2"
+              >
+                {trackingCode}
+              </a>
+            </div>
+          )}
+          {deliveryAddress && (
+            <div className="text-xs text-ink-3">
+              Entrega:{" "}
+              <span>
+                {deliveryAddress.street} {deliveryAddress.number}, CP{" "}
+                {deliveryAddress.zip}
+              </span>
             </div>
           )}
         </div>

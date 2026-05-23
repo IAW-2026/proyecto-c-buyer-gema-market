@@ -1,9 +1,19 @@
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
-import { getCarritoByBuyerId } from "@/app/lib/db/carrito";
+import { getCarritoByBuyerId, getCarritoItemCount } from "@/app/lib/db/carrito";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import type { CartItemWithProduct } from "@/app/lib/types/cart";
 
 export type { CartItemWithProduct };
+
+export async function getCartItemCount(): Promise<number> {
+  const userId = await getCurrentUserId();
+  if (!userId) return 0;
+  try {
+    return await getCarritoItemCount(userId);
+  } catch {
+    return 0;
+  }
+}
 
 /**
  * Obtiene los productos que están en el carrito del usuario actual,

@@ -59,10 +59,11 @@ export default async function ProductGrid({ filters }: ProductGridProps) {
         id="product-grid"
         className="grid gap-3 lgx:gap-4.5 grid-cols-[repeat(auto-fill,minmax(160px,1fr))] lgx:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]"
       >
-        {items.map((product) => (
+        {items.map((product, index) => (
           <ProductCard
             key={product.product_id}
             product={product}
+            priority={index < 4}
             initialFavorite={favoriteProductIds.includes(product.product_id)}
           />
         ))}

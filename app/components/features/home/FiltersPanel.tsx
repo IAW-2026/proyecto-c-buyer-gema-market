@@ -4,7 +4,7 @@ import { ChangeEvent } from "react";
 import { Icon, Pill, Button, Input } from "../../ui";
 import type { ProductCondition } from "@/app/lib/types/product";
 import { CONDITION_OPTIONS, SORT_OPTIONS } from "./utils/constants";
-import type { ParsedFilters } from "./utils/filterParser";
+import type { ParsedFilters } from "@/app/lib/utils/filterParser";
 import { fmtARS } from "@/app/lib/utils/format";
 
 interface FiltersPanelProps {

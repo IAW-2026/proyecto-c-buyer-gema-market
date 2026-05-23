@@ -62,4 +62,7 @@ export interface OrderDetailForUI {
   shippingId?: string;
   productTitle: string;
   productThumbnail: string;
+  trackingCode?: string;
+  trackingUrl?: string;
+  deliveryAddress?: { street: string; number: string; zip: string };
 }

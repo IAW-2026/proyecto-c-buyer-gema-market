@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         hostname: "qrbdthnwprtysodpsncu.supabase.co", // Permite obtener imagenes de seller app
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+      },
     ],
   },
 };

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { TopBar } from "@/app/components/ui";
 import { getOrdenById } from "@/app/lib/db/orden";
 import { getProductById } from "@/app/lib/api/seller";
+import { getShipmentByOrderId } from "@/app/lib/api/shipping";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
 import { OrderStatusCard } from "./OrderStatusCard";
 import { OrderTimeline } from "./OrderTimeline";
@@ -23,7 +24,15 @@ export async function OrderDetailFetcher({ params }: OrderDetailFetcherProps) {
   if (!userId) notFound();
   if (!orden || orden.buyerId !== userId) notFound();
 
-  const product = await getProductById(orden.productId);
+  const needsTracking =
+    orden.status === "shipping" ||
+    orden.status === "delivered" ||
+    orden.status === "shipping_failed";
+
+  const [product, shipment] = await Promise.all([
+    getProductById(orden.productId),
+    needsTracking ? getShipmentByOrderId(orden.id).catch(() => null) : null,
+  ]);
 
   const detail: OrderDetailForUI = {
     id: orden.id,
@@ -41,6 +50,9 @@ export async function OrderDetailFetcher({ params }: OrderDetailFetcherProps) {
     shippingId: orden.shippingId ?? undefined,
     productTitle: product?.title ?? "Producto",
     productThumbnail: product?.images?.[0] ?? "",
+    trackingCode: shipment?.tracking_code,
+    trackingUrl: shipment?.tracking_url,
+    deliveryAddress: shipment?.delivery_address,
   };
 
   return (
@@ -51,7 +63,9 @@ export async function OrderDetailFetcher({ params }: OrderDetailFetcherProps) {
         <OrderTimeline
           status={detail.status}
           paymentId={detail.paymentId}
-          shippingId={detail.shippingId}
+          trackingCode={detail.trackingCode}
+          trackingUrl={detail.trackingUrl}
+          deliveryAddress={detail.deliveryAddress}
         />
         <OrderProductCard
           status={detail.status}

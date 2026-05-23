@@ -28,7 +28,7 @@ export default async function FavoritesGrid({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(190px,1fr))] max-[420px]:grid-cols-1 lgx:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] lgx:gap-4.5">
+      <div className="grid gap-4 grid-cols-[repeat(auto-fill,minmax(150px,1fr))] lgx:grid-cols-[repeat(auto-fill,minmax(230px,1fr))] lgx:gap-4.5">
         {items.map((product) => (
           <ProductCard
             key={product.product_id}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Icon, Logo } from "../../ui";
 import CategoryListFetcher from "@/app/components/features/home/CategoryListFetcher";
 import SearchFilters from "./SearchFilters";
+import { CartBadge } from "@/app/components/features/cart/CartBadge";
 
 export function HeaderHomePage() {
   return (
@@ -22,10 +23,9 @@ export function HeaderHomePage() {
           aria-label="Ver carrito"
         >
           <Icon name="cart" size={18} />
-          {/* TODO: mostrar cantidad de productos en el carrito */}
-          {/* <span className="absolute -top-0.5 -right-0.5 min-w-4.5 h-4.5 px-1.5 rounded-full bg-forest text-paper text-[10px] font-bold flex items-center justify-center">
-            0
-          </span> */}
+          <Suspense fallback={null}>
+            <CartBadge />
+          </Suspense>
         </Link>
       </div>
 
