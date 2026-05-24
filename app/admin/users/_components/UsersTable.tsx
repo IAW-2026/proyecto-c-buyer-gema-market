@@ -1,11 +1,6 @@
 import Link from "next/link";
+import { fmtDate } from "@/app/lib/utils/format";
 import type { Usuario } from "@prisma/client";
-
-const dateFmt = new Intl.DateTimeFormat("es-AR", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
 
 export function UsuariosTable({ usuarios }: { usuarios: Usuario[] }) {
   return (
@@ -36,7 +31,7 @@ export function UsuariosTable({ usuarios }: { usuarios: Usuario[] }) {
                   {u.phoneNumber || "—"}
                 </td>
                 <td className="px-4 py-3 text-ink-3 hidden lgx:table-cell">
-                  {dateFmt.format(u.createdAt)}
+                  {fmtDate(u.createdAt)}
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Link

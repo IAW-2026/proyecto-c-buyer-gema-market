@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { TopBar } from "@/app/components/ui";
+import { fmtDateLong } from "@/app/lib/utils/format";
 import { getOrdenById } from "@/app/lib/db/orden";
 import { getProductById } from "@/app/lib/api/seller";
 import { getShipmentByOrderId } from "@/app/lib/api/shipping";
@@ -37,11 +38,7 @@ export async function OrderDetailFetcher({ params }: OrderDetailFetcherProps) {
   const detail: OrderDetailForUI = {
     id: orden.id,
     status: orden.status,
-    date: orden.createdAt.toLocaleDateString("es-AR", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }),
+    date: fmtDateLong(orden.createdAt),
     quantity: orden.quantity,
     unitPrice: Number(orden.unitPrice),
     shippingPrice: Number(orden.shippingPrice),

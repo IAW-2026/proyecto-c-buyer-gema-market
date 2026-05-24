@@ -1,6 +1,7 @@
 import type { OrdenConBuyer } from "@/app/lib/db/orden";
 import type { BatchProductItem } from "@/app/lib/types/product";
 import type { OrderForUI, OrderStatus } from "@/app/lib/types/orders";
+import { fmtDateMedium } from "@/app/lib/utils/format";
 
 export function mapOrdenesToUI(
   ordenes: OrdenConBuyer[],
@@ -10,11 +11,7 @@ export function mapOrdenesToUI(
     const product = productMap.get(o.productId);
     return {
       id: o.id,
-      date: o.createdAt.toLocaleDateString("es-AR", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }),
+      date: fmtDateMedium(o.createdAt),
       status: o.status as OrderStatus,
       productTitle: product?.title ?? "Producto",
       productThumbnail: product?.thumbnail_url ?? "",

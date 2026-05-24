@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/app/lib/auth/roles";
+import { fmtDateLong } from "@/app/lib/utils/format";
 import { getOrdenById } from "@/app/lib/db/orden";
 import { getProductById } from "@/app/lib/api/seller";
 import { Pill } from "@/app/components/ui";
@@ -20,11 +21,7 @@ export async function OrderDetailContent({ params }: { params: Promise<{ id: str
 
   const status = orden.status as OrderStatus;
   const { label, tone } = ORDER_STATUS_LABEL[status];
-  const date = orden.createdAt.toLocaleDateString("es-AR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const date = fmtDateLong(orden.createdAt);
 
   return (
     <div>

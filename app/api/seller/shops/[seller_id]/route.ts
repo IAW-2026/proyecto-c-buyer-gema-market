@@ -4,6 +4,7 @@ import {
   MOCK_SELLERS,
   MOCK_CATEGORIES,
 } from "@/app/mocks/seller/data";
+import { validateApiKey } from "@/app/lib/utils/hmac";
 
 /**
  * GET /api/seller/shops/:seller_id
@@ -14,6 +15,10 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ seller_id: string }> },
 ) {
+  if (!validateApiKey(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { seller_id } = await params;
   const { searchParams } = req.nextUrl;
 

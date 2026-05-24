@@ -8,8 +8,7 @@ import {
   ShopCategoryPills,
 } from "./ShopCategoryHeader";
 import { ShopProductsGrid } from "./ShopProductsGrid";
-
-const SHOP_PAGE_SIZE = 20;
+import { SHOP_PAGE_SIZE } from "@/app/lib/constants/pagination";
 
 interface ShopFetcherProps {
   params: Promise<{ id: string }>;
