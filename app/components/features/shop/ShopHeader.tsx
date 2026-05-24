@@ -25,11 +25,8 @@ export function ShopHeader({ shop }: ShopHeaderProps) {
           <div className="w-full h-full bg-gradient-to-br from-clay to-bark" />
         )}
         <div className="absolute right-[18px] bottom-[18px] flex gap-2 flex-wrap justify-end">
-          <Pill tone="sand" icon="pin" size="sm">
+          <Pill tone="glass" icon="pin" size="sm">
             {shop.city}
-          </Pill>
-          <Pill tone="sage" size="sm">
-            Vendedor verificado
           </Pill>
         </div>
       </div>
@@ -56,7 +53,7 @@ export function ShopHeader({ shop }: ShopHeaderProps) {
         </div>
 
         {shop.bio && (
-          <p className="m-0 mb-4 text-ink-2 leading-[1.5] max-w-[720px]">
+          <p className="m-0 mb-4 text-ink-2 leading-[1.5]">
             {shop.bio}
           </p>
         )}

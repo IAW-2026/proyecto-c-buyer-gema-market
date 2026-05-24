@@ -34,8 +34,10 @@ export async function ShopFetcher({ params, searchParams }: ShopFetcherProps) {
   return (
     <>
       <ShopHeader shop={shop} />
-      <ShopCategoryStaticTitle />
-      <ShopCategoryPills categories={shop.categories} />
+      <div className="flex items-end justify-between mb-3">
+        <ShopCategoryStaticTitle />
+        <ShopCategoryPills categories={shop.categories} />
+      </div>
       <ShopProductsGrid
         items={items}
         favoriteIds={favoriteIds}

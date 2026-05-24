@@ -53,14 +53,11 @@ function ShopHeaderSkeleton() {
 
 function ShopBodySkeleton() {
   return (
-    <>
-      <ShopCategoryPillsSkeleton />
-      <div className="grid grid-cols-2 gap-3 min-[600px]:grid-cols-3 min-[600px]:gap-3.5 lgx:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] lgx:gap-4.5">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <SkeletonCard key={i} />
-        ))}
-      </div>
-    </>
+    <div className="grid grid-cols-2 gap-3 min-[600px]:grid-cols-3 min-[600px]:gap-3.5 lgx:grid-cols-[repeat(auto-fill,minmax(220px,1fr))] lgx:gap-4.5">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <SkeletonCard key={i} />
+      ))}
+    </div>
   );
 }
 
@@ -68,7 +65,10 @@ export function ShopSkeleton() {
   return (
     <>
       <ShopHeaderSkeleton />
-      <ShopCategoryStaticTitle />
+      <div className="flex items-end justify-between mb-3">
+        <ShopCategoryStaticTitle />
+        <ShopCategoryPillsSkeleton />
+      </div>
       <ShopBodySkeleton />
     </>
   );

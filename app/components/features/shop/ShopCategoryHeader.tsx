@@ -4,7 +4,7 @@ import { Skeleton } from "@/app/components/ui/Skeleton";
 
 export function ShopCategoryStaticTitle() {
   return (
-    <div className="mb-2">
+    <div>
       <div className="text-[11px] font-mono uppercase text-ink-3 mb-1">
         Publicaciones
       </div>
@@ -20,7 +20,7 @@ interface ShopCategoryPillsProps {
 export function ShopCategoryPills({ categories }: ShopCategoryPillsProps) {
   if (categories.length === 0) return null;
   return (
-    <div className="flex gap-1.5 flex-wrap mb-3 max-[480px]:hidden">
+    <div className="flex gap-1.5 flex-wrap max-[480px]:hidden">
       {categories.slice(0, 3).map((cat) => (
         <Pill key={cat.category_id}>{cat.name}</Pill>
       ))}
