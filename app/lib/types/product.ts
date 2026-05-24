@@ -118,6 +118,9 @@ export interface BatchProductResponse {
 export interface Shop {
   seller_id: string;
   shop_name: string;
+  bio?: string;
+  logo_url?: string;
+  cover_url?: string;
   city: string;
   total_products: number;
   categories: Category[];
