@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button, Icon, Toast } from "@/app/components/ui";
-import { useCart } from "@/app/components/products/hooks/useCart";
+import { useCart } from "@/app/components/products/detail/hooks/useCart";
 
 interface ProductCartActionsProps {
   productId: string;

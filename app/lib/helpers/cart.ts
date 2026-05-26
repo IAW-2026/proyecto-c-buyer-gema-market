@@ -1,5 +1,5 @@
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
-import { getCarritoByBuyerId, getCarritoItemCount } from "@/app/lib/db/carrito";
+import { getCarritoByBuyerId, getCarritoItemCount } from "@/app/lib/db/cart";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import type { CartItemWithProduct } from "@/app/lib/types/cart";
 

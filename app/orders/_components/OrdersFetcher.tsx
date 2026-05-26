@@ -1,5 +1,5 @@
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
-import { countOrdenesByBuyerId, getOrdenesByBuyerId } from "@/app/lib/db/orden";
+import { countOrdenesByBuyerId, getOrdenesByBuyerId } from "@/app/lib/db/order";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import {
   ACTIVE_ORDER_STATUSES,

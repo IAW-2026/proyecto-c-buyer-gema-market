@@ -21,7 +21,7 @@
 
 import { revalidatePath } from "next/cache";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
-import { getCarritoByBuyerId } from "@/app/lib/db/carrito";
+import { getCarritoByBuyerId } from "@/app/lib/db/cart";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import { requestShippingQuote } from "@/app/lib/api/shipping";
 import { createPaymentOrder } from "@/app/lib/api/payments";

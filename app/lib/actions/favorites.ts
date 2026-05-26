@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { toggleFavorito } from "@/app/lib/db/favorito";
+import { toggleFavorito } from "@/app/lib/db/favorite";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 
 /**

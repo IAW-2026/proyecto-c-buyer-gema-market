@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { SectionTitle } from "@/app/components/ui";
-import { requireAdmin } from "@/app/lib/auth/roles";
+import { requireAdmin } from "@/app/lib/auth/permissions";
 import { getUsuarioById } from "@/app/lib/db/user";
 import { UsuarioForm } from "./UserForm";
 

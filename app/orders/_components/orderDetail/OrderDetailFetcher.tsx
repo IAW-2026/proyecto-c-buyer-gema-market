@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { TopBar } from "@/app/components/ui";
 import { fmtDateLong } from "@/app/lib/utils/format";
-import { getOrdenById } from "@/app/lib/db/orden";
+import { getOrdenById } from "@/app/lib/db/order";
 import { getProductById } from "@/app/lib/api/seller";
 import { getShipmentByOrderId } from "@/app/lib/api/shipping";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";

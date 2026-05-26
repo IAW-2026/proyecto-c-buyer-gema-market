@@ -34,6 +34,18 @@ export interface CheckoutItem {
 
 // ── Tipos de UI ───────────────────────────────────────────────────────────────
 
+// ── Filtros de DB ─────────────────────────────────────────────────────────────
+
+import type { OrdenStatus } from "@prisma/client";
+
+export type OrdenesAdminFilter = {
+  buyerId?: string;
+  sellerId?: string;
+  status?: OrdenStatus;
+  dateFrom?: Date;
+  dateTo?: Date;
+};
+
 /** Orden para el listado de órdenes del comprador. */
 export interface OrderForUI {
   id: string;

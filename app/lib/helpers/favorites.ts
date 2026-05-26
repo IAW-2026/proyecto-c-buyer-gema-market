@@ -2,7 +2,7 @@ import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import {
   countFavoritosByBuyerId,
   getFavoritosIdsPaginated,
-} from "@/app/lib/db/favorito";
+} from "@/app/lib/db/favorite";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import type { ProductListItem } from "@/app/lib/types/product";
 

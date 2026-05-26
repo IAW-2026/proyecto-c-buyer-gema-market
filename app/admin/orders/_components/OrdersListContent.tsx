@@ -1,6 +1,6 @@
 import { SectionTitle, EmptyState, Pagination } from "@/app/components/ui";
-import { requireAdmin } from "@/app/lib/auth/roles";
-import { getOrdenesPaginatedAdmin, countOrdenesAdmin } from "@/app/lib/db/orden";
+import { requireAdmin } from "@/app/lib/auth/permissions";
+import { getOrdenesPaginatedAdmin, countOrdenesAdmin } from "@/app/lib/db/order";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import { parsePage } from "@/app/lib/utils/pagination";
 import { ADMIN_ORDERS_PAGE_SIZE } from "@/app/lib/constants/pagination";

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/app/lib/api/seller";
-import { isFavorited } from "@/app/lib/db/favorito";
+import { isFavorited } from "@/app/lib/db/favorite";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import ProductImageGallery from "./ProductImageGallery";
 import ProductInfo from "./ProductInfo";

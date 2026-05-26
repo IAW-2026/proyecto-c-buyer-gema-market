@@ -1,6 +1,7 @@
 import { prisma } from "@/app/lib/prisma";
 import { Orden, OrdenStatus, Prisma } from "@prisma/client";
 import { generateUlid } from "../utils/ulidGenerator";
+import type { OrdenesAdminFilter } from "@/app/lib/types/orders";
 
 // ─────────────────────────────────────────────
 // Types
@@ -139,6 +140,100 @@ export async function countOrdenesAdmin(search?: string): Promise<number> {
       }
     : undefined;
   return prisma.orden.count({ where });
+}
+
+// ─────────────────────────────────────────────
+// ADMIN API
+// ─────────────────────────────────────────────
+
+function buildAdminWhere(f: OrdenesAdminFilter): Prisma.OrdenWhereInput {
+  const where: Prisma.OrdenWhereInput = {};
+  if (f.buyerId) where.buyerId = f.buyerId;
+  if (f.sellerId) where.sellerId = f.sellerId;
+  if (f.status) where.status = f.status;
+  if (f.dateFrom || f.dateTo) {
+    where.createdAt = {
+      ...(f.dateFrom ? { gte: f.dateFrom } : {}),
+      ...(f.dateTo ? { lte: f.dateTo } : {}),
+    };
+  }
+  return where;
+}
+
+export async function getOrdenesAdminApi(
+  opts: OrdenesAdminFilter & {
+    sortBy: string;
+    order: "asc" | "desc";
+    skip: number;
+    take: number;
+  },
+): Promise<Orden[]> {
+  const orderBy =
+    opts.sortBy === "total_amount"
+      ? { totalAmount: opts.order }
+      : opts.sortBy === "status"
+        ? { status: opts.order }
+        : { createdAt: opts.order };
+
+  return prisma.orden.findMany({
+    where: buildAdminWhere(opts),
+    orderBy,
+    skip: opts.skip,
+    take: opts.take,
+  });
+}
+
+export async function countOrdenesAdminApi(
+  filter: OrdenesAdminFilter,
+): Promise<number> {
+  return prisma.orden.count({ where: buildAdminWhere(filter) });
+}
+
+export async function getOrdenesStatsAdmin(opts: {
+  dateFrom?: Date;
+  dateTo?: Date;
+}): Promise<{
+  total_orders: number;
+  orders_by_status: Record<string, number>;
+  average_ticket: number;
+  currency: string;
+}> {
+  const where: Prisma.OrdenWhereInput = {};
+  if (opts.dateFrom || opts.dateTo) {
+    where.createdAt = {
+      ...(opts.dateFrom ? { gte: opts.dateFrom } : {}),
+      ...(opts.dateTo ? { lte: opts.dateTo } : {}),
+    };
+  }
+
+  const [grouped, aggregate] = await Promise.all([
+    prisma.orden.groupBy({ by: ["status"], where, _count: { status: true } }),
+    prisma.orden.aggregate({ where, _count: { id: true }, _avg: { totalAmount: true } }),
+  ]);
+
+  const ALL_STATUSES: OrdenStatus[] = [
+    "created",
+    "awaiting_payment",
+    "paid",
+    "shipping",
+    "delivered",
+    "shipping_failed",
+    "cancelled",
+  ];
+
+  const orders_by_status = Object.fromEntries(
+    ALL_STATUSES.map((s) => [
+      s,
+      grouped.find((g) => g.status === s)?._count.status ?? 0,
+    ]),
+  );
+
+  return {
+    total_orders: aggregate._count.id,
+    orders_by_status,
+    average_ticket: Number((aggregate._avg.totalAmount ?? 0).toFixed(2)),
+    currency: "ARS",
+  };
 }
 
 // ─────────────────────────────────────────────

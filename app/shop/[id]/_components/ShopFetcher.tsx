@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getShopById } from "@/app/lib/api/seller";
-import { getFavoritosIds } from "@/app/lib/db/favorito";
+import { getFavoritosIds } from "@/app/lib/db/favorite";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { ShopHeader } from "./ShopHeader";
 import {

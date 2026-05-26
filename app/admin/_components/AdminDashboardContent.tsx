@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Card, Icon } from "@/app/components/ui";
 import { prisma } from "@/app/lib/prisma";
-import { requireAdmin } from "@/app/lib/auth/roles";
+import { requireAdmin } from "@/app/lib/auth/permissions";
 
 const SECTIONS = [
   { href: "/admin/users", label: "Usuarios", icon: "user" as const, key: "usuarios" as const, enabled: true },

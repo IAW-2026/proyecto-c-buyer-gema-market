@@ -1,5 +1,5 @@
 import { SectionTitle, EmptyState, Pagination } from "@/app/components/ui";
-import { requireAdmin } from "@/app/lib/auth/roles";
+import { requireAdmin } from "@/app/lib/auth/permissions";
 import { getAllUsuarios, countUsuarios } from "@/app/lib/db/user";
 import { parsePage } from "@/app/lib/utils/pagination";
 import { ADMIN_USERS_PAGE_SIZE } from "@/app/lib/constants/pagination";

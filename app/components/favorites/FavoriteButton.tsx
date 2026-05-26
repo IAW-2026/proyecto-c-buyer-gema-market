@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@/app/components/ui";
-import { useFavorite } from "@/app/favorites/_components/hooks/useFavorite";
+import { useFavorite } from "@/app/components/favorites/hooks/useFavorite";
 
 interface FavoriteButtonProps {
   productId: string;

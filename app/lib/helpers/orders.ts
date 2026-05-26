@@ -1,4 +1,4 @@
-import type { OrdenConBuyer } from "@/app/lib/db/orden";
+import type { OrdenConBuyer } from "@/app/lib/db/order";
 import type { BatchProductItem } from "@/app/lib/types/product";
 import type { OrderForUI, OrderStatus } from "@/app/lib/types/orders";
 import { fmtDateMedium } from "@/app/lib/utils/format";

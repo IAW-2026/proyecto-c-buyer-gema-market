@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/app/lib/auth/roles";
+import { requireAdmin } from "@/app/lib/auth/permissions";
 import { fmtDateLong } from "@/app/lib/utils/format";
-import { getOrdenById } from "@/app/lib/db/orden";
+import { getOrdenById } from "@/app/lib/db/order";
 import { getProductById } from "@/app/lib/api/seller";
 import { Pill } from "@/app/components/ui";
 import { OrderTimeline } from "@/app/components/orders/OrderTimeline";
