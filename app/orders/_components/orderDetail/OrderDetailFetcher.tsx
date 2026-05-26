@@ -4,10 +4,10 @@ import { fmtDateLong } from "@/app/lib/utils/format";
 import { getOrdenById } from "@/app/lib/db/orden";
 import { getProductById } from "@/app/lib/api/seller";
 import { getShipmentByOrderId } from "@/app/lib/api/shipping";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { OrderStatusCard } from "./OrderStatusCard";
-import { OrderTimeline } from "./OrderTimeline";
-import { OrderProductCard } from "../OrderProductCard";
+import { OrderTimeline } from "@/app/components/orders/OrderTimeline";
+import { OrderProductCard } from "@/app/components/orders/OrderProductCard";
 import type { OrderDetailForUI } from "@/app/lib/types/orders";
 
 interface OrderDetailFetcherProps {

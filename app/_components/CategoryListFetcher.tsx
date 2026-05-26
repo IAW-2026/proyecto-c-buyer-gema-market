@@ -6,7 +6,7 @@
  */
 
 import { getCategories } from "@/app/lib/api/seller";
-import { CategoryList } from "@/app/components/features/home/CategoryList";
+import { CategoryList } from "./CategoryList";
 
 export default async function CategoryListFetcher() {
   const categories = await getCategories();

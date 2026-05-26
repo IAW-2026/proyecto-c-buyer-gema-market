@@ -5,7 +5,7 @@ import { Card, Avatar, Field, Input, Button, Icon } from "@/app/components/ui";
 import { SignOutButton } from "@clerk/nextjs";
 import type { Usuario } from "@prisma/client";
 import type { Address } from "@/app/lib/types/user";
-import { updateAccountAction } from "../../../lib/actions/account";
+import { updateAccountAction } from "../../lib/actions/account";
 
 interface AccountFormProps {
   initialData: Usuario;

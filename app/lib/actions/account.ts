@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { updateUsuario } from "@/app/lib/db/user";
 import { AccountSchema } from "@/app/lib/schemas/account";
 

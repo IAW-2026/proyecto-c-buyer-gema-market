@@ -5,8 +5,8 @@ import { fmtDateLong } from "@/app/lib/utils/format";
 import { getOrdenById } from "@/app/lib/db/orden";
 import { getProductById } from "@/app/lib/api/seller";
 import { Pill } from "@/app/components/ui";
-import { OrderTimeline } from "@/app/components/features/orders/orderDetail/OrderTimeline";
-import { OrderProductCard } from "@/app/components/features/orders/OrderProductCard";
+import { OrderTimeline } from "@/app/components/orders/OrderTimeline";
+import { OrderProductCard } from "@/app/components/orders/OrderProductCard";
 import { ORDER_STATUS_LABEL } from "@/app/lib/constants/orders";
 import type { OrderStatus } from "@/app/lib/types/orders";
 

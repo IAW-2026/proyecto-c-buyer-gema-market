@@ -20,7 +20,7 @@
  */
 
 import { revalidatePath } from "next/cache";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { getCarritoByBuyerId } from "@/app/lib/db/carrito";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import { requestShippingQuote } from "@/app/lib/api/shipping";

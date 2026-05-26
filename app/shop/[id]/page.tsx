@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { ShopFetcher } from "@/app/components/features/shop/ShopFetcher";
-import { ShopSkeleton } from "@/app/components/features/shop/ShopSkeleton";
+import { ShopFetcher } from "./_components/ShopFetcher";
+import { ShopSkeleton } from "./_components/ShopSkeleton";
 
 interface PageProps {
   params: Promise<{ id: string }>;

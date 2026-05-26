@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import {
   countFavoritosByBuyerId,
   getFavoritosIdsPaginated,

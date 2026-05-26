@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/app/lib/api/seller";
 import { isFavorited } from "@/app/lib/db/favorito";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import ProductImageGallery from "./ProductImageGallery";
 import ProductInfo from "./ProductInfo";
 import ProductCartActions from "./ProductCartActions";
@@ -13,7 +13,9 @@ interface ProductDetailFetcherProps {
   params: Promise<{ id: string }>;
 }
 
-export async function ProductDetailFetcher({ params }: ProductDetailFetcherProps) {
+export async function ProductDetailFetcher({
+  params,
+}: ProductDetailFetcherProps) {
   const { id } = await params;
 
   // Paralelo: producto + check de favorito.

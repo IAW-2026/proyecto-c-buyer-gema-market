@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Pill } from "../../ui/Pill";
+import { Pill } from "@/app/components/ui/Pill";
 import { Category } from "@/app/lib/types/product";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 

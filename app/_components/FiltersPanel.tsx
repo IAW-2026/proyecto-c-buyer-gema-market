@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent } from "react";
-import { Icon, Pill, Button, Input } from "../../ui";
+import { Icon, Pill, Button, Input } from "@/app/components/ui";
 import type { ProductCondition } from "@/app/lib/types/product";
 import { CONDITION_OPTIONS, SORT_OPTIONS } from "./utils/constants";
 import type { ParsedFilters } from "@/app/lib/utils/filterParser";
@@ -38,10 +38,10 @@ export function FiltersPanel({
   };
 
   return (
-    <div 
+    <div
       className={`absolute right-0 top-14 z-[45] w-[360px] bg-paper border border-line rounded-[18px] shadow-sh-3 p-4 origin-top-right max-[640px]:left-0 max-[640px]:right-0 max-[640px]:w-auto transition-all duration-200 ${
-        isOpen 
-          ? "opacity-100 scale-100 pointer-events-auto" 
+        isOpen
+          ? "opacity-100 scale-100 pointer-events-auto"
           : "opacity-0 scale-95 pointer-events-none"
       }`}
     >

@@ -4,7 +4,7 @@ import Image from "next/image";
 import type { ProductListItem } from "@/app/lib/types/product";
 import { Icon } from "../ui/Icon";
 import { fmtARS } from "@/app/lib/utils/format";
-import FavoriteButton from "../features/favorites/FavoriteButton";
+import FavoriteButton from "@/app/components/favorites/FavoriteButton";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 interface ProductCardProps {

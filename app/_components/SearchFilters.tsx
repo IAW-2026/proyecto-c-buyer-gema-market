@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Icon, SearchBar } from "../../ui";
+import { Icon, SearchBar } from "@/app/components/ui";
 
 import { FiltersPanel } from "./FiltersPanel";
 import { useFilteredParams } from "./hooks/useFilteredParams";

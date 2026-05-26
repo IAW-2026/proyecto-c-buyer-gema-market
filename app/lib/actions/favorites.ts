@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { toggleFavorito } from "@/app/lib/db/favorito";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 
 /**
  * Alterna favorito de un producto

@@ -1,4 +1,4 @@
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { countOrdenesByBuyerId, getOrdenesByBuyerId } from "@/app/lib/db/orden";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import {
