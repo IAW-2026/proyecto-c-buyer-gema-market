@@ -1,14 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { ProductListItem } from "@/app/lib/types/product";
+import type { ProductListItem, BatchProductItem } from "@/app/lib/types/product";
 import { Icon } from "../ui/Icon";
 import { fmtARS } from "@/app/lib/utils/format";
 import FavoriteButton from "@/app/components/favorites/FavoriteButton";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 interface ProductCardProps {
-  product: ProductListItem;
+  product: ProductListItem | BatchProductItem;
   compact?: boolean;
   initialFavorite?: boolean;
   priority?: boolean;

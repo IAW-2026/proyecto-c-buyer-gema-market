@@ -44,6 +44,7 @@ export async function ProductDetailFetcher({
           price={product.price}
           stock={product.stock}
           condition={product.condition}
+          category_name={product.category_name}
         />
 
         <ProductCartActions

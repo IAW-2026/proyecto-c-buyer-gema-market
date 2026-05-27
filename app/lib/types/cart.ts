@@ -1,7 +1,6 @@
-import type { ProductListItem } from "./product";
+import type { BatchProductItem } from "./product";
 
-export interface CartItemWithProduct extends ProductListItem {
+export interface CartItemWithProduct extends BatchProductItem {
   quantity: number;
   item_id: string;
-  stock: number;
 }

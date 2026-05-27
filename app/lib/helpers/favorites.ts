@@ -4,12 +4,12 @@ import {
   getFavoritosIdsPaginated,
 } from "@/app/lib/db/favorite";
 import { getProductsBatch } from "@/app/lib/api/seller";
-import type { ProductListItem } from "@/app/lib/types/product";
+import type { BatchProductItem } from "@/app/lib/types/product";
 
 export async function getFavoritesWithProducts(
   page: number,
   pageSize: number,
-): Promise<{ items: ProductListItem[]; total: number }> {
+): Promise<{ items: BatchProductItem[]; total: number }> {
   const userId = await getCurrentUserId();
 
   try {
