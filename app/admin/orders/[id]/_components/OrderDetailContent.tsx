@@ -9,6 +9,7 @@ import { OrderTimeline } from "@/app/components/orders/OrderTimeline";
 import { OrderProductCard } from "@/app/components/orders/OrderProductCard";
 import { ORDER_STATUS_LABEL } from "@/app/lib/constants/orders";
 import type { OrderStatus } from "@/app/lib/types/orders";
+import { OrderStatusActions } from "./OrderStatusActions";
 
 export async function OrderDetailContent({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
@@ -76,6 +77,15 @@ export async function OrderDetailContent({ params }: { params: Promise<{ id: str
           total={Number(orden.totalAmount)}
         />
       </div>
+
+      <OrderStatusActions
+        orderId={orden.id}
+        status={status}
+        paymentId={orden.paymentId ?? undefined}
+        shippingId={orden.shippingId ?? undefined}
+        totalAmount={Number(orden.totalAmount)}
+        currency={orden.currency}
+      />
     </div>
   );
 }

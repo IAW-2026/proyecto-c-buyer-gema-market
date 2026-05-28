@@ -9,19 +9,18 @@ import { useApplyFilters, useClearFilters } from "./hooks/useApplyFilters";
 import type { ParsedFilters } from "@/app/lib/utils/filterParser";
 
 /**
- * SearchFilters - Componente refactorizado que gestiona filtrado, búsqueda y ordenamiento
+ * SearchFilters - Componente que gestiona filtrado, búsqueda y ordenamiento
  *
- * Cambios principales:
- * - URL como única fuente de verdad (no duplica estado)
+ * - URL como única fuente de verdad
  * - Lógica separada en hooks y utils reutilizables
- * - Menos renders y mejor performance
  * - Type safety mejorado con validadores
  */
+
 export default function SearchFilters() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  // Leer filtros directamente de la URL (sin duplicar en useState)
+  // Leer filtros directamente de la URL
   const urlFilters = useFilteredParams();
 
   // Estado local para ediciones pendientes (mientras el modal está abierto)

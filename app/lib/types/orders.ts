@@ -10,6 +10,7 @@ export type OrderStatus =
   | "created"
   | "awaiting_payment"
   | "paid"
+  | "picked_up"
   | "shipping"
   | "delivered"
   | "shipping_failed"

@@ -7,7 +7,7 @@
 // sin que tengas que programar nada extra.
 
 import { Button, EmptyState } from "@/app/components/ui";
-import React, { useState, useOptimistic, useTransition, useMemo } from "react";
+import { useState, useOptimistic, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import type { CartItemWithProduct } from "@/app/lib/types/cart";
 import {

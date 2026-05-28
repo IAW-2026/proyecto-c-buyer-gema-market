@@ -14,10 +14,7 @@ export default function FavoriteButton({
   initialFavorite,
   className = "",
 }: FavoriteButtonProps) {
-  const { isFavorite, isPending, toggle } = useFavorite(
-    productId,
-    initialFavorite,
-  );
+  const { isFavorite, isPending, toggle } = useFavorite(productId, initialFavorite);
 
   return (
     <button

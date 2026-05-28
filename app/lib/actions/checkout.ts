@@ -1,24 +1,5 @@
 "use server";
 
-/**
- * Server Actions del flujo de Checkout.
- *
- * Dos acciones principales:
- *  1. `requestShippingQuoteAction` — cotiza el envío POR CADA PRODUCTO del carrito (Paso 1)
- *  2. `createCheckoutAction`       — crea las órdenes y redirige al pago (Paso 2)
- *
- * Regla de cotización:
- *  - Cada producto distinto en el carrito obtiene su propio quote_id y precio de envío.
- *  - La `quantity` de un item NO multiplica los quotes (enviar 2 sillas = 1 quote de sillas).
- *  - Tener una silla y una mesa = 2 quotes independientes.
- *
- * Flujo completo:
- *  Carrito → cotizar envío por item → crear órdenes en BD → crear orden de pago → checkout_url
- *
- * @see docs/apis.md — POST /api/shipping/cotizaciones
- * @see docs/apis.md — POST /api/payments/ordenes-de-pago
- */
-
 import { revalidatePath } from "next/cache";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { getCarritoByBuyerId } from "@/app/lib/db/cart";

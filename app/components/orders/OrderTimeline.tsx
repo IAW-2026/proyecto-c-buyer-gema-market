@@ -18,6 +18,11 @@ const ORDER_SEQUENCE: OrderStatus[] = [
   "delivered",
 ];
 
+// picked_up y shipping se muestran en el mismo paso del timeline
+const TIMELINE_STATUS_ALIAS: Partial<Record<OrderStatus, OrderStatus>> = {
+  picked_up: "shipping",
+};
+
 const FAILED_STATUSES: OrderStatus[] = ["cancelled"];
 
 interface OrderTimelineProps {
@@ -37,7 +42,8 @@ export function OrderTimeline({
 }: OrderTimelineProps) {
   if (FAILED_STATUSES.includes(status)) return null;
 
-  const currentIdx = ORDER_SEQUENCE.indexOf(status);
+  const displayStatus = TIMELINE_STATUS_ALIAS[status] ?? status;
+  const currentIdx = ORDER_SEQUENCE.indexOf(displayStatus);
 
   return (
     <Card padding={20} className="mb-4">

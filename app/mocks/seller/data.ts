@@ -73,7 +73,6 @@ export const MOCK_PRODUCTS = [
       "https://images.unsplash.com/photo-1772761482020-3cea792b5de7?w=400&q=80",
     images: [
       "https://images.unsplash.com/photo-1772761482020-3cea792b5de7?w=800&q=80",
-      "https://images.unsplash.com/photo-1761123261084-53c40fe1e607?w=800&q=80",
     ],
     material: "Madera maciza",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF001",

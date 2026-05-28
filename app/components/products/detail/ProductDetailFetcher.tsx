@@ -18,8 +18,6 @@ export async function ProductDetailFetcher({
 }: ProductDetailFetcherProps) {
   const { id } = await params;
 
-  // Paralelo: producto + check de favorito.
-  // isFavorited usa findUnique por clave primaria compuesta (buyerId, productId) — O(1).
   const [product, initialFavorite] = await Promise.all([
     getProductById(id),
     getCurrentUserId().then((userId) =>

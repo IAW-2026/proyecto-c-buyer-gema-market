@@ -215,6 +215,7 @@ export async function getOrdenesStatsAdmin(opts: {
     "created",
     "awaiting_payment",
     "paid",
+    "picked_up",
     "shipping",
     "delivered",
     "shipping_failed",

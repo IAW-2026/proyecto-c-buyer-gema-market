@@ -11,6 +11,7 @@ import { validateApiKey } from "@/app/lib/utils/hmac";
 const SHIPPING_TO_ORDER_STATUS: Partial<
   Record<ShippingStatusUpdateInput["status"], OrdenStatus>
 > = {
+  picked_up: "picked_up",
   in_transit: "shipping",
   delivered: "delivered",
   failed: "shipping_failed",

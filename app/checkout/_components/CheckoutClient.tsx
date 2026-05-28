@@ -95,8 +95,6 @@ export default function CheckoutClient({
         return;
       }
 
-      // Redirigir a la checkout_url de la Payments App
-      // (en mock: /orders — en producción: URL de Mercado Pago)
       router.push(result.checkout_url);
     });
   }

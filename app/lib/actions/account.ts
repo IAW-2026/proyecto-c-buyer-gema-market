@@ -11,7 +11,7 @@ import { AccountSchema } from "@/app/lib/schemas/account";
 
 /**
  * Server Action para actualizar los datos del usuario.
- * Acepta FormData directamente para uso con useActionState sin wrapper intermedio.
+ * Acepta FormData directamente para uso con useActionState
  */
 export async function updateAccountAction(
   _prevState: unknown,

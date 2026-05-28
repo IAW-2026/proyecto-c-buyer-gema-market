@@ -26,6 +26,7 @@ export async function OrderDetailFetcher({ params }: OrderDetailFetcherProps) {
   if (!orden || orden.buyerId !== userId) notFound();
 
   const needsTracking =
+    orden.status === "picked_up" ||
     orden.status === "shipping" ||
     orden.status === "delivered" ||
     orden.status === "shipping_failed";

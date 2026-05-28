@@ -16,15 +16,6 @@ interface FiltersPanelProps {
   onClear: () => Promise<void>;
 }
 
-/**
- * FiltersPanel - Panel refactorizado con menos props drilling
- *
- * Cambios principales:
- * - Props consolidados en un objeto 'filters'
- * - Una única función callback para actualizar filtros
- * - Lógica de formato separada en utils
- * - Reducido de 10 props a 6
- */
 export function FiltersPanel({
   isOpen,
   onClose,
@@ -33,7 +24,10 @@ export function FiltersPanel({
   onApply,
   onClear,
 }: FiltersPanelProps) {
-  const handleFilterUpdate = (key: keyof ParsedFilters, value: ParsedFilters[keyof ParsedFilters]) => {
+  const handleFilterUpdate = (
+    key: keyof ParsedFilters,
+    value: ParsedFilters[keyof ParsedFilters],
+  ) => {
     onFilterChange({ ...filters, [key]: value });
   };
 
@@ -89,7 +83,9 @@ export function FiltersPanel({
               onClick={() =>
                 handleFilterUpdate(
                   "condition",
-                  filters.condition === value ? "" : (value as ProductCondition),
+                  filters.condition === value
+                    ? ""
+                    : (value as ProductCondition),
                 )
               }
               size="md"
