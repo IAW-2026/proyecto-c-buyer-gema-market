@@ -3,7 +3,13 @@
     "allow": [
       "Bash(pnpm tsc *)",
       "WebFetch(domain:unsplash.com)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(Get-ChildItem *)",
+      "Bash(npx tsc *)",
+      "Bash(git diff *)"
     ]
-  }
+  },
+  "disabledMcpjsonServers": [
+    "context7"
+  ]
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_PRODUCTS, MOCK_SELLERS } from "@/app/mocks/seller/data";
+import { MOCK_PRODUCTS, MOCK_SELLERS, MOCK_CATEGORIES } from "@/app/mocks/seller/data";
 
 /**
  * GET /api/seller/productos/:product_id
@@ -42,6 +42,7 @@ export async function GET(
   } = product as typeof product & { material?: string };
 
   const sellerData = MOCK_SELLERS[seller_id] ?? { shop_name: "Vendedor", logo_url: "" };
+  const categoryData = MOCK_CATEGORIES.find((c) => c.category_id === category_id);
 
   return NextResponse.json({
     product_id: id,
@@ -55,6 +56,7 @@ export async function GET(
     price,
     currency,
     category_id,
+    category_name: categoryData?.name ?? null,
     condition,
     stock,
     weight,

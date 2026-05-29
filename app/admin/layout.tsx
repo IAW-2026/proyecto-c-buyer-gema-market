@@ -7,9 +7,6 @@ const ADMIN_SECTIONS: { href: string; label: string; icon: IconName }[] = [
   { href: "/admin/orders", label: "Órdenes", icon: "box" },
 ];
 
-// Layout síncrono para mantener el shell estático bajo PPR (cacheComponents).
-// La autorización real la garantiza el middleware en proxy.ts; cada page
-// además llama a requireAdmin() dentro del async content como defensa en profundidad.
 export default function AdminLayout({
   children,
 }: {

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
-import { requireAdmin } from "@/app/lib/auth/roles";
+import { requireAdmin } from "@/app/lib/auth/permissions";
 import { updateUsuario, deleteUsuario } from "@/app/lib/db/user";
 import { AdminUsuarioUpdateSchema } from "@/app/lib/schemas/admin/usuario";
 

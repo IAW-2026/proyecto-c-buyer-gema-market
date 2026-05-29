@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MOCK_PRODUCTS } from "@/app/mocks/seller/data";
+import { MOCK_PRODUCTS, MOCK_SELLERS } from "@/app/mocks/seller/data";
 
 /**
  * POST /api/seller/productos/batch
@@ -23,22 +23,31 @@ export async function POST(req: NextRequest) {
 
     const products = MOCK_PRODUCTS.filter((p) =>
       product_ids.includes(p.product_id),
-    ).map((p) => ({
-      product_id: p.product_id,
-      seller_id: p.seller_id,
-      title: p.title,
-      price: p.price,
-      currency: p.currency,
-      category_id: p.category_id,
-      stock: p.stock,
-      condition: p.condition as "nuevo" | "usado",
-      thumbnail_url: p.thumbnail_url,
-      href: p.href,
-      weight: p.weight,
-      height: p.height,
-      width: p.width,
-      depth: p.depth,
-    }));
+    ).map((p) => {
+      const sellerData = MOCK_SELLERS[p.seller_id] ?? {
+        shop_name: "Vendedor",
+        logo_url: "",
+      };
+      return {
+        product_id: p.product_id,
+        seller: {
+          seller_id: p.seller_id,
+          shop_name: sellerData.shop_name,
+          logo_url: sellerData.logo_url,
+        },
+        title: p.title,
+        category_id: p.category_id,
+        price: p.price,
+        currency: p.currency,
+        stock: p.stock,
+        condition: p.condition as "nuevo" | "usado",
+        thumbnail_url: p.thumbnail_url,
+        weight: p.weight,
+        height: p.height,
+        width: p.width,
+        depth: p.depth,
+      };
+    });
 
     return NextResponse.json({ products });
   } catch {

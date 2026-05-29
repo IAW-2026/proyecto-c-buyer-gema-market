@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { TopBar } from "@/app/components/ui";
-import FavoritesGrid from "../components/features/favorites/FavoritesGrid";
-import FavoritesSkeleton from "../components/features/favorites/FavoritesSkeleton";
+import FavoritesGrid from "./_components/FavoritesGrid";
+import FavoritesSkeleton from "./_components/FavoritesSkeleton";
 
 export default function FavoritesPage({
   searchParams,

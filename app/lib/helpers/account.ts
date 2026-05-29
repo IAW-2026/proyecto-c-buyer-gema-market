@@ -1,5 +1,5 @@
 import { Usuario } from "@prisma/client";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { getUsuarioById } from "@/app/lib/db/user";
 
 /**

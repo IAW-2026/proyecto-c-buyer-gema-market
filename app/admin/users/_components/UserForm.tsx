@@ -24,10 +24,6 @@ export function UsuarioForm({ usuario }: UsuarioFormProps) {
 
   useEffect(() => {
     if (!state) return;
-    // Se envuelve en un setTimeout para que el banner aparezca después de
-    // que el DOM se actualice con el nuevo estado. Sino state cambia a null
-    // justo después de la acción, y el banner no alcanza a renderizarse con
-    // el mensaje de éxito o error.
     const showTimer = setTimeout(() => setShowBanner(true), 0);
     const hideTimer = setTimeout(() => setShowBanner(false), 3500);
     return () => {

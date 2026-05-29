@@ -11,7 +11,8 @@ interface PillProps {
     | "success"
     | "warn"
     | "danger"
-    | "outline";
+    | "outline"
+    | "glass";
   size?: "sm" | "md" | "lg";
   icon?: IconName;
   onClick?: () => void;
@@ -35,6 +36,7 @@ export const Pill = ({
     warn: "bg-warn/20 text-warn",
     danger: "bg-danger/15 text-danger",
     outline: "bg-transparent text-ink-2 border border-line-2",
+    glass: "bg-paper/70 text-ink backdrop-blur-sm",
   };
   const sizeMap = {
     sm: "px-[9px] py-[3px] text-[11px] gap-1",

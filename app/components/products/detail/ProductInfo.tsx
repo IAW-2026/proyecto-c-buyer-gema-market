@@ -7,6 +7,7 @@ interface ProductInfoProps {
   price: number;
   stock: number;
   condition: ProductCondition;
+  category_name?: string;
 }
 
 export default function ProductInfo({
@@ -14,6 +15,7 @@ export default function ProductInfo({
   price,
   stock,
   condition,
+  category_name,
 }: ProductInfoProps) {
   const conditionLabel = condition === "nuevo" ? "Nuevo" : "Usado";
 
@@ -23,6 +25,11 @@ export default function ProductInfo({
         <Pill tone="sage" size="sm">
           {conditionLabel}
         </Pill>
+        {category_name && (
+          <Pill tone="sand" size="sm">
+            {category_name}
+          </Pill>
+        )}
       </div>
       <h1 className="text-2xl tracking-[-0.02em] font-semibold m-0 mb-2">
         {title}

@@ -18,6 +18,7 @@ export const ORDER_STATUS_LABEL: Record<
   created: { label: "Creado", tone: "neutral" },
   awaiting_payment: { label: "Pago pendiente", tone: "warn" },
   paid: { label: "Pagado / Preparando", tone: "sand" },
+  picked_up: { label: "Paquete retirado", tone: "sage" },
   shipping: { label: "En camino", tone: "forest" },
   delivered: { label: "Entregado", tone: "success" },
   shipping_failed: { label: "Envío fallido", tone: "danger" },
@@ -28,6 +29,7 @@ export const ACTIVE_ORDER_STATUSES: OrderStatus[] = [
   "created",
   "awaiting_payment",
   "paid",
+  "picked_up",
   "shipping",
 ];
 
