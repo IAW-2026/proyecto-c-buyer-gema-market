@@ -6,11 +6,10 @@ import {
   deleteItemCarrito,
   upsertItemCarrito,
   getItemByCarritoAndProduct,
-} from "@/app/lib/db/item_carrito";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
-import { getCarritoByBuyerId, getOrCreateCarrito } from "@/app/lib/db/carrito";
+} from "@/app/lib/db/cartItem";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
+import { getCarritoByBuyerId, getOrCreateCarrito } from "@/app/lib/db/cart";
 import { getProductById } from "@/app/lib/api/seller";
-
 
 // Helper reutilizable: verifica que el item pertenezca al carrito del usuario actual.
 // Retorna el carritoId si es válido, o un error si no.

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { OrderDetailFetcher } from "@/app/components/features/orders/orderDetail/OrderDetailFetcher";
-import { OrderDetailSkeleton } from "@/app/components/features/orders/orderDetail/OrderDetailSkeleton";
+import { OrderDetailFetcher } from "@/app/orders/_components/orderDetail/OrderDetailFetcher";
+import { OrderDetailSkeleton } from "@/app/orders/_components/orderDetail/OrderDetailSkeleton";
 
 interface PageProps {
   params: Promise<{ id: string }>;

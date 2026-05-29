@@ -1,27 +1,8 @@
 "use server";
 
-/**
- * Server Actions del flujo de Checkout.
- *
- * Dos acciones principales:
- *  1. `requestShippingQuoteAction` — cotiza el envío POR CADA PRODUCTO del carrito (Paso 1)
- *  2. `createCheckoutAction`       — crea las órdenes y redirige al pago (Paso 2)
- *
- * Regla de cotización:
- *  - Cada producto distinto en el carrito obtiene su propio quote_id y precio de envío.
- *  - La `quantity` de un item NO multiplica los quotes (enviar 2 sillas = 1 quote de sillas).
- *  - Tener una silla y una mesa = 2 quotes independientes.
- *
- * Flujo completo:
- *  Carrito → cotizar envío por item → crear órdenes en BD → crear orden de pago → checkout_url
- *
- * @see docs/apis.md — POST /api/shipping/cotizaciones
- * @see docs/apis.md — POST /api/payments/ordenes-de-pago
- */
-
 import { revalidatePath } from "next/cache";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
-import { getCarritoByBuyerId } from "@/app/lib/db/carrito";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
+import { getCarritoByBuyerId } from "@/app/lib/db/cart";
 import { getProductsBatch } from "@/app/lib/api/seller";
 import { requestShippingQuote } from "@/app/lib/api/shipping";
 import { createPaymentOrder } from "@/app/lib/api/payments";
@@ -112,7 +93,7 @@ export async function requestShippingQuoteAction(address: {
         return {
           itemId: item.id,
           productId: item.productId,
-          sellerId: product.seller_id,
+          sellerId: product.seller.seller_id,
           productTitle: product.title,
           productImage: product.thumbnail_url,
           quantity: item.quantity,

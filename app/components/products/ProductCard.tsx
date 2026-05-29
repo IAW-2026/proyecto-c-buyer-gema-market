@@ -1,14 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import type { ProductListItem } from "@/app/lib/types/product";
+import type { ProductListItem, BatchProductItem } from "@/app/lib/types/product";
 import { Icon } from "../ui/Icon";
 import { fmtARS } from "@/app/lib/utils/format";
-import FavoriteButton from "../features/favorites/FavoriteButton";
+import FavoriteButton from "@/app/components/favorites/FavoriteButton";
 
 // ── Component ─────────────────────────────────────────────────────────────────
 interface ProductCardProps {
-  product: ProductListItem;
+  product: ProductListItem | BatchProductItem;
   compact?: boolean;
   initialFavorite?: boolean;
   priority?: boolean;
@@ -33,7 +33,7 @@ export default function ProductCard({
               src={product.thumbnail_url}
               alt={product.title}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
               priority={priority}
               className="object-cover transition-transform duration-500 group-hover:scale-105"
             />

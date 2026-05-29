@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { TopBar } from "@/app/components/ui";
-import { OrdersFetcher } from "@/app/components/features/orders/OrdersFetcher";
-import { OrdersSkeleton } from "@/app/components/features/orders/OrdersSkeleton";
+import { OrdersFetcher } from "./_components/OrdersFetcher";
+import { OrdersSkeleton } from "./_components/OrdersSkeleton";
 
 export default function OrdersPage({
   searchParams,

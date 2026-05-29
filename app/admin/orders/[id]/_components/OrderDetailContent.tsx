@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { requireAdmin } from "@/app/lib/auth/roles";
-import { getOrdenById } from "@/app/lib/db/orden";
+import { requireAdmin } from "@/app/lib/auth/permissions";
+import { fmtDateLong } from "@/app/lib/utils/format";
+import { getOrdenById } from "@/app/lib/db/order";
 import { getProductById } from "@/app/lib/api/seller";
 import { Pill } from "@/app/components/ui";
-import { OrderTimeline } from "@/app/components/features/orders/orderDetail/OrderTimeline";
-import { OrderProductCard } from "@/app/components/features/orders/OrderProductCard";
+import { OrderTimeline } from "@/app/components/orders/OrderTimeline";
+import { OrderProductCard } from "@/app/components/orders/OrderProductCard";
 import { ORDER_STATUS_LABEL } from "@/app/lib/constants/orders";
 import type { OrderStatus } from "@/app/lib/types/orders";
+import { OrderStatusActions } from "./OrderStatusActions";
 
 export async function OrderDetailContent({ params }: { params: Promise<{ id: string }> }) {
   await requireAdmin();
@@ -20,11 +22,7 @@ export async function OrderDetailContent({ params }: { params: Promise<{ id: str
 
   const status = orden.status as OrderStatus;
   const { label, tone } = ORDER_STATUS_LABEL[status];
-  const date = orden.createdAt.toLocaleDateString("es-AR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const date = fmtDateLong(orden.createdAt);
 
   return (
     <div>
@@ -79,6 +77,15 @@ export async function OrderDetailContent({ params }: { params: Promise<{ id: str
           total={Number(orden.totalAmount)}
         />
       </div>
+
+      <OrderStatusActions
+        orderId={orden.id}
+        status={status}
+        paymentId={orden.paymentId ?? undefined}
+        shippingId={orden.shippingId ?? undefined}
+        totalAmount={Number(orden.totalAmount)}
+        currency={orden.currency}
+      />
     </div>
   );
 }

@@ -1,19 +1,8 @@
 import Link from "next/link";
 import { Pill } from "@/app/components/ui";
 import { ORDER_STATUS_LABEL } from "@/app/lib/constants/orders";
+import { fmtARS, fmtDate } from "@/app/lib/utils/format";
 import type { OrdenStatus } from "@prisma/client";
-
-const dateFmt = new Intl.DateTimeFormat("es-AR", {
-  day: "2-digit",
-  month: "2-digit",
-  year: "numeric",
-});
-
-const currencyFmt = new Intl.NumberFormat("es-AR", {
-  style: "currency",
-  currency: "ARS",
-  maximumFractionDigits: 0,
-});
 
 export type OrderRow = {
   id: string;
@@ -53,13 +42,13 @@ export function OrdersTable({ rows }: { rows: OrderRow[] }) {
                     {row.productTitle}
                   </td>
                   <td className="px-4 py-3 text-ink hidden sm:table-cell">
-                    {currencyFmt.format(row.total)}
+                    {fmtARS(row.total)}
                   </td>
                   <td className="px-4 py-3 hidden md:table-cell">
                     <Pill tone={tone} size="sm">{label}</Pill>
                   </td>
                   <td className="px-4 py-3 text-ink-3 hidden lg:table-cell">
-                    {dateFmt.format(row.createdAt)}
+                    {fmtDate(row.createdAt)}
                   </td>
                   <td className="px-4 py-3">
                     <Link

@@ -5,32 +5,42 @@
 
 export const MOCK_SELLERS: Record<
   string,
-  { shop_name: string; logo_url: string }
+  { shop_name: string; logo_url: string; bio?: string; city: string }
 > = {
   usr_01HSELLER01: {
     shop_name: "MaderPlac",
     logo_url:
       "https://api.dicebear.com/9.x/initials/png?seed=MaderPlac&backgroundColor=b6e3f4&size=64",
+    bio: "Muebles de madera maciza hechos a mano. Más de 10 años equipando hogares y departamentos en Bahía Blanca.",
+    city: "Bahía Blanca",
   },
   usr_01HSELLER02: {
     shop_name: "Ergonómica BA",
     logo_url:
       "https://api.dicebear.com/9.x/initials/png?seed=Ergon%C3%B3mica+BA&backgroundColor=c0aede&size=64",
+    bio: "Mobiliario y accesorios ergonómicos para el trabajo y el estudio. Envíos a todo Bahía Blanca.",
+    city: "Bahía Blanca",
   },
   usr_01HSELLER03: {
     shop_name: "Café & Más",
     logo_url:
       "https://api.dicebear.com/9.x/initials/png?seed=Caf%C3%A9+%26+M%C3%A1s&backgroundColor=ffd5dc&size=64",
+    bio: "Todo para tu cocina y living. Electrodomésticos, sillas y mesas para armar el hogar perfecto.",
+    city: "Bahía Blanca",
   },
   usr_01HSELLER04: {
     shop_name: "TechStudy",
     logo_url:
       "https://api.dicebear.com/9.x/initials/png?seed=TechStudy&backgroundColor=d1f4cc&size=64",
+    bio: "Equipamos espacios de estudio y trabajo en casa. Lámparas, sillas, escritorios y storage.",
+    city: "Bahía Blanca",
   },
   usr_01HSELLER05: {
     shop_name: "UniHousing",
     logo_url:
       "https://api.dicebear.com/9.x/initials/png?seed=UniHousing&backgroundColor=ffdfbf&size=64",
+    bio: "Productos seleccionados para departamentos de estudiantes. Coordinamos el envío con UniHousing.",
+    city: "Bahía Blanca",
   },
 };
 
@@ -63,7 +73,6 @@ export const MOCK_PRODUCTS = [
       "https://images.unsplash.com/photo-1772761482020-3cea792b5de7?w=400&q=80",
     images: [
       "https://images.unsplash.com/photo-1772761482020-3cea792b5de7?w=800&q=80",
-      "https://images.unsplash.com/photo-1761123261084-53c40fe1e607?w=800&q=80",
     ],
     material: "Madera maciza",
     href: "http://localhost:3000/api/seller/productos/prd_01HABCDEF001",

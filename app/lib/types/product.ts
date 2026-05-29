@@ -57,6 +57,7 @@ export interface ProductDetail {
   price: number;
   currency: string;
   category_id: string;
+  category_name?: string;
   condition: ProductCondition;
   stock: number;
   weight: number; // kg
@@ -98,11 +99,26 @@ export interface Product extends ProductListItem {
 // ── Batch: POST /api/seller/productos/batch ───────────────────────────────────
 /**
  * Ítem de producto devuelto por el endpoint batch.
- * Coincide con ProductListItem (incluye `thumbnail_url`) más las dimensiones
- * requeridas para cotizar envío. No incluye `description` ni `images`.
+ * A diferencia del listado, expone `seller` como objeto anidado (con shop_name y
+ * logo_url) y agrega las dimensiones necesarias para cotizar envío.
+ * No incluye `description` ni `images`.
+ *
+ * @see docs/apis.md — POST /api/seller/productos/batch
  */
-export interface BatchProductItem extends ProductListItem {
+export interface BatchProductItem {
+  product_id: string;
+  seller: {
+    seller_id: string;
+    shop_name: string;
+    logo_url: string;
+  };
+  title: string;
+  category_id: string;
+  price: number;
+  currency: string;
   stock: number;
+  condition: ProductCondition;
+  thumbnail_url: string;
   weight: number;
   height: number;
   width: number;
@@ -118,6 +134,9 @@ export interface BatchProductResponse {
 export interface Shop {
   seller_id: string;
   shop_name: string;
+  bio?: string;
+  logo_url?: string;
+  cover_url?: string;
   city: string;
   total_products: number;
   categories: Category[];

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updateOrden } from "@/app/lib/db/orden";
+import { updateOrden } from "@/app/lib/db/order";
 import { PaymentConfirmedSchema } from "@/app/lib/schemas/payments";
 import { validateApiKey } from "@/app/lib/utils/hmac";
 

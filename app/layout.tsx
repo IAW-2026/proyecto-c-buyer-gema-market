@@ -34,6 +34,11 @@ export default function RootLayout({
         lang="es"
         className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
       >
+        <head>
+          <link rel="preconnect" href="https://images.unsplash.com" />
+          <link rel="preconnect" href="https://qrbdthnwprtysodpsncu.supabase.co" crossOrigin="anonymous" />
+          <link rel="preconnect" href="https://api.dicebear.com" />
+        </head>
         <body className="min-h-full bg-cream text-ink font-sans">
           {/* Desktop sidebar */}
           <Suspense fallback={<aside className="hidden lgx:block lgx:fixed lgx:left-0 lgx:top-0 lgx:bottom-0 lgx:w-60 lgx:bg-paper lgx:border-r lgx:border-line" />}>

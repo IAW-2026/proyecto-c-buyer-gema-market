@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProductById } from "@/app/lib/api/seller";
-import { isFavorited } from "@/app/lib/db/favorito";
-import { getCurrentUserId } from "@/app/lib/auth/mapClerkId-UserId";
+import { isFavorited } from "@/app/lib/db/favorite";
+import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import ProductImageGallery from "./ProductImageGallery";
 import ProductInfo from "./ProductInfo";
 import ProductCartActions from "./ProductCartActions";
@@ -13,11 +13,11 @@ interface ProductDetailFetcherProps {
   params: Promise<{ id: string }>;
 }
 
-export async function ProductDetailFetcher({ params }: ProductDetailFetcherProps) {
+export async function ProductDetailFetcher({
+  params,
+}: ProductDetailFetcherProps) {
   const { id } = await params;
 
-  // Paralelo: producto + check de favorito.
-  // isFavorited usa findUnique por clave primaria compuesta (buyerId, productId) — O(1).
   const [product, initialFavorite] = await Promise.all([
     getProductById(id),
     getCurrentUserId().then((userId) =>
@@ -42,6 +42,7 @@ export async function ProductDetailFetcher({ params }: ProductDetailFetcherProps
           price={product.price}
           stock={product.stock}
           condition={product.condition}
+          category_name={product.category_name}
         />
 
         <ProductCartActions

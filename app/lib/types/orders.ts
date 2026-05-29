@@ -10,6 +10,7 @@ export type OrderStatus =
   | "created"
   | "awaiting_payment"
   | "paid"
+  | "picked_up"
   | "shipping"
   | "delivered"
   | "shipping_failed"
@@ -33,6 +34,18 @@ export interface CheckoutItem {
 }
 
 // ── Tipos de UI ───────────────────────────────────────────────────────────────
+
+// ── Filtros de DB ─────────────────────────────────────────────────────────────
+
+import type { OrdenStatus } from "@prisma/client";
+
+export type OrdenesAdminFilter = {
+  buyerId?: string;
+  sellerId?: string;
+  status?: OrdenStatus;
+  dateFrom?: Date;
+  dateTo?: Date;
+};
 
 /** Orden para el listado de órdenes del comprador. */
 export interface OrderForUI {

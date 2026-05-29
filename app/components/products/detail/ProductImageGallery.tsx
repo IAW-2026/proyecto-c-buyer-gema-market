@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/app/components/ui";
-import FavoriteButton from "../../features/favorites/FavoriteButton";
+import FavoriteButton from "@/app/components/favorites/FavoriteButton";
 
 interface ProductImageGalleryProps {
   images: string[];
