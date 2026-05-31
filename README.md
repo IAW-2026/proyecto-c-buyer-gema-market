@@ -149,7 +149,7 @@ Todas validan el `x-api-key-hash` (responden `401` si no coincide) y el body con
 
 ### 5.2. Endpoints administrativos (Etapa 3)
 
-Protegidos por rol `admin` y consumidos por el Control Plane y el Analytics Dashboard:
+Protegidos por rol `admin_buyer` y consumidos por el Control Plane y el Analytics Dashboard:
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
@@ -176,7 +176,7 @@ app/
 ├── product/[id]/             # Detalle de producto
 ├── shop/[id]/                # Tienda de un vendedor
 ├── cart/                     # Carrito de compras
-├── checkout/                 # Checkout en 2 pasos (dirección → resumen → pago)
+├── checkout/                 # Checkout en 2 pasos (dirección → resumen y pago)
 ├── orders/                   # Mis pedidos y detalle
 ├── favorites/                # Productos guardados
 ├── account/                  # Perfil del comprador
@@ -221,6 +221,21 @@ prisma/
    ```
 
 5. Abrir [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 8. Credenciales de prueba
+
+Usuarios de prueba para iniciar sesión vía Clerk:
+
+| Rol | Email | Contraseña |
+|-----|-------|------------|
+| Buyer (usuario) | `buyer.user+clerk_test@unihousing.com` | `@BuyerUserPassword` |
+| Buyer (admin) | `buyer.admin+clerk_test@unihousing.com` | `@BuyerAdminPassword` |
+
+Para ambos usuarios, el código de verificación es `424242`.
+
+> Son cuentas de test de Clerk (modo desarrollo): el sufijo `+clerk_test` y el código `424242` solo funcionan en la instancia de test de Clerk, no en producción.
 
 ---
 
