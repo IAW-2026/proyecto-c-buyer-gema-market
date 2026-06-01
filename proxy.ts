@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/payments(.*)",
   "/api/buyer(.*)",
   "/product(.*)",
+  "/shop(.*)",
 ]);
 
 // Rutas que además de autenticación requieren rol "admin_buyer"
