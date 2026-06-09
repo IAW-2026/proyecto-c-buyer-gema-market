@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUsuarioById } from "@/app/lib/db/user";
+import { getUsuarioByClerkId } from "@/app/lib/db/user";
 import { validateApiKey } from "@/app/lib/utils/hmac";
 
 /**
@@ -20,7 +20,7 @@ export async function GET(
   try {
     const { buyer_id } = await params;
 
-    const usuario = await getUsuarioById(buyer_id);
+    const usuario = await getUsuarioByClerkId(buyer_id);
 
     if (!usuario) {
       return NextResponse.json(

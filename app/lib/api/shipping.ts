@@ -29,7 +29,10 @@ export async function requestShippingQuote(
 ): Promise<ShippingQuote> {
   const res = await fetch(`${SHIPPING_BASE_URL}/cotizaciones`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-api-key-hash": API_KEY_HASH },
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key-hash": API_KEY_HASH,
+    },
     body: JSON.stringify(params),
     cache: "no-store",
   });
@@ -41,7 +44,9 @@ export async function requestShippingQuote(
   return res.json();
 }
 
-export async function getShipmentByOrderId(orderId: string): Promise<ShipmentDetail> {
+export async function getShipmentByOrderId(
+  orderId: string,
+): Promise<ShipmentDetail> {
   const res = await fetch(`${SHIPPING_BASE_URL}/envios/${orderId}`, {
     headers: { "x-api-key-hash": API_KEY_HASH },
     cache: "no-store",

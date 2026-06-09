@@ -18,6 +18,7 @@ export interface PaymentOrderItem {
   order_id: string;
   seller_id: string;
   product_id: string;
+  product_name: string;
   quantity: number;
   unit_price: number;
   quote?: {

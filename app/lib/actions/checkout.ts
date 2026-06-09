@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { currentUser } from "@clerk/nextjs/server";
 import { getCurrentUserId } from "@/app/lib/auth/mapClerkIdToUserId";
 import { getCarritoByBuyerId } from "@/app/lib/db/cart";
 import { getProductsBatch } from "@/app/lib/api/seller";
@@ -85,9 +86,9 @@ export async function requestShippingQuoteAction(address: {
           destination_address: parsed.data,
           product_id: product.product_id,
           weight_kg: product.weight || 5,
-          height_m: product.height || 0.5,
-          width_m: product.width || 0.5,
-          depth_m: product.depth || 0.5,
+          height_cm: product.height || 50,
+          width_cm: product.width || 50,
+          depth_cm: product.depth || 50,
         });
 
         return {
@@ -147,6 +148,11 @@ export async function createCheckoutAction(
   const createdOrderIds: string[] = [];
 
   try {
+    const clerkUser = await currentUser();
+    if (!clerkUser?.id) {
+      return { ok: false, error: "Debés iniciar sesión para continuar." };
+    }
+
     const userId = await getCurrentUserId();
     if (!userId) {
       return { ok: false, error: "Debés iniciar sesión para continuar." };
@@ -199,6 +205,7 @@ export async function createCheckoutAction(
       order_id: orden.id,
       seller_id: items[i].sellerId,
       product_id: items[i].productId,
+      product_name: items[i].productTitle,
       quantity: items[i].quantity,
       unit_price: items[i].unitPrice,
       quote: {
@@ -213,7 +220,7 @@ export async function createCheckoutAction(
     let paymentResult;
     try {
       paymentResult = await createPaymentOrder({
-        buyer_id: userId,
+        buyer_id: clerkUser.id,
         buyer_name: buyer.fullName,
         orders: ordersForPayment,
         currency: "ARS",

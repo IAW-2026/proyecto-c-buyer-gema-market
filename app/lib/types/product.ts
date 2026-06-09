@@ -61,9 +61,9 @@ export interface ProductDetail {
   condition: ProductCondition;
   stock: number;
   weight: number; // kg
-  height: number; // m
-  width: number; // m
-  depth: number; // m
+  height: number; // cm
+  width: number; // cm
+  depth: number; // cm
   material?: string;
   images: string[]; // URLs
   created_at: string; // ISO 8601
