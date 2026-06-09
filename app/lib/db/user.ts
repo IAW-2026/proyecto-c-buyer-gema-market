@@ -28,6 +28,12 @@ export async function getUsuarioById(id: string): Promise<Usuario | null> {
   });
 }
 
+export async function getUsuarioByClerkId(clerkUserId: string): Promise<Usuario | null> {
+  return prisma.usuario.findUnique({
+    where: { clerkUserId },
+  });
+}
+
 /**
  * Obtiene usuarios con paginación opcional, ordenados por fecha de creación (descendente).
  * Sin opciones: retorna todos los usuarios.

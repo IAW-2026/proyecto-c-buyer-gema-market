@@ -13,9 +13,9 @@ import { validateApiKey } from "@/app/lib/utils/hmac";
  *   destination_address: { street, number, zip },
  *   product_id: string,
  *   weight_kg: number,
- *   height_m: number,
- *   width_m: number,
- *   depth_m: number
+ *   height_cm: number,
+ *   width_cm: number,
+ *   depth_cm: number
  * }
  *
  * Response 200:
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { destination_address, product_id, weight_kg, height_m, width_m, depth_m } = body;
+    const { destination_address, product_id, weight_kg, height_cm, width_cm, depth_cm } = body;
 
     if (destination_address?.zip !== "8000") {
       return NextResponse.json(
@@ -49,9 +49,10 @@ export async function POST(req: NextRequest) {
 
     // Usar peso del body; si no viene, default 5 kg
     const weight = typeof weight_kg === "number" ? weight_kg : 5;
-    const height = typeof height_m === "number" ? height_m : 0.5;
-    const width = typeof width_m === "number" ? width_m : 0.5;
-    const depth = typeof depth_m === "number" ? depth_m : 0.5;
+    // Convertir cm → m para calcShippingPrice (trabaja en metros)
+    const height = typeof height_cm === "number" ? height_cm / 100 : 0.5;
+    const width = typeof width_cm === "number" ? width_cm / 100 : 0.5;
+    const depth = typeof depth_cm === "number" ? depth_cm / 100 : 0.5;
 
     const quote = createMockQuote(product_id, weight, height, width, depth);
 

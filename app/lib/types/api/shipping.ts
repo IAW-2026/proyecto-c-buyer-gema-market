@@ -12,9 +12,9 @@ export interface RequestQuoteParams {
   destination_address: Address;
   product_id: string;
   weight_kg: number;
-  height_m: number;
-  width_m: number;
-  depth_m: number;
+  height_cm: number;
+  width_cm: number;
+  depth_cm: number;
 }
 
 // ── Response: POST /api/shipping/cotizaciones ─────────────────────────────────

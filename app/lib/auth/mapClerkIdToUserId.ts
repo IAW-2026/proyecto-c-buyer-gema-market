@@ -30,7 +30,7 @@ export const getCurrentUserId = cache(async (): Promise<string | null> => {
   try {
     const created = await prisma.usuario.create({
       data: {
-        id: generateUlid("usr_"),
+        id: generateUlid("usr"),
         clerkUserId: clerkUser.id,
         email: clerkUser.emailAddresses[0]?.emailAddress ?? null,
         fullName:

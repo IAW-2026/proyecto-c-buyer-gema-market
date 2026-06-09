@@ -36,12 +36,20 @@ export default function RootLayout({
       >
         <head>
           <link rel="preconnect" href="https://images.unsplash.com" />
-          <link rel="preconnect" href="https://qrbdthnwprtysodpsncu.supabase.co" crossOrigin="anonymous" />
+          <link
+            rel="preconnect"
+            href="https://qrbdthnwprtysodpsncu.supabase.co"
+            crossOrigin="anonymous"
+          />
           <link rel="preconnect" href="https://api.dicebear.com" />
         </head>
         <body className="min-h-full bg-cream text-ink font-sans">
           {/* Desktop sidebar */}
-          <Suspense fallback={<aside className="hidden lgx:block lgx:fixed lgx:left-0 lgx:top-0 lgx:bottom-0 lgx:w-60 lgx:bg-paper lgx:border-r lgx:border-line" />}>
+          <Suspense
+            fallback={
+              <aside className="hidden lgx:block lgx:fixed lgx:left-0 lgx:top-0 lgx:bottom-0 lgx:w-60 lgx:bg-paper lgx:border-r lgx:border-line" />
+            }
+          >
             <SideNav />
           </Suspense>
 
@@ -51,7 +59,11 @@ export default function RootLayout({
           </main>
 
           {/* Mobile bottom navigation */}
-          <Suspense fallback={<nav className="fixed bottom-0 left-0 right-0 h-16 bg-paper border-t border-line lgx:hidden" />}>
+          <Suspense
+            fallback={
+              <nav className="fixed bottom-0 left-0 right-0 h-16 bg-paper border-t border-line lgx:hidden" />
+            }
+          >
             <BottomNav />
           </Suspense>
         </body>
