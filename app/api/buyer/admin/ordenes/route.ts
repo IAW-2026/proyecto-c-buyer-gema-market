@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { OrdenStatus } from "@prisma/client";
-import { isAdmin } from "@/app/lib/auth/permissions";
+import { isAdminRequest } from "@/app/lib/auth/adminGate";
 import {
   getOrdenesAdminApi,
   countOrdenesAdminApi,
@@ -17,7 +17,7 @@ const VALID_STATUSES = Object.values(OrdenStatus);
  * @see docs/apis.md
  */
 export async function GET(req: NextRequest) {
-  if (!(await isAdmin())) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

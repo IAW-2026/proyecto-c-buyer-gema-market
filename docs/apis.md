@@ -627,7 +627,7 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
 
 ## Endpoints Administrativos (Control Plane / Analytics)
 
-> **Autenticación**: todos los endpoints de esta sección requieren un JWT de Clerk con `"admin" in roles`. Las apps deben validar este claim antes de procesar la solicitud. Los endpoints son consumidos exclusivamente por el Control Plane y el Analytics Dashboard (Etapa 3).
+> **Autenticación**: todos los endpoints de esta sección aceptan **`INTERNAL_API_KEY` (server-to-server)** — enviada como `x-api-key-hash: SHA256(INTERNAL_API_KEY).toUpperCase()` — **o** un JWT de Clerk con rol `admin_buyer` en `sessionClaims.metadata.role`. Las apps deben validar uno de los dos antes de procesar la solicitud.
 
 > **Contrato de respuesta paginada estándar**: todos los endpoints de listado siguen la misma estructura de respuesta con soporte para paginación, filtrado y ordenamiento.
 
@@ -759,13 +759,77 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
     "created": 12,
     "awaiting_payment": 5,
     "paid": 34,
+    "picked_up": 3,
     "shipping": 18,
     "delivered": 170,
-    "cancelled": 10,
-    "refunded": 4
+    "shipping_failed": 2,
+    "cancelled": 12
   },
   "average_ticket": 14250.5,
   "currency": "ARS"
+}
+```
+
+#### `GET /api/buyer/admin/ordenes/:order_id`
+
+- **Consumido por**: Control Plane.
+- **Descripción**: detalle completo de una orden específica.
+- **Response 200**:
+
+```json
+{
+  "order_id": "ord_…",
+  "buyer_id": "usr_…",
+  "seller_id": "usr_…",
+  "product_id": "prd_…",
+  "quantity": 2,
+  "unit_price": 7500.0,
+  "quote_id": "qte_…",
+  "shipping_price": 3500,
+  "total_amount": 18500.0,
+  "currency": "ARS",
+  "status": "paid",
+  "payment_id": "pay_…",
+  "shipping_id": "shp_…",
+  "created_at": "2026-04-12T08:00:00Z",
+  "updated_at": "2026-04-12T09:00:00Z"
+}
+```
+
+- **Response 404**: orden no encontrada.
+
+#### `PATCH /api/buyer/admin/ordenes/:order_id`
+
+- **Consumido por**: Control Plane.
+- **Descripción**: marca una orden como `cancelled`. Solo válido desde estados no terminales (`created`, `awaiting_payment`, `paid`, `picked_up`, `shipping`). No orquesta reversa de pago ni envío.
+- **Request body**: `{ "status": "cancelled" }`
+- **Response 200**: `{ "order_id": "ord_…", "status": "cancelled" }`
+- **Response 404**: orden no encontrada.
+- **Response 422**: transición inválida (orden ya en estado terminal: `delivered`, `shipping_failed`, `cancelled`).
+
+#### `GET /api/buyer/admin/usuarios`
+
+- **Consumido por**: Control Plane, Analytics Dashboard.
+- **Descripción**: listado paginado de usuarios registrados (caché de Clerk).
+- **Query params**: `q` (email/fullName), `page`, `page_size`.
+- **Response 200**:
+
+```json
+{
+  "items": [
+    {
+      "user_id": "usr_…",
+      "clerk_user_id": "user_…",
+      "email": "c@p.com",
+      "full_name": "Carlos Pérez",
+      "phone_number": "291…",
+      "role": "buyer",
+      "created_at": "…"
+    }
+  ],
+  "page": 1,
+  "page_size": 20,
+  "total": 300
 }
 ```
 
