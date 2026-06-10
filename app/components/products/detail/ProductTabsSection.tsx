@@ -49,7 +49,7 @@ export default function ProductTabsSection({
             <div>
               <div className="text-ink-3">Dimensiones</div>
               <div className="font-medium">
-                {width}x{height}x{depth}m
+                {width}x{height}x{depth} cm
               </div>
             </div>
             <div>

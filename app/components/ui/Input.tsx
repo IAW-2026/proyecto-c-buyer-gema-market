@@ -12,7 +12,11 @@ export const Input = ({
   className = "",
   ...rest
 }: InputProps) => (
-  <div className="flex items-center gap-2 w-full bg-paper border border-line-2 rounded-r2 px-3.5 h-[46px] transition-[border-color,box-shadow] duration-150 focus-within:border-olive">
+  <div
+    className={`flex items-center gap-2 w-full bg-paper border rounded-r2 px-3.5 h-[46px] transition-[border-color,box-shadow] duration-150 focus-within:border-olive ${
+      rest["aria-invalid"] ? "border-danger" : "border-line-2"
+    }`}
+  >
     {icon && <Icon name={icon} size={18} className="text-ink-3" />}
     <input
       {...rest}
