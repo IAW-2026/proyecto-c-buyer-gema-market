@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAdmin } from "@/app/lib/auth/permissions";
+import { isAdminRequest } from "@/app/lib/auth/adminGate";
 import { getOrdenesStatsAdmin } from "@/app/lib/db/order";
 
 /**
@@ -10,7 +10,7 @@ import { getOrdenesStatsAdmin } from "@/app/lib/db/order";
  * @see docs/apis.md
  */
 export async function GET(req: NextRequest) {
-  if (!(await isAdmin())) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
