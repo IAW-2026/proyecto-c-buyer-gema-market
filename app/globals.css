@@ -95,6 +95,15 @@
     min-height: 100vh;
   }
 
+  button:not(:disabled),
+  a,
+  label[for],
+  select,
+  summary,
+  [role="button"] {
+    cursor: pointer;
+  }
+
   /* Custom Scrollbar */
   ::-webkit-scrollbar {
     width: 10px;

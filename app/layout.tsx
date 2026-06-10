@@ -6,6 +6,7 @@ import { inter, jetbrainsMono } from "./lib/fonts";
 import { SideNav } from "./components/layout/SideNav";
 import { BottomNav } from "./components/layout/BottomNav";
 import { ClerkProvider } from "@clerk/nextjs";
+import ProfileGate from "./components/onboarding/ProfileGate";
 
 export const metadata: Metadata = {
   title: "UniHousing — Tu mudanza simplificada",
@@ -65,6 +66,11 @@ export default function RootLayout({
             }
           >
             <BottomNav />
+          </Suspense>
+
+          {/* Onboarding: bloquea la app hasta que el usuario complete su perfil */}
+          <Suspense fallback={null}>
+            <ProfileGate />
           </Suspense>
         </body>
       </html>
