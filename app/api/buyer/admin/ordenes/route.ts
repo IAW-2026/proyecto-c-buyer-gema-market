@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { OrdenStatus } from "@prisma/client";
 import { isAdminRequest } from "@/app/lib/auth/adminGate";
 import {
@@ -28,6 +29,20 @@ export async function GET(req: NextRequest) {
   const statusParam = searchParams.get("status") ?? undefined;
   const dateFrom = searchParams.get("date_from") ?? undefined;
   const dateTo = searchParams.get("date_to") ?? undefined;
+
+  const isoDatetime = z.string().datetime();
+  if (dateFrom && !isoDatetime.safeParse(dateFrom).success) {
+    return NextResponse.json(
+      { error: "date_from debe ser ISO 8601 completo con hora (ej: 2026-06-16T00:00:00.000Z)" },
+      { status: 400 },
+    );
+  }
+  if (dateTo && !isoDatetime.safeParse(dateTo).success) {
+    return NextResponse.json(
+      { error: "date_to debe ser ISO 8601 completo con hora (ej: 2026-06-16T23:59:59.999Z)" },
+      { status: 400 },
+    );
+  }
 
   const sortByParam = searchParams.get("sort_by") ?? "created_at";
   const sortBy = VALID_SORT_FIELDS.includes(
