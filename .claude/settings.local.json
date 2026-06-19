@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm tsc *)",
+      "WebFetch(domain:unsplash.com)",
+      "WebSearch",
+      "Bash(Get-ChildItem *)",
+      "Bash(npx tsc *)",
+      "Bash(git diff *)",
+      "Bash(npx eslint *)",
+      "Bash(git config *)",
+      "Bash(echo \"exit:$?\")"
+    ]
+  },
+  "disabledMcpjsonServers": [
+    "context7"
+  ]
+}

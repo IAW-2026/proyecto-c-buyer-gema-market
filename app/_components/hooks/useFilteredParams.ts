@@ -1,0 +1,19 @@
+import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { parseFiltersFromParams } from "@/app/lib/utils/filterParser";
+import type { ParsedFilters } from "@/app/lib/utils/filterParser";
+
+/**
+ * Hook para sincronizar filtros con URL
+ * @returns Objeto con filtros parseados desde la URL
+ */
+export function useFilteredParams(): ParsedFilters {
+  const searchParams = useSearchParams();
+
+  // useMemo asegura que solo se recalcula cuando searchParams cambia
+  const filters = useMemo(() => {
+    return parseFiltersFromParams(searchParams);
+  }, [searchParams]);
+
+  return filters;
+}
