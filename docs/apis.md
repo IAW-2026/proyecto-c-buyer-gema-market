@@ -770,6 +770,19 @@ Estados soportados (mapeo Mercado Pago Sandbox): `pending`, `in_process`, `appro
 }
 ```
 
+#### `GET /api/buyer/admin/usuarios-activos`
+
+- **Consumido por**: Analytics Dashboard.
+- **Descripción**: cantidad de compradores distintos (`COUNT(DISTINCT buyer_id)`) entre las órdenes filtradas por rango de fechas. Si no se envían `date_from`/`date_to`, cuenta sobre todas las órdenes.
+- **Query params**: `date_from`, `date_to` (ISO 8601 completo con hora, opcionales).
+- **Response 200**:
+
+```json
+{
+  "count": 312
+}
+```
+
 #### `GET /api/buyer/admin/ordenes/:order_id`
 
 - **Consumido por**: Control Plane.

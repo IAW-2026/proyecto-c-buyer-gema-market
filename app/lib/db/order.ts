@@ -237,6 +237,25 @@ export async function getOrdenesStatsAdmin(opts: {
   };
 }
 
+export async function countUniqueBuyersAdmin(opts: {
+  dateFrom?: Date;
+  dateTo?: Date;
+}): Promise<number> {
+  const conditions: Prisma.Sql[] = [];
+  if (opts.dateFrom) conditions.push(Prisma.sql`created_at >= ${opts.dateFrom}`);
+  if (opts.dateTo) conditions.push(Prisma.sql`created_at <= ${opts.dateTo}`);
+  const where =
+    conditions.length > 0
+      ? Prisma.sql`WHERE ${Prisma.join(conditions, " AND ")}`
+      : Prisma.empty;
+
+  const result = await prisma.$queryRaw<{ count: bigint }[]>`
+    SELECT COUNT(DISTINCT buyer_id) AS count FROM orden ${where}
+  `;
+
+  return Number(result[0]?.count ?? 0);
+}
+
 // ─────────────────────────────────────────────
 // UPDATE
 // ─────────────────────────────────────────────
