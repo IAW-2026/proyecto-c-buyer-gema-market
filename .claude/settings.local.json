@@ -6,7 +6,10 @@
       "WebSearch",
       "Bash(Get-ChildItem *)",
       "Bash(npx tsc *)",
-      "Bash(git diff *)"
+      "Bash(git diff *)",
+      "Bash(npx eslint *)",
+      "Bash(git config *)",
+      "Bash(echo \"exit:$?\")"
     ]
   },
   "disabledMcpjsonServers": [
